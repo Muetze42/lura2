@@ -5,6 +5,7 @@ namespace NormanHuth\Luraa\Support;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemInterface;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Filesystem\FilesystemManager;
 use NormanHuth\Luraa\Container;
 
@@ -20,34 +21,28 @@ class Storage
      */
     public Filesystem $filesystem;
 
+    /**
+     * The filesystem instance for the package directory.
+     */
+    public FilesystemAdapter|FilesystemInterface $packageDisk;
+
+    /**
+     * The filesystem instance for the target directory.
+     */
+    public FilesystemAdapter|FilesystemInterface $targetDisk;
+
+    /**
+     * The filesystem instance for the cwd directory.
+     */
+    public FilesystemAdapter|FilesystemInterface $cwdDisk;
+
     public function __construct(string $targetPath, string $packagePath)
     {
         $this->registerManager($targetPath, $packagePath);
         $this->filesystem = new Filesystem();
-    }
-
-    /**
-     * Get the package disk instance.
-     */
-    public function packageDisk(): FilesystemInterface
-    {
-        return $this->filesystemManager->disk('package');
-    }
-
-    /**
-     * Get the target disk instance.
-     */
-    public function targetDisk(): FilesystemInterface
-    {
-        return $this->filesystemManager->disk('target');
-    }
-
-    /**
-     * Get the cwd disk instance.
-     */
-    public function cwdDisk(): FilesystemInterface
-    {
-        return $this->filesystemManager->disk('cwd');
+        $this->packageDisk = $this->filesystemManager->disk('package');
+        $this->cwdDisk = $this->filesystemManager->disk('cwd');
+        $this->targetDisk = $this->filesystemManager->disk('target');
     }
 
     /**
@@ -55,7 +50,7 @@ class Storage
      */
     public function packagePath(): string
     {
-        return $this->packageDisk()->path('');
+        return $this->packageDisk->path('');
     }
 
     /**
@@ -63,7 +58,7 @@ class Storage
      */
     public function targetPath(): string
     {
-        return $this->targetDisk()->path('');
+        return $this->targetDisk->path('');
     }
 
     /**
@@ -71,23 +66,23 @@ class Storage
      */
     public function cwdPath(): string
     {
-        return $this->cwdDisk()->path('');
+        return $this->cwdDisk->path('');
     }
 
     public function publish(string $from, string $to): void
     {
-        if (is_dir($this->packageDisk()->path($from))) {
+        if (is_dir($this->packageDisk->path($from))) {
             $this->filesystem->copyDirectory(
-                $this->packageDisk()->path($from),
-                $this->targetDisk()->path($to),
+                $this->packageDisk->path($from),
+                $this->targetDisk->path($to),
             );
 
             return;
         }
 
         $this->filesystem->copy(
-            $this->packageDisk()->path($from),
-            $this->targetDisk()->path($to),
+            $this->packageDisk->path($from),
+            $this->targetDisk->path($to),
         );
     }
 
