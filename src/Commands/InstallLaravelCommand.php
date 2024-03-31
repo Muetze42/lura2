@@ -259,7 +259,8 @@ class InstallLaravelCommand extends AbstractCommand
                 'type' => 'composer',
                 'url' => 'https://nova.laravel.com',
             ]);
-            $this->dependencies->addComposerRequirement('laravel/nova', '^4.33.1');
+            $this->dependencies->addComposerRequirement('laravel/nova', '^4.33');
+            $this->dependencies->addComposerRequirement('norman-huth/nova-assets-versioning', '^1.0');
             $this->storage->publish('stubs/nova', 'stubs/nova');
             $this->storage->publish('resources/nova/Commands', 'app/Console/Commands/Nova');
         }
