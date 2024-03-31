@@ -20,9 +20,9 @@ class Storage
      */
     public Filesystem $filesystem;
 
-    public function __construct(string $targetPath)
+    public function __construct(string $targetPath, string $packagePath)
     {
-        $this->registerManager($targetPath);
+        $this->registerManager($targetPath, $packagePath);
         $this->filesystem = new Filesystem();
     }
 
@@ -53,7 +53,7 @@ class Storage
     /**
      * Get the full path to the package.
      */
-    public function package(): string
+    public function packagePath(): string
     {
         return $this->packageDisk()->path('');
     }
@@ -61,7 +61,7 @@ class Storage
     /**
      * Get the full path to the target.
      */
-    public function target(): string
+    public function targetPath(): string
     {
         return $this->targetDisk()->path('');
     }
@@ -69,9 +69,9 @@ class Storage
     /**
      * Get the full path to the cwd.
      */
-    public function cwd(): string
+    public function cwdPath(): string
     {
-        return $this->targetDisk()->path('');
+        return $this->cwdDisk()->path('');
     }
 
     public function publish(string $from, string $to): void
@@ -94,7 +94,7 @@ class Storage
     /**
      * Register the filesystem manager.
      */
-    protected function registerManager(string $targetPath): void
+    protected function registerManager(string $targetPath, string $packagePath): void
     {
         $container = new Container();
         $container->instance('app', $container);
@@ -104,7 +104,7 @@ class Storage
                 'disks' => [
                     'package' => [
                         'driver' => 'local',
-                        'root' => dirname(__DIR__, 2),
+                        'root' => $packagePath,
                     ],
                     'target' => [
                         'driver' => 'local',

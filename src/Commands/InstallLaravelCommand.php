@@ -3,16 +3,25 @@
 namespace NormanHuth\Luraa\Commands;
 
 use Illuminate\Support\Str;
-use NormanHuth\Luraa\Services\EnvFile;
+use NormanHuth\Luraa\Contracts\ComposerInstallTrait;
+use NormanHuth\Luraa\Contracts\CreateProjectTrait;
+use NormanHuth\Luraa\Services\DependenciesFilesService;
+use NormanHuth\Luraa\Services\EnvFileService;
 use NormanHuth\Luraa\Support\Process;
 use NormanHuth\Luraa\Support\Storage;
+use ReflectionClass;
 
+use function Laravel\Prompts\intro;
 use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\outro;
+use function Laravel\Prompts\spin;
 use function Laravel\Prompts\text;
-use function NormanHuth\Luraa\ci;
 
 class InstallLaravelCommand extends AbstractCommand
 {
+    use ComposerInstallTrait;
+    use CreateProjectTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -40,7 +49,9 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected string $composer;
 
-    protected EnvFile $env;
+    protected EnvFileService $env;
+
+    protected DependenciesFilesService $dependencies;
 
     protected array $options = [
         'Inertia.js' => true,
@@ -61,24 +72,41 @@ class InstallLaravelCommand extends AbstractCommand
      */
     public function handle(): void
     {
+        intro('Creating a Laravel Project');
+
         $this->determineAppData();
         if (!$this->isTargetPathOk()) {
             return;
         }
 
-        $this->options = multiselect(
-            label: 'Select optional packages to install',
-            options: array_keys($this->options),
-            default: array_keys(array_filter($this->options)),
-            scroll: count($this->options),
+        $this->determineOptions();
+
+        spin(
+            fn () => $this->initializeInstallerResources(),
+            'Initializing installer resources'
         );
 
-        $this->env = new EnvFile($this->storage->targetDisk()->path('.env.example'));
+        $this->createProject();
+
+        $this->composerInstall();
+
+        spin(
+            fn () => $this->loadInstallerResources(),
+            'Loading additional installer resources'
+        );
 
         $this->moveTempContentBack();
+
+        outro(
+            sprintf(
+                'Your project "%s" has been successfully created at "%s"',
+                $this->appName,
+                $this->storage->targetPath()
+            )
+        );
     }
 
-    protected function createProject(): void
+    protected function executeCreateProject(): void
     {
         $command = [
             $this->composer,
@@ -92,10 +120,67 @@ class InstallLaravelCommand extends AbstractCommand
             '--ansi',
         ];
 
-        $this->composer = $this->findComposer();
-        $result = Process::path($this->storage->cwd())->run(ci($command));
+        $result = Process::path($this->storage->cwdPath())
+            ->run(ci($command));
 
         $this->line($result->output());
+    }
+
+    protected function executeComposerInstall(): void
+    {
+        $command = [
+            $this->composer,
+            'install',
+            '--prefer-dist',
+            '--ansi',
+        ];
+
+        $result = Process::path($this->storage->targetPath())
+            ->run(ci($command));
+
+        $this->line($result->output());
+    }
+
+    protected function initializeInstallerResources(): void
+    {
+        $this->composer = $this->findComposer();
+    }
+
+    protected function loadInstallerResources(): void
+    {
+        $this->env = new EnvFileService($this->storage->targetDisk()->path('.env.example'));
+    }
+
+    protected function determineOptions(): void
+    {
+        $options = [];
+        if ($this->promptsUnsupportedEnvironment) {
+            foreach ($this->options as $key => $value) {
+                if ($this->confirm($key, $value)) {
+                    $options[] = $key;
+                }
+            }
+
+            $this->options = $options;
+            return;
+        }
+
+        $this->options = multiselect(
+            label: 'Select optional packages to install',
+            options: array_keys($this->options),
+            default: array_keys(array_filter($this->options)),
+            scroll: count($this->options),
+        );
+    }
+
+    protected function beforeCreateProject(): void
+    {
+        //
+    }
+
+    protected function afterCreateProject(): void
+    {
+        //
     }
 
     protected function moveTempContentBack(): void
@@ -137,7 +222,7 @@ class InstallLaravelCommand extends AbstractCommand
         if (count($directories) || count($files)) {
             $this->components->error(
                 sprintf(
-                    'The target path „%s“ already contains Laravel files or directories.',
+                    'The target path "%s" already contains Laravel files or directories.',
                     $this->appPath
                 )
             );
@@ -189,10 +274,20 @@ class InstallLaravelCommand extends AbstractCommand
             $this->error('Could not determine the app path with this name.');
         }
 
-        $this->storage = new Storage(rtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath);
+        $this->initializeStorage();
 
         if ($validated || empty($this->appPath)) {
             $this->determineAppData();
         }
+    }
+
+    protected function initializeStorage(): void
+    {
+        $reflection = new ReflectionClass(get_called_class());
+
+        $this->storage = new Storage(
+            targetPath: rtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
+            packagePath: dirname($reflection->getFileName(), 3)
+        );
     }
 }

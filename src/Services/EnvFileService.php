@@ -2,7 +2,7 @@
 
 namespace NormanHuth\Luraa\Services;
 
-class EnvFile
+class EnvFileService
 {
     protected string $file;
     protected string $contents;

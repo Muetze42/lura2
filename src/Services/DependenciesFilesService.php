@@ -2,7 +2,9 @@
 
 namespace NormanHuth\Luraa\Services;
 
-class Dependencies
+use NormanHuth\Luraa\Support\Http;
+
+class DependenciesFilesService
 {
     protected ?string $packageJsonFile;
 
@@ -11,6 +13,10 @@ class Dependencies
     protected ?array $packageJson = null;
 
     protected ?array $composerJson = null;
+
+    protected array $versions = [];
+
+    protected string $versionsSource = 'https://raw.githubusercontent.com/Muetze42/data/main/storage/versions.json';
 
     public function __construct(string $packageJsonFile = null, string $composerJsonFile = null)
     {
@@ -22,6 +28,11 @@ class Dependencies
         }
         if ($composerJsonFile) {
             $this->composerJson = json_decode(file_get_contents($composerJsonFile), true);
+        }
+
+        $response = Http::get($this->versionsSource);
+        if ($response->successful()) {
+            $this->versions = $response->json();
         }
     }
 

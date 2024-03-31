@@ -17,6 +17,16 @@ abstract class AbstractCommand extends Command
     protected ?Validator $validator = null;
 
     protected array $validatorMessages;
+    protected bool $promptsUnsupportedEnvironment;
+
+    /**
+     * Create a new console command instance.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->promptsUnsupportedEnvironment = windows_os();
+    }
 
     /**
      * Create a new Validator instance.
