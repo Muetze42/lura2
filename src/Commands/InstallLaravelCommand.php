@@ -378,6 +378,7 @@ class InstallLaravelCommand extends AbstractCommand
     protected function afterComposerInstall(): void
     {
         $this->runProcess('php artisan lang:publish --ansi');
+        $this->runProcess('php artisan key:generate --ansi');
 
         if (in_array('Laravel Sanctum', $this->options)) {
             $this->runProcess('php artisan vendor:publish --tag=sanctum-migrations --ansi');
