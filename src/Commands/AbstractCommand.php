@@ -5,6 +5,7 @@ namespace NormanHuth\Luraa\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
@@ -66,10 +67,15 @@ abstract class AbstractCommand extends Command
     /**
      * Get the composer command for the environment.
      */
-    public function findComposer(): string
+    protected function findComposer(): string
     {
         $composerPath = getcwd() . '/composer.phar';
 
         return file_exists($composerPath) ? '"' . PHP_BINARY . '" ' . $composerPath : 'composer';
+    }
+
+    protected function getMigrationPrefixedFileName(string $name): string
+    {
+        return date('Y_m_d_') . '000000_' . Str::snake(trim($name, '_')) . '.php';
     }
 }

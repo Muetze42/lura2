@@ -1,8 +1,6 @@
 wip
 
-Command line interface tool for **personal** usage.
-
-Integrated and set up:
+Command line interface tool for **personal** usage created with:
 
 * [Illuminate Console component](https://laravel.com/docs/11.x/artisan)
 * [Laravel Prompts](https://laravel.com/docs/11.x/prompts)
@@ -12,4 +10,5 @@ Integrated and set up:
 * [Illuminate Filesystem component](https://laravel.com/docs/11.x/filesystem)
 * [Illuminate Support component](https://laravel.com/docs/11.x/helpers)
 
-![preview](/docs/preview.png)
+![preview 1](/docs/preview-1.png)
+![preview 2](/docs/preview-2.png)

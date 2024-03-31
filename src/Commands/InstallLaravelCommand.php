@@ -273,6 +273,16 @@ class InstallLaravelCommand extends AbstractCommand
             $this->storage->publish('templates/media-library/model.stub', 'app/Models/Media.php');
         }
 
+        if (in_array('spatie/laravel-activitylog', $this->options)) {
+            $this->dependencies->addComposerRequirement('spatie/laravel-activitylog', '^4.8');
+            $this->storage->publish('templates/activity-log/model.stub', 'app/Models/Activity.php');
+            $this->storage->publish('templates/activity-log/config.stub', 'config/activitylog.php');
+            $this->storage->publish(
+                'templates/activity-log/migration.stub',
+                'database/migrations/' . $this->getMigrationPrefixedFileName('CreateActivityLogTable')
+            );
+        }
+
         if (in_array('norman-huth/php-library', $this->options)) {
             $this->dependencies->addComposerRequirement('norman-huth/php-library', '^0.0.2');
         }
