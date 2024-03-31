@@ -69,7 +69,7 @@ class Storage
         return $this->cwdDisk->path('');
     }
 
-    public function publish(string $from, string $to): void
+    public function publish(string $from, string $to = ''): void
     {
         if (is_dir($this->packageDisk->path($from))) {
             $this->filesystem->copyDirectory(
@@ -78,6 +78,10 @@ class Storage
             );
 
             return;
+        }
+
+        if (empty($to) && !is_dir($this->packageDisk->path($from))) {
+            $to = basename($from);
         }
 
         $this->filesystem->copy(

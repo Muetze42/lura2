@@ -8,6 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
+use NormanHuth\Library\Lib\MacroRegistry;
 
 abstract class AbstractCommand extends Command
 {
@@ -17,6 +18,7 @@ abstract class AbstractCommand extends Command
     protected ?Validator $validator = null;
 
     protected array $validatorMessages;
+
     protected bool $promptsUnsupportedEnvironment;
 
     /**
@@ -25,6 +27,7 @@ abstract class AbstractCommand extends Command
     public function __construct()
     {
         parent::__construct();
+        MacroRegistry::registerStrMacros();
         $this->promptsUnsupportedEnvironment = windows_os();
     }
 

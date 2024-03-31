@@ -2,6 +2,7 @@
 
 namespace NormanHuth\Luraa\Services;
 
+use Illuminate\Support\Arr;
 use NormanHuth\Library\Support\ComposerJson;
 use NormanHuth\Luraa\Support\Http;
 
@@ -38,7 +39,34 @@ class DependenciesFilesService
                 $response->json('composer'),
                 $response->json('npm'),
             );
+
+            $this->versions = Arr::map($this->versions, function (string $version) {
+                return str_starts_with($version, '^') ? $version : '^' . $version;
+            });
         }
+    }
+
+    public function addComposerRepository(array $data): void
+    {
+        $repositories = data_get($this->dependencies['composer'], 'repositories', []);
+        $repositories[] = $data;
+        data_set(
+            $this->dependencies['composer'],
+            'repositories',
+            $repositories
+        );
+    }
+
+    public function addComposerScript(string $key, array|string $value): void
+    {
+        $value = (array) $value;
+        $scripts = data_get($this->dependencies['composer'], 'scripts', []);
+        $scripts[$key] = $value;
+        data_set(
+            $this->dependencies['composer'],
+            'scripts',
+            $scripts
+        );
     }
 
     public function addComposerRequirement(string $package, string $version, bool $forceVersion = false): void
@@ -51,6 +79,16 @@ class DependenciesFilesService
         $this->dependenciesUpdate($package, $version, $forceVersion, 'composer.require-dev');
     }
 
+    public function addPackageDependency(string $package, string $version, bool $forceVersion = false): void
+    {
+        $this->dependenciesUpdate($package, $version, $forceVersion, 'package.dependencies');
+    }
+
+    public function addPackageDevDependency(string $package, string $version, bool $forceVersion = false): void
+    {
+        $this->dependenciesUpdate($package, $version, $forceVersion, 'package.devDependencies');
+    }
+
     protected function dependenciesUpdate(
         string $package,
         string $version,
@@ -61,7 +99,8 @@ class DependenciesFilesService
             $version = $this->versions[$package] ?? $version;
         }
 
-        data_fill($this->dependencies, $key . '.' . $package, $version);
+        $forceVersion ? data_set($this->dependencies, $key . '.' . $package, $version) :
+            data_fill($this->dependencies, $key . '.' . $package, $version);
     }
 
     public function close(): void
