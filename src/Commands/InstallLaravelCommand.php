@@ -61,8 +61,9 @@ class InstallLaravelCommand extends AbstractCommand
         'spatie/laravel-activitylog' => false,
         'spatie/laravel-medialibrary' => false,
         'Custom Error Pages' => true,
-        'laravel/pint' => true,
-        'laravel/dusk' => false,
+        'Laravel Pint' => true,
+        'Laravel Dusk' => false,
+        'Laravel Sanctum' => false,
     ];
 
     protected string $optionFontAwesome = 'no';
@@ -139,7 +140,7 @@ class InstallLaravelCommand extends AbstractCommand
         }
 
         $this->options = multiselect(
-            label: 'Select optional packages to install',
+            label: 'Select optional features to install',
             options: array_keys($this->options),
             default: array_keys(array_filter($this->options)),
             scroll: count($this->options),
@@ -209,13 +210,13 @@ class InstallLaravelCommand extends AbstractCommand
             $this->dependencies->addComposerDevRequirement('barryvdh/laravel-ide-helper', '^3.0"');
         }
 
-        if (in_array('laravel/pint', $this->options)) {
+        if (in_array('Laravel Pint', $this->options)) {
             $this->dependencies->addComposerDevRequirement('laravel/pint', '^1.15');
             $this->storage->publish('templates/pint.json');
             $this->dependencies->addComposerScript('pint', './vendor/bin/pint');
         }
 
-        if (in_array('laravel/dusk', $this->options)) {
+        if (in_array('Laravel Dusk', $this->options)) {
             $this->dependencies->addComposerDevRequirement('laravel/dusk', '^8.1');
         }
 
@@ -299,6 +300,11 @@ class InstallLaravelCommand extends AbstractCommand
             }
         }
 
+        if (in_array('Laravel Sanctum', $this->options)) {
+            $this->dependencies->addComposerRequirement('laravel/sanctum', '^4.0');
+            $this->env->addKeys('SANCTUM_TOKEN_PREFIX', 'APP_URL');
+        }
+
         if (in_array('HeadlessUI Vue', $this->options)) {
             $this->dependencies->addPackageDependency('@headlessui/vue', '^1.7.19');
         }
@@ -330,6 +336,13 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function afterComposerInstall(): void
     {
+        $this->runProcess('php artisan lang:publish --ansi');
+
+        if (in_array('Laravel Sanctum', $this->options)) {
+            $this->runProcess('php artisan vendor:publish --tag=sanctum-migrations --ansi');
+            $this->runProcess('php artisan vendor:publish --tag=sanctum-config --ansi');
+        }
+
         $this->afterComposerInstallAbstractController();
         $this->afterComposerInstallServiceProvider();
         $this->afterComposerInstallInertia();
@@ -341,7 +354,7 @@ class InstallLaravelCommand extends AbstractCommand
             $this->storage->publish('templates/eslint');
         }
 
-        if (in_array('laravel/dusk', $this->options)) {
+        if (in_array('Laravel Dusk', $this->options)) {
             $this->runProcess('php artisan dusk:install --ansi');
         }
 
@@ -350,7 +363,7 @@ class InstallLaravelCommand extends AbstractCommand
             $this->storage->publish('templates/NovaServiceProvider.php', 'app/Providers/NovaServiceProvider.php');
         }
 
-        if (in_array('laravel/pint', $this->options)) {
+        if (in_array('Laravel Pint', $this->options)) {
             $this->runProcess($this->composer . ' pint --ansi');
         }
     }
@@ -529,7 +542,7 @@ class InstallLaravelCommand extends AbstractCommand
         $this->line('If the folder already exists, it may not contain any files or folders created by Laravel.');
 
         $this->appName = text(
-            label: 'What name should the app have?',
+            label: 'Name of the new app',
             default: $this->appName,
             required: true,
             //hint: implode(' ', [
