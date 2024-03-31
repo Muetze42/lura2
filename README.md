@@ -12,3 +12,23 @@ Command line interface tool for **personal** usage created with:
 
 ![preview 1](/docs/preview-1.png)
 ![preview 2](/docs/preview-2.png)
+
+# Install
+
+Remove all old Lura packages if installed
+
+```shell
+composer global remove norman-huth/lura norman-huth/laravel-installer norman-huth/advanced-laravel-installer norman-huth/package-init
+```
+
+Install Lura 2
+
+```shell
+composer global require norman-huth/lura2:"@dev"
+```
+
+Execute Lura
+
+```shell
+lura
+```

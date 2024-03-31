@@ -194,6 +194,9 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function beforeComposerInstall(): void
     {
+        $this->env->setValue('APP_NAME', '"' . addslashes($this->appName) . '"');
+        $this->env->setExampleValue('APP_NAME', '"' . addslashes($this->appName) . '"');
+
         if (in_array('Sentry', $this->options)) {
             $this->dependencies->addComposerRequirement('sentry/sentry-laravel', '^4.4');
         }
