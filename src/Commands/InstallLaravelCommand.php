@@ -120,10 +120,10 @@ class InstallLaravelCommand extends AbstractCommand
             '--ansi',
         ];
 
-        $result = Process::path($this->storage->cwdPath())
-            ->run(ci($command));
-
-        $this->line($result->output());
+        Process::path($this->storage->cwdPath())
+            ->run(ci($command), function (string $type, string $output) {
+                $this->line($output);
+            });
     }
 
     protected function executeComposerInstall(): void
@@ -135,10 +135,10 @@ class InstallLaravelCommand extends AbstractCommand
             '--ansi',
         ];
 
-        $result = Process::path($this->storage->targetPath())
-            ->run(ci($command));
-
-        $this->line($result->output());
+        Process::path($this->storage->targetPath())
+            ->run(ci($command), function (string $type, string $output) {
+                $this->line($output);
+            });
     }
 
     protected function initializeInstallerResources(): void

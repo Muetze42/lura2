@@ -9,8 +9,13 @@ use Illuminate\Process\Factory;
  */
 class Process
 {
+    public static int $timeout = 300;
+
     public static function __callStatic($name, $arguments)
     {
-        return (new Factory())->{$name}(...$arguments);
+        /* @var \Illuminate\Support\Facades\Process $instance */
+        $instance = new Factory();
+
+        return $instance->timeout(static::$timeout)->{$name}(...$arguments);
     }
 }
