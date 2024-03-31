@@ -252,6 +252,8 @@ class InstallLaravelCommand extends AbstractCommand
             });
         }
 
+        $this->storage->publish('stubs/laravel', 'stubs');
+
         if (in_array('Laravel Nova', $this->options)) {
             $this->dependencies->addComposerRepository([
                 'type' => 'composer',
@@ -316,6 +318,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function afterComposerInstall(): void
     {
+        $this->afterComposerInstallAbstractController();
         $this->afterComposerInstallServiceProvider();
         $this->afterComposerInstallInertia();
         $this->afterComposerInstallBootstrapApp();
@@ -347,6 +350,23 @@ class InstallLaravelCommand extends AbstractCommand
                     $this->output->write($output);
                 });
         }
+    }
+
+    protected function afterComposerInstallAbstractController(): void
+    {
+        $file = 'app/Http/Controllers/Controller.php';
+        if (!$this->storage->targetDisk->exists($file)) {
+            return;
+        }
+        file_put_contents(
+            $this->storage->targetDisk->path('app/Http/Controllers/AbstractController.php'),
+            str_replace(
+                'abstract class Controller',
+                'abstract class AbstractController',
+                $this->storage->targetDisk->get($file)
+            )
+        );
+        $this->storage->targetDisk->delete($file);
     }
 
     protected function afterComposerInstallStylesheet(): void
