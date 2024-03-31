@@ -3,8 +3,6 @@
 namespace NormanHuth\Luraa\Commands;
 
 use Illuminate\Support\Str;
-use NormanHuth\Luraa\Contracts\ComposerInstallTrait;
-use NormanHuth\Luraa\Contracts\CreateProjectTrait;
 use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
 use NormanHuth\Luraa\Support\Process;
@@ -19,9 +17,6 @@ use function Laravel\Prompts\text;
 
 class InstallLaravelCommand extends AbstractCommand
 {
-    use ComposerInstallTrait;
-    use CreateProjectTrait;
-
     /**
      * The name and signature of the console command.
      *
@@ -106,6 +101,18 @@ class InstallLaravelCommand extends AbstractCommand
         );
     }
 
+    protected function createProject(): void
+    {
+        $this->beforeCreateProject();
+        $this->executeCreateProject();
+        $this->afterCreateProject();
+    }
+
+    protected function beforeCreateProject(): void
+    {
+        //
+    }
+
     protected function executeCreateProject(): void
     {
         $command = [
@@ -122,8 +129,25 @@ class InstallLaravelCommand extends AbstractCommand
 
         Process::path($this->storage->cwdPath())
             ->run(ci($command), function (string $type, string $output) {
-                $this->line($output);
+                $this->line(trim($output));
             });
+    }
+
+    protected function afterCreateProject(): void
+    {
+        //
+    }
+
+    protected function composerInstall(): void
+    {
+        $this->beforeComposerInstall();
+        $this->executeComposerInstall();
+        $this->afterComposerInstall();
+    }
+
+    protected function beforeComposerInstall(): void
+    {
+        //
     }
 
     protected function executeComposerInstall(): void
@@ -137,8 +161,13 @@ class InstallLaravelCommand extends AbstractCommand
 
         Process::path($this->storage->targetPath())
             ->run(ci($command), function (string $type, string $output) {
-                $this->line($output);
+                $this->line(trim($output));
             });
+    }
+
+    protected function afterComposerInstall(): void
+    {
+        //
     }
 
     protected function initializeInstallerResources(): void
@@ -171,16 +200,6 @@ class InstallLaravelCommand extends AbstractCommand
             default: array_keys(array_filter($this->options)),
             scroll: count($this->options),
         );
-    }
-
-    protected function beforeCreateProject(): void
-    {
-        //
-    }
-
-    protected function afterCreateProject(): void
-    {
-        //
     }
 
     protected function moveTempContentBack(): void

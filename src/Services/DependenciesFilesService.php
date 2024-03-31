@@ -2,6 +2,7 @@
 
 namespace NormanHuth\Luraa\Services;
 
+use NormanHuth\Library\Support\ComposerJson;
 use NormanHuth\Luraa\Support\Http;
 
 class DependenciesFilesService
@@ -10,9 +11,10 @@ class DependenciesFilesService
 
     protected ?string $composerJsonFile;
 
-    protected ?array $packageJson = null;
-
-    protected ?array $composerJson = null;
+    protected array $dependencies = [
+        'composer' => null,
+        'package' => null,
+    ];
 
     protected array $versions = [];
 
@@ -24,10 +26,10 @@ class DependenciesFilesService
         $this->composerJsonFile = $composerJsonFile;
 
         if ($packageJsonFile) {
-            $this->packageJson = json_decode(file_get_contents($packageJsonFile), true);
+            $this->dependencies['package'] = json_decode(file_get_contents($packageJsonFile), true);
         }
         if ($composerJsonFile) {
-            $this->composerJson = json_decode(file_get_contents($composerJsonFile), true);
+            $this->dependencies['composer'] = json_decode(file_get_contents($composerJsonFile), true);
         }
 
         $response = Http::get($this->versionsSource);
@@ -36,18 +38,29 @@ class DependenciesFilesService
         }
     }
 
+    protected function dependenciesUpdate()
+    {
+    }
+
     public function close(): void
     {
-        if ($this->packageJsonFile) {
+        if ($this->dependencies['package']) {
             file_put_contents(
                 $this->packageJsonFile,
-                json_encode($this->packageJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                json_encode(
+                    $this->dependencies['package'],
+                    JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                )
             );
         }
         if ($this->composerJsonFile) {
+            $this->dependencies['composer'] = ComposerJson::sort($this->dependencies['composer']);
             file_put_contents(
                 $this->composerJsonFile,
-                json_encode($this->composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                json_encode(
+                    $this->dependencies['composer'],
+                    JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                )
             );
         }
     }
