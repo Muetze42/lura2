@@ -13,6 +13,7 @@ Command line interface tool for **personal** usage created with:
 ![preview 1](/docs/preview-1.png)
 ![preview 2](/docs/preview-2.png)
 ![preview 3](/docs/preview-3.png)
+![preview 4](/docs/preview-4.png)
 
 # Install
 

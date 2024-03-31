@@ -68,7 +68,9 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected string $optionFontAwesome = 'no';
 
-    protected string $defaultCacheStore = 'file';
+    protected string $cacheStore = 'file';
+
+    protected string $sessionDriver = 'database';
 
     /**
      * Execute the console command.
@@ -107,16 +109,31 @@ class InstallLaravelCommand extends AbstractCommand
     protected function configureProject(): void
     {
         $this->determineOptions();
-        $this->defaultCacheStore();
+        $this->cacheStore();
+        $this->sessionDriver();
         $this->determineFontAwesome();
     }
 
-    protected function defaultCacheStore(): void
+    protected function cacheStore(): void
     {
-        $this->defaultCacheStore = select(
-            label: 'Which cache store should be used as default?',
+        $this->cacheStore = select(
+            label: 'Which cache store should be used?',
             options: ['database', 'file', 'redis', 'memcached', 'apc', 'array', 'dynamodb', 'octane', 'null'],
-            default: $this->defaultCacheStore
+            default: $this->cacheStore,
+            hint: 'This connection is utilized if another isn\'t explicitly ' .
+                'specified when running a cache operation inside the application.',
+            required: true
+        );
+    }
+
+    protected function sessionDriver(): void
+    {
+        $this->sessionDriver = select(
+            label: 'Which session driver should be used?',
+            options: ['file', 'database', 'redis', 'cookie', 'apc', 'memcached', 'dynamodb', 'array'],
+            default: $this->sessionDriver,
+            hint: 'Database storage is a great default choice.',
+            required: true
         );
     }
 
@@ -212,8 +229,11 @@ class InstallLaravelCommand extends AbstractCommand
         $this->env->setValue('LOG_STACK', 'daily');
         $this->env->setExampleValue('LOG_STACK', 'daily');
 
-        $this->env->setValue('CACHE_STORE', $this->defaultCacheStore);
-        $this->env->setExampleValue('CACHE_STORE', $this->defaultCacheStore);
+        $this->env->setValue('CACHE_STORE', $this->cacheStore);
+        $this->env->setExampleValue('CACHE_STORE', $this->cacheStore);
+
+        $this->env->setValue('SESSION_DRIVER', $this->sessionDriver);
+        $this->env->setExampleValue('SESSION_DRIVER', $this->sessionDriver);
 
         if (in_array('Sentry', $this->options)) {
             $this->dependencies->addComposerRequirement('sentry/sentry-laravel', '^4.4');
