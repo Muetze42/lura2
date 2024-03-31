@@ -1,6 +1,8 @@
 <?php
 
-function ci(array $command): string
-{
-    return implode(' ', $command);
+if (!function_exists('ci')) {
+    function ci(array $command): string
+    {
+        return implode(' ', $command);
+    }
 }
