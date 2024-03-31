@@ -135,19 +135,24 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function afterCreateProject(): void
     {
-        //
+        $this->dependencies = new DependenciesFilesService(
+            packageJsonFile: $this->storage->targetDisk->path('package.json'),
+            composerJsonFile: $this->storage->targetDisk->path('composer.json')
+        );
     }
 
     protected function composerInstall(): void
     {
         $this->beforeComposerInstall();
-        $this->executeComposerInstall();
+        //$this->executeComposerInstall();
         $this->afterComposerInstall();
     }
 
     protected function beforeComposerInstall(): void
     {
-        //
+        if (in_array('Inertia.js', $this->options)) {
+            $this->dependencies->addComposerRequirement('inertiajs/inertia-laravel', '^1.0');
+        }
     }
 
     protected function executeComposerInstall(): void
@@ -167,7 +172,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function afterComposerInstall(): void
     {
-        //
+        $this->dependencies->close();
     }
 
     protected function initializeInstallerResources(): void
@@ -177,7 +182,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function loadInstallerResources(): void
     {
-        $this->env = new EnvFileService($this->storage->targetDisk()->path('.env.example'));
+        $this->env = new EnvFileService($this->storage->targetDisk->path('.env.example'));
     }
 
     protected function determineOptions(): void
@@ -208,32 +213,32 @@ class InstallLaravelCommand extends AbstractCommand
             return;
         }
 
-        foreach ($this->storage->cwdDisk()->directories($this->tempPath) as $directory) {
+        foreach ($this->storage->cwdDisk->directories($this->tempPath) as $directory) {
             $this->storage->filesystem->moveDirectory(
-                $this->storage->cwdDisk()->path($directory),
-                $this->storage->targetDisk()->path(basename($directory)),
+                $this->storage->cwdDisk->path($directory),
+                $this->storage->targetDisk->path(basename($directory)),
                 true
             );
         }
-        foreach ($this->storage->cwdDisk()->files($this->tempPath) as $file) {
+        foreach ($this->storage->cwdDisk->files($this->tempPath) as $file) {
             $this->storage->filesystem->move(
-                $this->storage->cwdDisk()->path($file),
-                $this->storage->targetDisk()->path(basename($file))
+                $this->storage->cwdDisk->path($file),
+                $this->storage->targetDisk->path(basename($file))
             );
         }
-        $this->storage->cwdDisk()->deleteDirectory($this->tempPath);
+        $this->storage->cwdDisk->deleteDirectory($this->tempPath);
     }
 
     protected function isTargetPathOk(): bool
     {
-        $files = $this->storage->targetDisk()->files();
-        $directories = $this->storage->targetDisk()->directories();
+        $files = $this->storage->targetDisk->files();
+        $directories = $this->storage->targetDisk->directories();
 
         if (!count($directories) && !count($files)) {
             return true;
         }
 
-        $laravel = $this->storage->packageDisk()->json('data/laravel-file-structure.json');
+        $laravel = $this->storage->packageDisk->json('data/laravel-file-structure.json');
 
         $files = array_intersect($files, $laravel['files']);
         $directories = array_intersect($directories, $laravel['directories']);
@@ -251,8 +256,8 @@ class InstallLaravelCommand extends AbstractCommand
 
         $this->determineTempPath();
         $this->storage->filesystem->moveDirectory(
-            $this->storage->targetDisk()->path(''),
-            $this->storage->cwdDisk()->path($this->tempPath)
+            $this->storage->targetDisk->path(''),
+            $this->storage->cwdDisk->path($this->tempPath)
         );
 
         return true;
@@ -261,7 +266,7 @@ class InstallLaravelCommand extends AbstractCommand
     protected function determineTempPath(): void
     {
         $temp = 'temp-' . Str::random();
-        if ($this->storage->cwdDisk()->exists($temp)) {
+        if ($this->storage->cwdDisk->exists($temp)) {
             $this->determineTempPath();
         }
         $this->tempPath = $temp;

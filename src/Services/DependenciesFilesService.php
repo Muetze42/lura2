@@ -34,12 +34,34 @@ class DependenciesFilesService
 
         $response = Http::get($this->versionsSource);
         if ($response->successful()) {
-            $this->versions = $response->json();
+            $this->versions = array_merge(
+                $response->json('composer'),
+                $response->json('npm'),
+            );
         }
     }
 
-    protected function dependenciesUpdate()
+    public function addComposerRequirement(string $package, string $version, bool $forceVersion = false): void
     {
+        $this->dependenciesUpdate($package, $version, $forceVersion);
+    }
+
+    public function addComposerDevRequirement(string $package, string $version, bool $forceVersion = false): void
+    {
+        $this->dependenciesUpdate($package, $version, $forceVersion, 'composer.require-dev');
+    }
+
+    protected function dependenciesUpdate(
+        string $package,
+        string $version,
+        bool $forceVersion = false,
+        string $key = 'composer.require'
+    ): void {
+        if (!$forceVersion) {
+            $version = $this->versions[$package] ?? $version;
+        }
+
+        data_fill($this->dependencies, $key . '.' . $package, $version);
     }
 
     public function close(): void
