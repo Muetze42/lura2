@@ -130,10 +130,10 @@ class InstallLaravelCommand extends AbstractCommand
     }
     protected function defaultQueueConnection(): void
     {
-        $this->defaultCacheStore = select(
+        $this->defaultQueueConnection = select(
             label: 'Which queue connection should be used as default?',
             options: ['sync', 'database', 'redis', 'beanstalkd', 'sqs', 'null'],
-            default: $this->defaultCacheStore,
+            default: $this->defaultQueueConnection,
             required: true
         );
     }
