@@ -196,6 +196,8 @@ class InstallLaravelCommand extends AbstractCommand
     {
         $this->env->setValue('APP_NAME', '"' . addslashes($this->appName) . '"');
         $this->env->setExampleValue('APP_NAME', '"' . addslashes($this->appName) . '"');
+        $this->env->setValue('LOG_STACK', 'daily');
+        $this->env->setExampleValue('LOG_STACK', 'daily');
 
         if (in_array('Sentry', $this->options)) {
             $this->dependencies->addComposerRequirement('sentry/sentry-laravel', '^4.4');

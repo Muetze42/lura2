@@ -18,7 +18,7 @@ Command line interface tool for **personal** usage created with:
 Remove all old Lura packages if installed
 
 ```shell
-composer global remove norman-huth/lura norman-huth/laravel-installer norman-huth/advanced-laravel-installer norman-huth/package-init
+composer global remove norman-huth/lura norman-huth/laravel-installer norman-huth/advanced-laravel-installer norman-huth/package-init norman-huth/lura-laravel-localize
 ```
 
 Install Lura 2
