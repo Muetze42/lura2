@@ -9,7 +9,7 @@ use Illuminate\Process\Factory;
  */
 class Process
 {
-    public static ?int $timeout = null;
+    public static int $timeout = 900;
 
     public static function __callStatic($name, $arguments)
     {
