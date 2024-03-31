@@ -265,6 +265,14 @@ class InstallLaravelCommand extends AbstractCommand
             $this->storage->publish('resources/nova/Commands', 'app/Console/Commands/Nova');
         }
 
+        if (in_array('spatie/laravel-medialibrary', $this->options)) {
+            $this->dependencies->addComposerRequirement('spatie/laravel-medialibrary', '^11.4');
+            $file = 'templates/media-library/config.' .
+                (int) in_array('norman-huth/php-library', $this->options) . '.stub';
+            $this->storage->publish($file, 'config/media-library.php');
+            $this->storage->publish('templates/media-library/model.stub', 'app/Models/Media.php');
+        }
+
         if (in_array('norman-huth/php-library', $this->options)) {
             $this->dependencies->addComposerRequirement('norman-huth/php-library', '^0.0.2');
         }
