@@ -75,6 +75,7 @@ class EnvFileService
         foreach ($lines as $line) {
             if (!str_starts_with($line, $key . '=')) {
                 $contents .= $line . "\n";
+
                 continue;
             }
             $contents .= $key . '=' . $value . "\n";

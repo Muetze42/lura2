@@ -8,8 +8,6 @@ class InstallCommand extends Command
 {
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function handle(): void
     {
@@ -48,8 +46,6 @@ class InstallCommand extends Command
 
     /**
      * Set the proper application namespace on the installed files.
-     *
-     * @return void
      */
     protected function setAppNamespace(): void
     {

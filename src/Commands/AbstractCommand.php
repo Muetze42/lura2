@@ -10,6 +10,7 @@ use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
 use NormanHuth\Library\Lib\MacroRegistry;
+use NormanHuth\Luraa\Support\Process;
 
 abstract class AbstractCommand extends Command
 {
@@ -77,5 +78,20 @@ abstract class AbstractCommand extends Command
     protected function getMigrationPrefixedFileName(string $name): string
     {
         return date('Y_m_d_') . '000000_' . Str::snake(trim($name, '_')) . '.php';
+    }
+
+    protected function runProcess(string|array $command, string $path = null): void
+    {
+        if (!$path) {
+            $path = $this->storage->targetPath();
+        }
+        if (is_array($command)) {
+            $command = implode(' ', $command);
+        }
+
+        Process::path($path)
+            ->run($command, function (string $type, string $output) {
+                $this->output->write($output);
+            });
     }
 }

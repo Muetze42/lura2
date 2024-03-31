@@ -11,10 +11,7 @@
     "autoload": {
         "psr-4": {
             "NormanHuth\\Luraa\\": "src/"
-        },
-        "files": [
-            "functions/helpers.php"
-        ]
+        }
     },
     "bin": [
         "bin/lura"

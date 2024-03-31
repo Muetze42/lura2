@@ -1,5 +1,7 @@
 <?php
 
+// Todo: Remove
+
 if (!function_exists('ci')) {
     function ci(array $command): string
     {

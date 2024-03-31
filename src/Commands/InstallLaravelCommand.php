@@ -5,7 +5,6 @@ namespace NormanHuth\Luraa\Commands;
 use Illuminate\Support\Str;
 use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
-use NormanHuth\Luraa\Support\Process;
 use NormanHuth\Luraa\Support\Storage;
 use ReflectionClass;
 
@@ -173,10 +172,7 @@ class InstallLaravelCommand extends AbstractCommand
             '--ansi',
         ];
 
-        Process::path($this->storage->cwdPath())
-            ->run(ci($command), function (string $type, string $output) {
-                $this->output->write($output);
-            });
+        $this->runProcess($command, $this->storage->cwdPath());
     }
 
     protected function afterCreateProject(): void
@@ -329,10 +325,7 @@ class InstallLaravelCommand extends AbstractCommand
             '--ansi',
         ];
 
-        Process::path($this->storage->targetPath())
-            ->run(ci($command), function (string $type, string $output) {
-                $this->output->write($output);
-            });
+        $this->runProcess($command);
     }
 
     protected function afterComposerInstall(): void
@@ -349,25 +342,16 @@ class InstallLaravelCommand extends AbstractCommand
         }
 
         if (in_array('laravel/dusk', $this->options)) {
-            Process::path($this->storage->targetPath())
-                ->run('php artisan dusk:install --ansi', function (string $type, string $output) {
-                    $this->output->write($output);
-                });
+            $this->runProcess('php artisan dusk:install --ansi');
         }
 
         if (in_array('Laravel Nova', $this->options)) {
-            Process::path($this->storage->targetPath())
-                ->run('php artisan nova:install --ansi', function (string $type, string $output) {
-                    $this->output->write($output);
-                });
+            $this->runProcess('php artisan nova:install --ansi');
             $this->storage->publish('templates/NovaServiceProvider.php', 'app/Providers/NovaServiceProvider.php');
         }
 
         if (in_array('laravel/pint', $this->options)) {
-            Process::path($this->storage->targetPath())
-                ->run($this->composer . ' pint --ansi', function (string $type, string $output) {
-                    $this->output->write($output);
-                });
+            $this->runProcess($this->composer . ' pint --ansi');
         }
     }
 
@@ -399,6 +383,7 @@ class InstallLaravelCommand extends AbstractCommand
 
         if (!in_array('SCSS instead of CSS', $this->options)) {
             $this->storage->publish('templates/css', 'resources/css');
+
             return;
         }
         $this->storage->publish('templates/scss', 'resources/scss');
@@ -462,10 +447,7 @@ class InstallLaravelCommand extends AbstractCommand
             return;
         }
 
-        Process::path($this->storage->targetPath())
-            ->run('php artisan inertia:middleware --ansi ', function (string $type, string $output) {
-                $this->output->write($output);
-            });
+        $this->runProcess('php artisan inertia:middleware --ansi');
 
         $file = 'templates/app.' . (int) in_array('Sentry', $this->options) . '.js';
         $this->storage->publish($file, 'resources/js/app.js');

@@ -11,8 +11,6 @@ class ResourceCommand extends Command
      * Get the default namespace for the class.
      *
      * @param string $rootNamespace
-     *
-     * @return string
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
@@ -24,14 +22,13 @@ class ResourceCommand extends Command
      *
      * @param string $stub
      * @param string $name
-     *
-     * @return string
      */
     protected function replaceClass($stub, $name): string
     {
         $class = str_replace($this->getNamespace($name) . '\\', '', $name);
 
         $stub = str_replace(['{{ plural }}', '{{plural}}'], Str::plural($class), $stub);
+
         return str_replace(['DummyClass', '{{ class }}', '{{class}}'], $class, $stub);
     }
 
