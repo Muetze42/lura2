@@ -68,6 +68,8 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected string $optionFontAwesome = 'no';
 
+    protected string $defaultCacheStore = 'file';
+
     /**
      * Execute the console command.
      */
@@ -105,7 +107,17 @@ class InstallLaravelCommand extends AbstractCommand
     protected function configureProject(): void
     {
         $this->determineOptions();
+        $this->defaultCacheStore();
         $this->determineFontAwesome();
+    }
+
+    protected function defaultCacheStore(): void
+    {
+        $this->defaultCacheStore = select(
+            label: 'Which cache store should be used as default?',
+            options: ['database', 'file', 'redis', 'memcached', 'apc', 'array', 'dynamodb', 'octane', 'null'],
+            default: $this->defaultCacheStore
+        );
     }
 
     protected function determineFontAwesome(): void
@@ -196,8 +208,12 @@ class InstallLaravelCommand extends AbstractCommand
     {
         $this->env->setValue('APP_NAME', '"' . addslashes($this->appName) . '"');
         $this->env->setExampleValue('APP_NAME', '"' . addslashes($this->appName) . '"');
+
         $this->env->setValue('LOG_STACK', 'daily');
         $this->env->setExampleValue('LOG_STACK', 'daily');
+
+        $this->env->setValue('CACHE_STORE', $this->defaultCacheStore);
+        $this->env->setExampleValue('CACHE_STORE', $this->defaultCacheStore);
 
         if (in_array('Sentry', $this->options)) {
             $this->dependencies->addComposerRequirement('sentry/sentry-laravel', '^4.4');
