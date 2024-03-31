@@ -1,0 +1,15 @@
+/.fleet
+/.idea
+/.vscode
+/node_modules
+/vendor
+/debug
+/bin/debug/
+
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+auth.json
+npm-debug.log
+yarn-error.log

@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+use NormanHuth\Luraa\Bootstrap;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
+
+$autoloader = file_exists(__DIR__ . '/../../../autoload.php') ?
+    __DIR__ . '/../../../autoload.php' : __DIR__ . '/../vendor/autoload.php';
+
+require $autoloader;
+
+try {
+    new Bootstrap();
+} catch (CommandNotFoundException) {
+    $message = [
+        "\033[31mCommand not Found.\033[0m",
+        "Enter `\033[32m" . basename(__FILE__) . " list\033[0m` to list available commands for the application.",
+        "Or enter `\033[32m" . basename(__FILE__) . "\033[0m` to start a Installation process.",
+    ];
+
+    echo implode("\n", $message);
+    exit();
+} catch (Exception $exception) {
+    echo "\033[31m$exception \033[0m\n";
+    exit();
+}

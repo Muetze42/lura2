@@ -1,0 +1,25 @@
+{
+    "files": [
+        ".editorconfig",
+        ".env.example",
+        ".gitattributes",
+        ".gitignore",
+        "README.md",
+        "artisan",
+        "composer.json",
+        "package.json",
+        "phpunit.xml",
+        "vite.config.js"
+    ],
+    "directories": [
+        "app",
+        "bootstrap",
+        "config",
+        "database",
+        "public",
+        "resources",
+        "routes",
+        "storage",
+        "tests"
+    ]
+}
