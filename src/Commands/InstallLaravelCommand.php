@@ -60,6 +60,7 @@ class InstallLaravelCommand extends AbstractCommand
         'ESLint' => true,
         'spatie/laravel-activitylog' => false,
         'spatie/laravel-medialibrary' => false,
+        'spatie/laravel-permission' => false,
         'Custom Error Pages' => true,
         'Laravel Pint' => true,
         'Laravel Dusk' => false,
@@ -353,6 +354,17 @@ class InstallLaravelCommand extends AbstractCommand
             );
         }
 
+        if (in_array('spatie/laravel-permission', $this->options)) {
+            $this->dependencies->addComposerRequirement('spatie/laravel-permission', '^6.4');
+            $this->storage->publish('templates/laravel-permission/config.stub', 'config/permission.php');
+            $this->storage->publish(
+                'templates/laravel-permission/migration.stub',
+                'database/migrations/' . $this->getMigrationPrefixedFileName('CreatePermissionsTables')
+            );
+            $this->storage->publish('templates/laravel-permission/Permission.stub', 'app/Models/Permission.php');
+            $this->storage->publish('templates/laravel-permission/Role.stub', 'app/Models/Role.php');
+        }
+
         if (in_array('norman-huth/php-library', $this->options)) {
             $this->dependencies->addComposerRequirement('norman-huth/php-library', '^0.0.2');
         }
@@ -372,8 +384,6 @@ class InstallLaravelCommand extends AbstractCommand
                 $this->dependencies->addPackageDependency('@sentry/vue', '^7.109.0');
             }
         }
-
-
 
         if (in_array('Laravel Nova', $this->options)) {
             $this->env->addKeys('NOVA_LICENSE_KEY', 'APP_URL');
