@@ -61,6 +61,7 @@ class InstallLaravelCommand extends AbstractCommand
         'spatie/laravel-activitylog' => false,
         'spatie/laravel-medialibrary' => false,
         'spatie/laravel-permission' => false,
+        'spatie/laravel-backup' => false,
         'Custom Error Pages' => true,
         'Laravel Pint' => true,
         'Laravel Dusk' => false,
@@ -292,7 +293,11 @@ class InstallLaravelCommand extends AbstractCommand
         }
 
         if (in_array('barryvdh/laravel-ide-helper', $this->options)) {
-            $this->dependencies->addComposerDevRequirement('barryvdh/laravel-ide-helper', '^3.0"');
+            $this->dependencies->addComposerDevRequirement('barryvdh/laravel-ide-helper', '^3.0');
+        }
+
+        if (in_array('spatie/laravel-backup', $this->options)) {
+            $this->dependencies->addComposerRequirement('spatie/laravel-backup', '^8.6');
         }
 
         if (in_array('Laravel Pint', $this->options)) {
@@ -460,6 +465,10 @@ class InstallLaravelCommand extends AbstractCommand
     {
         $this->runProcess('php artisan lang:publish --ansi');
         $this->runProcess('php artisan key:generate --ansi');
+
+        if (in_array('spatie/laravel-backup', $this->options)) {
+            $this->runProcess('php artisan vendor:publish --provider="Spatie\Backup\BackupServiceProvider" --ansi');
+        }
 
         if (in_array('Laravel Sanctum', $this->options)) {
             $this->runProcess('php artisan vendor:publish --tag=sanctum-migrations --ansi');
