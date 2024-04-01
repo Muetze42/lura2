@@ -66,6 +66,7 @@ class InstallLaravelCommand extends AbstractCommand
         'Laravel Dusk' => false,
         'Laravel Sanctum' => false,
         'Laravel UI' => false,
+        'Remove Laravel Sail' => false,
     ];
 
     protected string $optionFontAwesome = 'no';
@@ -273,6 +274,10 @@ class InstallLaravelCommand extends AbstractCommand
 
         $this->env->setValue('QUEUE_CONNECTION', $this->defaultQueueConnection);
         $this->env->setExampleValue('QUEUE_CONNECTION', $this->defaultQueueConnection);
+
+        if (in_array('Remove Laravel Sail', $this->options)) {
+            $this->dependencies->removeComposerDevRequirement('laravel/sail');
+        }
 
         if (in_array('Sentry', $this->options)) {
             $this->dependencies->addComposerRequirement('sentry/sentry-laravel', '^4.4');

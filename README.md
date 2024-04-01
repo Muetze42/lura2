@@ -10,7 +10,7 @@ Command line interface tool for **personal** usage created with:
 * [Illuminate Filesystem component](https://laravel.com/docs/11.x/filesystem)
 * [Illuminate Support component](https://laravel.com/docs/11.x/helpers)
 
-![preview-01](/docs/assets/preview-01.png?v=f1ae578943b65efd88242299350b73e4)
+![preview-01](/docs/assets/preview-01.png?v=a1daa84ad33bb1fef113f2ca0baca237)
 ![preview-02](/docs/assets/preview-02.png?v=61e54abbe07630592ad2a8de1526cd44)
 ![preview-03](/docs/assets/preview-03.png?v=59bcd81e786e68c973c921e6fb87764c)
 ![preview-04](/docs/assets/preview-04.png?v=937994c9a4dcbd1b975660b132628ba6)

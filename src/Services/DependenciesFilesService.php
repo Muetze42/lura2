@@ -71,25 +71,54 @@ class DependenciesFilesService
 
     public function addComposerRequirement(string $package, string $version, bool $forceVersion = false): void
     {
-        $this->dependenciesUpdate($package, $version, $forceVersion);
+        $this->addDependency($package, $version, $forceVersion);
     }
 
     public function addComposerDevRequirement(string $package, string $version, bool $forceVersion = false): void
     {
-        $this->dependenciesUpdate($package, $version, $forceVersion, 'composer.require-dev');
+        $this->addDependency($package, $version, $forceVersion, 'composer.require-dev');
     }
 
     public function addPackageDependency(string $package, string $version, bool $forceVersion = false): void
     {
-        $this->dependenciesUpdate($package, $version, $forceVersion, 'package.dependencies');
+        $this->addDependency($package, $version, $forceVersion, 'package.dependencies');
     }
 
     public function addPackageDevDependency(string $package, string $version, bool $forceVersion = false): void
     {
-        $this->dependenciesUpdate($package, $version, $forceVersion, 'package.devDependencies');
+        $this->addDependency($package, $version, $forceVersion, 'package.devDependencies');
     }
 
-    protected function dependenciesUpdate(
+    public function removeComposerRequirement(string $package): void
+    {
+        $this->removeDependency($package);
+    }
+
+    public function removeComposerDevRequirement(string $package): void
+    {
+        $this->removeDependency($package, 'composer.require-dev');
+    }
+
+    public function removePackageDependency(string $package): void
+    {
+        $this->removeDependency($package, 'package.dependencies');
+    }
+
+    public function removePackageDevDependency(string $package): void
+    {
+        $this->removeDependency($package, 'package.devDependencies');
+    }
+
+    protected function removeDependency(string $package, string $key = 'composer.require'): void
+    {
+        data_set(
+            $this->dependencies,
+            $key,
+            Arr::except(data_get($this->dependencies, $key, []), [$package])
+        );
+    }
+
+    protected function addDependency(
         string $package,
         string $version,
         bool $forceVersion = false,
