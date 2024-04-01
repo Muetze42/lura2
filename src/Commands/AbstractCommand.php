@@ -10,6 +10,7 @@ use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
 use NormanHuth\Library\Lib\MacroRegistry;
+use NormanHuth\Library\Support\Macros\Str\SplitNewLinesMacro;
 use NormanHuth\Luraa\Support\Process;
 
 abstract class AbstractCommand extends Command
@@ -29,7 +30,8 @@ abstract class AbstractCommand extends Command
     public function __construct()
     {
         parent::__construct();
-        MacroRegistry::registerStrMacros();
+        MacroRegistry::macros([SplitNewLinesMacro::class => Str::class]);
+
         $this->promptsUnsupportedEnvironment = windows_os();
     }
 
