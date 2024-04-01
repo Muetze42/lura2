@@ -379,6 +379,10 @@ class InstallLaravelCommand extends AbstractCommand
             }
         }
 
+        if (in_array('Laravel Nova', $this->options)) {
+            $this->env->addKeys('NOVA_LICENSE_KEY', 'APP_URL');
+        }
+
         if (in_array('Laravel Sanctum', $this->options)) {
             $this->dependencies->addComposerRequirement('laravel/sanctum', '^4.0');
             $this->env->addKeys('SANCTUM_TOKEN_PREFIX', 'APP_URL');
