@@ -478,6 +478,7 @@ class InstallLaravelCommand extends AbstractCommand
 
         if (in_array('Laravel Nova', $this->options)) {
             $this->runProcess('php artisan nova:install --ansi');
+            $this->runProcess('php artisan vendor:publish --tag=nova-lang --ansi');
             $this->storage->publish('templates/NovaServiceProvider.php', 'app/Providers/NovaServiceProvider.php');
         }
 
