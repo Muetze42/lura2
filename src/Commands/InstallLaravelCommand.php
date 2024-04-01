@@ -383,6 +383,8 @@ class InstallLaravelCommand extends AbstractCommand
                 $this->dependencies->addPackageDependency('@sentry/vite-plugin', '^2.16.0');
                 $this->dependencies->addPackageDependency('@sentry/vue', '^7.109.0');
             }
+
+            $this->storage->publish('templates/config/sentry.php', 'config/sentry.php');
         }
 
         if (in_array('Laravel Nova', $this->options)) {
