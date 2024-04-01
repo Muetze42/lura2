@@ -330,17 +330,6 @@ class InstallLaravelCommand extends AbstractCommand
 
         $this->storage->publish('stubs/laravel', 'stubs');
 
-        if (in_array('Laravel Nova', $this->options)) {
-            $this->dependencies->addComposerRepository([
-                'type' => 'composer',
-                'url' => 'https://nova.laravel.com',
-            ]);
-            $this->dependencies->addComposerRequirement('laravel/nova', '^4.33');
-            $this->dependencies->addComposerRequirement('norman-huth/nova-assets-versioning', '^1.0');
-            $this->storage->publish('stubs/nova', 'stubs/nova');
-            $this->storage->publish('resources/nova/Commands', 'app/Console/Commands/Nova');
-        }
-
         if (in_array('spatie/laravel-medialibrary', $this->options)) {
             $this->dependencies->addComposerRequirement('spatie/laravel-medialibrary', '^11.4');
             $file = 'templates/media-library/config.' .
@@ -379,8 +368,20 @@ class InstallLaravelCommand extends AbstractCommand
             }
         }
 
+
+
         if (in_array('Laravel Nova', $this->options)) {
             $this->env->addKeys('NOVA_LICENSE_KEY', 'APP_URL');
+            $this->dependencies->addComposerRepository([
+                'type' => 'composer',
+                'url' => 'https://nova.laravel.com',
+            ]);
+            $this->dependencies->addComposerRequirement('laravel/nova', '^4.33');
+            $this->dependencies->addComposerRequirement('norman-huth/nova-assets-versioning', '^1.0');
+            $this->storage->publish('stubs/nova', 'stubs/nova');
+            $this->storage->publish('resources/nova/Commands', 'app/Console/Commands/Nova');
+
+            $this->determineLaravelNovaKey();
         }
 
         if (in_array('Laravel Sanctum', $this->options)) {
@@ -403,6 +404,22 @@ class InstallLaravelCommand extends AbstractCommand
         $this->env->setExampleValue('VITE_SENTRY_DSN_PUBLIC', 'http://localhost:8000');
 
         $this->dependencies->close();
+    }
+
+    protected function determineLaravelNovaKey(): void
+    {
+        $authJson = dirname($this->storage->packagePath(), 3) . DIRECTORY_SEPARATOR . 'auth.json';
+
+        if (!file_exists($authJson)) {
+            return;
+        }
+        $data = json_decode(file_get_contents($authJson), true);
+        foreach (data_get($data, 'http-basic', []) as $target => $basicAuth) {
+            if ($target != 'nova.laravel.com') {
+                continue;
+            }
+            $this->env->setValue('NOVA_LICENSE_KEY', data_get($basicAuth, 'password'));
+        }
     }
 
     protected function executeComposerInstall(): void
