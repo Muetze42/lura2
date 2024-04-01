@@ -1,0 +1,6 @@
+{
+    "preset": "psr12",
+    "notName": [
+        "_ide_help*.php"
+    ]
+}

@@ -74,6 +74,8 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected string $defaultQueueConnection = 'database';
 
+    protected string $pintRules = 'psr12-custom';
+
     /**
      * Execute the console command.
      */
@@ -112,9 +114,28 @@ class InstallLaravelCommand extends AbstractCommand
     {
         $this->determineOptions();
         $this->defaultCacheStore();
-        $this->defaultQueueConnection();
-        $this->sessionDriver();
+        $this->determineDefaultQueueConnection();
+        $this->determineSessionDriver();
+        $this->determinePintRules();
         $this->determineFontAwesome();
+    }
+
+    protected function determinePintRules(): void
+    {
+        if (!in_array('Laravel Pint', $this->options)) {
+            return;
+        }
+
+        $rules = array_map(
+            fn (string $file) => pathinfo($file, PATHINFO_FILENAME),
+            $this->storage->packageDisk->files('templates/pint')
+        );
+        $this->pintRules = select(
+            label: 'Wich pint rules should use in this project?',
+            options: $rules,
+            default: $this->pintRules,
+            required: true
+        );
     }
 
     protected function defaultCacheStore(): void
@@ -128,7 +149,8 @@ class InstallLaravelCommand extends AbstractCommand
             required: true
         );
     }
-    protected function defaultQueueConnection(): void
+
+    protected function determineDefaultQueueConnection(): void
     {
         $this->defaultQueueConnection = select(
             label: 'Which queue connection should be used as default?',
@@ -138,7 +160,7 @@ class InstallLaravelCommand extends AbstractCommand
         );
     }
 
-    protected function sessionDriver(): void
+    protected function determineSessionDriver(): void
     {
         $this->sessionDriver = select(
             label: 'Which session driver should be used?',
@@ -268,7 +290,8 @@ class InstallLaravelCommand extends AbstractCommand
 
         if (in_array('Laravel Pint', $this->options)) {
             $this->dependencies->addComposerDevRequirement('laravel/pint', '^1.15');
-            $this->storage->publish('templates/pint.json');
+            $file = 'templates/pint/' . $this->pintRules . '.json';
+            $this->storage->publish($file, 'pint.json');
             $this->dependencies->addComposerScript('pint', './vendor/bin/pint');
         }
 

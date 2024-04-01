@@ -15,6 +15,7 @@ Command line interface tool for **personal** usage created with:
 ![preview 3](/docs/preview-3.png)
 ![preview 4](/docs/preview-4.png)
 ![preview 5](/docs/preview-5.png)
+![preview 10](/docs/preview-10.png)
 
 # Install
 

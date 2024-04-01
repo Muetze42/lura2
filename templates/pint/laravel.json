@@ -1,0 +1,6 @@
+{
+    "preset": "laravel",
+    "notName": [
+        "_ide_help*.php"
+    ]
+}
