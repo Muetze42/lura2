@@ -4,17 +4,19 @@ $lines = preg_split('/\r\n|\n|\r/', file_get_contents(__DIR__ . '/stubs/README.m
 $contents = [];
 
 foreach ($lines as $line) {
-    if (!str_starts_with($line, 'image:')) {
+    if ($line != '{images}') {
         $contents[] = $line;
         continue;
     }
 
-    $image = str_replace('image:', '', $line);
+    $images = glob(__DIR__ . '/docs/assets/*.{jpg,png,gif}', GLOB_BRACE);
+    sort($images);
+    foreach ($images as $image) {
+        $line = '![' . pathinfo($image, PATHINFO_FILENAME) . ']';
+        $line .= '(/docs/assets/' . basename($image) . '?v=' . md5_file($image) . ')';
 
-    $line = '![' . pathinfo($line, PATHINFO_FILENAME) . ']';
-    $line .= '(' . $image . '?v=' . md5_file(__DIR__ . $image) . ')';
-
-    $contents[] = $line;
+        $contents[] = $line;
+    }
 }
 
 file_put_contents(__DIR__ . '/README.md', implode("\n", $contents));
