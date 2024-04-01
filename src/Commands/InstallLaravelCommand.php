@@ -64,6 +64,7 @@ class InstallLaravelCommand extends AbstractCommand
         'Laravel Pint' => true,
         'Laravel Dusk' => false,
         'Laravel Sanctum' => false,
+        'Laravel UI' => false,
     ];
 
     protected string $optionFontAwesome = 'no';
@@ -297,6 +298,10 @@ class InstallLaravelCommand extends AbstractCommand
 
         if (in_array('Laravel Dusk', $this->options)) {
             $this->dependencies->addComposerDevRequirement('laravel/dusk', '^8.1');
+        }
+
+        if (in_array('Laravel UI', $this->options)) {
+            $this->dependencies->addComposerRequirement('laravel/ui', '^4.5');
         }
 
         if (in_array('Inertia.js', $this->options)) {
