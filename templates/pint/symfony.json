@@ -1,0 +1,6 @@
+{
+    "preset": "symfony",
+    "notName": [
+        "_ide_help*.php"
+    ]
+}
