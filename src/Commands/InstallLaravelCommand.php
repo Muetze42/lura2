@@ -36,9 +36,6 @@ class InstallLaravelCommand extends AbstractCommand
      */
     protected $description = 'A custom Laravel application installer';
 
-    /**
-     * The Storage instance.
-     */
     public Storage $storage;
 
     public string $appName = '';
@@ -97,22 +94,21 @@ class InstallLaravelCommand extends AbstractCommand
         $this->setEnvVariables();
         $this->storage->publish('templates/css', 'resources/css');
 
+        $this->abstractController();
+        $this->serviceProvider();
+        $this->bootstrapAppFile();
+
         foreach ($this->modules as $module) {
             $module::afterComposerInstall($this);
         }
         $this->storage->publish('templates/.editorconfig');
 
+        $this->storage->publish('templates/fonts', 'resources/fonts');
+
         $this->runProcess('php artisan lang:publish --ansi');
         $this->runProcess('php artisan key:generate --ansi');
 
-        $this->storage->publish('templates/fonts', 'resources/fonts');
-
-        $this->abstractController();
-        $this->serviceProvider();
-        $this->bootstrapAppFile();
-
-
-        // Pint as last
+        // Finally
         if ($this->storage->targetDisk->exists('pint.json')) {
             $this->runProcess($this->composer . ' pint --ansi');
         }
@@ -128,36 +124,6 @@ class InstallLaravelCommand extends AbstractCommand
             (int) in_array(SentryModule::class, $this->modules),
         );
         $this->storage->publish($file, 'bootstrap/app.php');
-
-        if (in_array(PhpLibraryModule::class, $this->modules)) {
-            $contents = $this->storage->targetDisk->get('bootstrap/app.php');
-            $contents = str_replace(
-                'use Illuminate\Http\Request;',
-                'use Illuminate\Http\Request;' . "\n" . 'use NormanHuth\Library\Lib\CommandRegistry;',
-                $contents
-            );
-            $contents = str_replace(
-                '->withCommands()',
-                '->withCommands(CommandRegistry::devCommands())',
-                $contents
-            );
-
-            $this->storage->targetDisk->put('bootstrap/app.php', $contents);
-
-            if (in_array(SentryModule::class, $this->modules)) {
-                $contents = trim($this->storage->targetDisk->get('routes/api.php'));
-                $contents = str_replace(
-                    'use Illuminate\Support\Facades\Route;',
-                    'use Illuminate\Support\Facades\Route;' . "\n" .
-                    'use NormanHuth\Library\Http\Controllers\Api\SentryTunnelController;',
-                    $contents
-                );
-                $contents .= "\n";
-                $contents .= 'Route::post(\'sentry-tunnel\', SentryTunnelController::class);';
-
-                $this->storage->targetDisk->put('routes/api.php', $contents . "\n");
-            }
-        }
     }
 
     protected function abstractController(): void
