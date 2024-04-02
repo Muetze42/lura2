@@ -67,7 +67,7 @@ class PintModule extends AbstractModule
         );
 
         static::$pintRules = select(
-            label: 'Wich pint rules should use in this project?',
+            label: 'Wich rules should use for Laravel Pint in this project?',
             options: $rules,
             default: static::$pintRules,
             required: true
