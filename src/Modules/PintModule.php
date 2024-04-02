@@ -16,7 +16,7 @@ class PintModule extends AbstractModule
      */
     public static function name(): string
     {
-        return 'Laravel Pints';
+        return 'Laravel Pint';
     }
 
     /**
