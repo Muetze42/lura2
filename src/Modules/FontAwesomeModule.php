@@ -8,6 +8,7 @@ use NormanHuth\Luraa\Contracts\AbstractModule;
 class FontAwesomeModule extends AbstractModule
 {
     protected static string $version = '^6.5.1';
+
     protected static function packages(array $merge): array
     {
         return array_merge([

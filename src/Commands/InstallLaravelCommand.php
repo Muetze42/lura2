@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use NormanHuth\Library\Support\ClassFinder;
 use NormanHuth\Luraa\Contracts\ModuleInterface;
 use NormanHuth\Luraa\Modules\InertiaJsModule;
-use NormanHuth\Luraa\Modules\PhpLibraryModule;
 use NormanHuth\Luraa\Modules\SentryModule;
 use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
