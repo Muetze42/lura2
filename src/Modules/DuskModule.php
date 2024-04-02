@@ -27,4 +27,12 @@ class DuskModule extends AbstractModule
             new Package('laravel/dusk', '^8.1'),
         ];
     }
+
+    /**
+     * Perform action after the composer install process.
+     */
+    public static function afterComposerInstall(InstallLaravelCommand $command): void
+    {
+        $command->runProcess('php artisan dusk:install --ansi');
+    }
 }

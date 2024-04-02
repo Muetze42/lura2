@@ -46,12 +46,4 @@ class ESLintModule extends AbstractModule
     {
         $command->storage->publish('templates/eslint');
     }
-
-    /**
-     * Perform action after the composer install process.
-     */
-    public static function afterComposerInstall(InstallLaravelCommand $command): void
-    {
-        $command->runProcess('php artisan dusk:install --ansi');
-    }
 }
