@@ -7,13 +7,15 @@ use NormanHuth\Luraa\Contracts\AbstractModule;
 
 class FontAwesomeModule extends AbstractModule
 {
-    protected static array $packages = [
-        '@fortawesome/vue-fontawesome' => '^3.0.6',
-        '@fortawesome/fontawesome-svg-core' => '^6.5.1',
-        '@fortawesome/free-brands-svg-icons' => '^6.5.1',
-    ];
-
     protected static string $version = '^6.5.1';
+    protected static function packages(array $merge): array
+    {
+        return array_merge([
+            '@fortawesome/vue-fontawesome' => '^3.0.6',
+            '@fortawesome/fontawesome-svg-core' => static::$version,
+            '@fortawesome/free-brands-svg-icons' => static::$version,
+        ], $merge);
+    }
 
     /**
      * Determine the name of the module.
@@ -38,7 +40,7 @@ class FontAwesomeModule extends AbstractModule
      */
     public static function packageDependency(InstallLaravelCommand $command): array
     {
-        return array_merge(static::$packages, [
+        return static::packages([
             'free-regular-svg-icons' => static::$version,
             'free-solid-svg-icons' => static::$version,
         ]);

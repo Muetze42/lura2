@@ -29,7 +29,7 @@ class FontAwesomeProModule extends FontAwesomeModule
      */
     public static function packageDependency(InstallLaravelCommand $command): array
     {
-        return array_merge(static::$packages, [
+        return static::packages([
             'pro-duotone-svg-icons' => static::$version,
             'pro-light-svg-icons' => static::$version,
             'pro-regular-svg-icons' => static::$version,
