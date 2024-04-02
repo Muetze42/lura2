@@ -9,7 +9,7 @@ use function Laravel\Prompts\select;
 
 class PintModule extends AbstractModule
 {
-    protected static string $pintRules = 'psr12-custom';
+    protected static string $rules = 'psr12-custom';
 
     /**
      * Determine the name of the module.
@@ -52,7 +52,7 @@ class PintModule extends AbstractModule
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
-        $file = 'templates/pint/' . static::$pintRules . '.json';
+        $file = 'templates/pint/' . static::$rules . '.json';
         $command->storage->publish($file, 'pint.json');
     }
 
@@ -66,10 +66,10 @@ class PintModule extends AbstractModule
             $command->storage->packageDisk->files('templates/pint')
         );
 
-        static::$pintRules = select(
+        static::$rules = select(
             label: 'Wich rules should use for Laravel Pint in this project?',
             options: $rules,
-            default: static::$pintRules,
+            default: static::$rules,
             required: true
         );
     }
