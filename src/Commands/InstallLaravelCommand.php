@@ -72,9 +72,9 @@ class InstallLaravelCommand extends AbstractCommand
         $this->beforeCreateProject();
         $this->createProject();
         $this->afterCreateProject();
-        //$this->composerInstall();
-        //$this->afterComposerInstall();
-        //$this->moveTempContentBack();
+        $this->composerInstall();
+        $this->afterComposerInstall();
+        $this->moveTempContentBack();
 
         outro(
             sprintf(
