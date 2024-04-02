@@ -39,7 +39,7 @@ class LaravelNovaModule extends AbstractModule
             'url' => 'https://nova.laravel.com',
         ]);
         $command->storage->publish('stubs/nova', 'stubs/nova');
-        $command->storage->publish('resources/nova/Commands', 'app/Console/Commands/Nova');
+        $command->storage->publish('templates/nova/Commands', 'app/Console/Commands/Nova');
         static::determineLaravelNovaKey($command);
     }
 
