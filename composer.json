@@ -2,20 +2,6 @@
     "name": "norman-huth/lura2",
     "description": "A personal Laravel application Installer",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Norman Huth",
-            "homepage": "https://huth.it"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "NormanHuth\\Luraa\\": "src/"
-        }
-    },
-    "bin": [
-        "bin/lura"
-    ],
     "require": {
         "php": "^8.2",
         "illuminate/cache": "^11.1",
@@ -35,6 +21,20 @@
         "league/flysystem": "^3.26",
         "norman-huth/php-library": "^0.0.3"
     },
+    "authors": [
+        {
+            "name": "Norman Huth",
+            "homepage": "https://huth.it"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "NormanHuth\\Luraa\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/lura"
+    ],
     "require-dev": {
         "laravel/pint": "^1.15"
     }

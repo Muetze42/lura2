@@ -1,6 +1,10 @@
 wip
 
-Command line interface tool for **personal** usage created with:
+Command line interface tool for **personal** usage.
+
+The available scripts can be found in the directory [src/Modules](/src/Modules).
+
+## Created with
 
 * [Illuminate Console component](https://laravel.com/docs/11.x/artisan)
 * [Laravel Prompts](https://laravel.com/docs/11.x/prompts)
@@ -10,28 +14,26 @@ Command line interface tool for **personal** usage created with:
 * [Illuminate Filesystem component](https://laravel.com/docs/11.x/filesystem)
 * [Illuminate Support component](https://laravel.com/docs/11.x/helpers)
 
-![preview-01a](/docs/assets/preview-01a.png?v=e58b698ff25dfd6aafbfad18ce9cfef2)
-![preview-02](/docs/assets/preview-02.png?v=61e54abbe07630592ad2a8de1526cd44)
-![preview-03](/docs/assets/preview-03.png?v=59bcd81e786e68c973c921e6fb87764c)
-![preview-04](/docs/assets/preview-04.png?v=937994c9a4dcbd1b975660b132628ba6)
-![preview-05](/docs/assets/preview-05.png?v=b5581e04fc7d99c74872200bbf214371)
-![preview-06](/docs/assets/preview-06.png?v=08af2783cdbed606f27e03dceb9916aa)
+![01](/docs/assets/01.png?v=d7a2118ac99dee6d494b40e3e788b450)
+![02](/docs/assets/02.png?v=4320b908207b3cf8bca84fa7ae11cf24)
+![03](/docs/assets/03.png?v=9c5dac6b2b4fc7f555b63e06b098e443)
+![04](/docs/assets/04.png?v=63c7e4422a3273ef47c6a608df6996ed)
 
-# Install
+## Install
 
-Remove all old Lura packages if installed
+### Remove all old Lura packages if installed
 
 ```shell
 composer global remove norman-huth/lura norman-huth/laravel-installer norman-huth/advanced-laravel-installer norman-huth/package-init norman-huth/lura-laravel-localize
 ```
 
-Install Lura 2
+### Install Lura 2
 
 ```shell
 composer global require norman-huth/lura2:"@dev"
 ```
 
-Execute Lura
+### Execute Lura
 
 ```shell
 lura
