@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
+use Laravel\Prompts\Prompt;
 use NormanHuth\Library\Lib\MacroRegistry;
 use NormanHuth\Library\Support\Macros\Str\SplitNewLinesMacro;
 use NormanHuth\Luraa\Support\Process;
@@ -31,8 +32,8 @@ abstract class AbstractCommand extends Command
     {
         parent::__construct();
         MacroRegistry::macros([SplitNewLinesMacro::class => Str::class]);
-
         $this->promptsUnsupportedEnvironment = windows_os();
+        Prompt::fallbackWhen($this->promptsUnsupportedEnvironment);
     }
 
     /**
@@ -77,12 +78,12 @@ abstract class AbstractCommand extends Command
         return file_exists($composerPath) ? '"' . PHP_BINARY . '" ' . $composerPath : 'composer';
     }
 
-    protected function getMigrationPrefixedFileName(string $name): string
+    public function getMigrationPrefixedFileName(string $name): string
     {
         return date('Y_m_d_') . '000000_' . Str::snake(trim($name, '_')) . '.php';
     }
 
-    protected function runProcess(string|array $command, string $path = null): void
+    public function runProcess(string|array $command, string $path = null): void
     {
         if (!$path) {
             $path = $this->storage->targetPath();

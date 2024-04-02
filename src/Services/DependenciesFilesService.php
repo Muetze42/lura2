@@ -116,6 +116,8 @@ class DependenciesFilesService
             $key,
             Arr::except(data_get($this->dependencies, $key, []), [$package])
         );
+
+        $this->close();
     }
 
     protected function addDependency(
@@ -130,9 +132,11 @@ class DependenciesFilesService
 
         $forceVersion ? data_set($this->dependencies, $key . '.' . $package, $version) :
             data_fill($this->dependencies, $key . '.' . $package, $version);
+
+        $this->close();
     }
 
-    public function close(): void
+    protected function close(): void
     {
         if ($this->dependencies['package']) {
             file_put_contents(
@@ -153,10 +157,5 @@ class DependenciesFilesService
                 )
             );
         }
-    }
-
-    protected function sortJson(): void
-    {
-        // Todo
     }
 }

@@ -2,7 +2,13 @@
 
 namespace NormanHuth\Luraa\Commands;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use NormanHuth\Library\Support\ClassFinder;
+use NormanHuth\Luraa\Contracts\ModuleInterface;
+use NormanHuth\Luraa\Modules\InertiaJsModule;
+use NormanHuth\Luraa\Modules\PhpLibraryModule;
+use NormanHuth\Luraa\Modules\SentryModule;
 use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
 use NormanHuth\Luraa\Support\Storage;
@@ -12,7 +18,6 @@ use function Laravel\Prompts\intro;
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\outro;
 use function Laravel\Prompts\select;
-use function Laravel\Prompts\spin;
 use function Laravel\Prompts\text;
 
 class InstallLaravelCommand extends AbstractCommand
@@ -34,43 +39,19 @@ class InstallLaravelCommand extends AbstractCommand
     /**
      * The Storage instance.
      */
-    protected Storage $storage;
+    public Storage $storage;
 
-    protected string $appName = '';
+    public string $appName = '';
 
     protected string $appPath;
 
     protected ?string $tempPath = null;
 
-    protected string $composer;
+    public string $composer;
 
-    protected EnvFileService $env;
+    public EnvFileService $env;
 
-    protected DependenciesFilesService $dependencies;
-
-    protected array $options = [
-        'Inertia.js' => true,
-        'Laravel Nova' => false,
-        'barryvdh/laravel-ide-helper' => true,
-        'norman-huth/php-library' => true,
-        'Sentry' => true,
-        'Tailwind CSS' => true,
-        'SCSS instead of CSS' => true,
-        'HeadlessUI Vue' => true,
-        'ESLint' => true,
-        'spatie/laravel-activitylog' => false,
-        'spatie/laravel-medialibrary' => false,
-        'spatie/laravel-permission' => false,
-        'spatie/laravel-backup' => false,
-        'Custom Error Pages' => true,
-        'Laravel Pint' => true,
-        'Laravel Dusk' => false,
-        'Laravel Sanctum' => false,
-        'Laravel UI' => false,
-        'Remove Laravel Sail' => false,
-    ];
-
-    protected string $optionFontAwesome = 'no';
+    public DependenciesFilesService $dependencies;
 
     protected string $defaultCacheStore = 'file';
 
@@ -78,7 +59,10 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected string $defaultQueueConnection = 'database';
 
-    protected string $pintRules = 'psr12-custom';
+    /**
+     * @var array<\NormanHuth\Luraa\Contracts\ModuleInterface|string>
+     */
+    public array $modules = [];
 
     /**
      * Execute the console command.
@@ -92,17 +76,11 @@ class InstallLaravelCommand extends AbstractCommand
             return;
         }
 
-        $this->configureProject();
-
-        spin(
-            fn () => $this->initializeInstallerResources(),
-            'Initializing installer resources'
-        );
-
+        $this->beforeCreateProject();
         $this->createProject();
-
+        $this->afterCreateProject();
         $this->composerInstall();
-
+        $this->afterComposerInstall();
         $this->moveTempContentBack();
 
         outro(
@@ -114,32 +92,147 @@ class InstallLaravelCommand extends AbstractCommand
         );
     }
 
-    protected function configureProject(): void
+    protected function afterComposerInstall(): void
     {
+        $this->setEnvVariables();
+        $this->storage->publish('templates/css', 'resources/css');
+
+        foreach ($this->modules as $module) {
+            $module::afterComposerInstall($this);
+        }
+        $this->storage->publish('templates/.editorconfig');
+
+        $this->runProcess('php artisan lang:publish --ansi');
+        $this->runProcess('php artisan key:generate --ansi');
+
+        $this->storage->publish('templates/fonts', 'resources/fonts');
+
+        $this->abstractController();
+        $this->serviceProvider();
+        $this->bootstrapAppFile();
+
+
+        // Pint as last
+        if ($this->storage->targetDisk->exists('pint.json')) {
+            $this->runProcess($this->composer . ' pint --ansi');
+        }
+    }
+
+    protected function bootstrapAppFile(): void
+    {
+        $this->storage->publish('templates/api.php', 'routes/api.php');
+
+        $file = sprintf(
+            'templates/app.%d.%d.php',
+            (int) in_array(InertiaJsModule::class, $this->modules),
+            (int) in_array(SentryModule::class, $this->modules),
+        );
+        $this->storage->publish($file, 'bootstrap/app.php');
+
+        if (in_array(PhpLibraryModule::class, $this->modules)) {
+            $contents = $this->storage->targetDisk->get('bootstrap/app.php');
+            $contents = str_replace(
+                'use Illuminate\Http\Request;',
+                'use Illuminate\Http\Request;' . "\n" . 'use NormanHuth\Library\Lib\CommandRegistry;',
+                $contents
+            );
+            $contents = str_replace(
+                '->withCommands()',
+                '->withCommands(CommandRegistry::devCommands())',
+                $contents
+            );
+
+            $this->storage->targetDisk->put('bootstrap/app.php', $contents);
+
+            if (in_array(SentryModule::class, $this->modules)) {
+                $contents = trim($this->storage->targetDisk->get('routes/api.php'));
+                $contents = str_replace(
+                    'use Illuminate\Support\Facades\Route;',
+                    'use Illuminate\Support\Facades\Route;' . "\n" .
+                    'use NormanHuth\Library\Http\Controllers\Api\SentryTunnelController;',
+                    $contents
+                );
+                $contents .= "\n";
+                $contents .= 'Route::post(\'sentry-tunnel\', SentryTunnelController::class);';
+
+                $this->storage->targetDisk->put('routes/api.php', $contents . "\n");
+            }
+        }
+    }
+
+    protected function abstractController(): void
+    {
+        $file = 'app/Http/Controllers/Controller.php';
+        if (!$this->storage->targetDisk->exists($file)) {
+            return;
+        }
+        file_put_contents(
+            $this->storage->targetDisk->path('app/Http/Controllers/AbstractController.php'),
+            str_replace(
+                'abstract class Controller',
+                'abstract class AbstractController',
+                $this->storage->targetDisk->get($file)
+            )
+        );
+        $this->storage->targetDisk->delete($file);
+    }
+
+    protected function serviceProvider(): void
+    {
+        $this->storage->publish('templates/AppServiceProvider.php', 'app/Providers/AppServiceProvider.php');
+    }
+
+    protected function setEnvVariables(): void
+    {
+        $variables = [
+            'APP_NAME' => '"' . addslashes($this->appName) . '"',
+            'LOG_STACK' => 'daily',
+            'CACHE_STORE' => $this->defaultCacheStore,
+            'SESSION_DRIVER' => $this->sessionDriver,
+            'QUEUE_CONNECTION' => $this->defaultQueueConnection,
+            'APP_URL' => 'http://localhost:8000',
+        ];
+
+        foreach ($variables as $key => $value) {
+            $this->env->setValue($key, $value);
+            $this->env->setExampleValue($key, $value);
+        }
+    }
+
+    protected function afterCreateProject(): void
+    {
+        foreach ($this->modules as $module) {
+            foreach ($module::composerRequirements($this) as $package => $version) {
+                $this->dependencies->addComposerRequirement($package, $version);
+            }
+            foreach ($module::composerDevRequirements($this) as $package => $version) {
+                $this->dependencies->addComposerDevRequirement($package, $version);
+            }
+            foreach ($module::packageDependency($this) as $package => $version) {
+                $this->dependencies->addPackageDependency($package, $version);
+            }
+            foreach ($module::packageDevDependency($this) as $package => $version) {
+                $this->dependencies->addPackageDevDependency($package, $version);
+            }
+            foreach ($module::composerScripts($this) as $key => $value) {
+                $this->dependencies->addComposerScript($key, $value);
+            }
+            $module::afterCreateProject($this);
+        }
+
+        $this->storage->publish('stubs/laravel', 'stubs');
+    }
+
+    protected function beforeCreateProject(): void
+    {
+        $this->composer = $this->findComposer();
         $this->determineOptions();
+        foreach ($this->modules as $module) {
+            $module::beforeCreateProject($this);
+        }
         $this->defaultCacheStore();
         $this->determineDefaultQueueConnection();
         $this->determineSessionDriver();
-        $this->determinePintRules();
-        $this->determineFontAwesome();
-    }
-
-    protected function determinePintRules(): void
-    {
-        if (!in_array('Laravel Pint', $this->options)) {
-            return;
-        }
-
-        $rules = array_map(
-            fn (string $file) => pathinfo($file, PATHINFO_FILENAME),
-            $this->storage->packageDisk->files('templates/pint')
-        );
-        $this->pintRules = select(
-            label: 'Wich pint rules should use in this project?',
-            options: $rules,
-            default: $this->pintRules,
-            required: true
-        );
     }
 
     protected function defaultCacheStore(): void
@@ -175,58 +268,71 @@ class InstallLaravelCommand extends AbstractCommand
         );
     }
 
-    protected function determineFontAwesome(): void
-    {
-        if (!in_array('Inertia.js', $this->options)) {
-            return;
-        }
-        $this->optionFontAwesome = select(
-            label: 'Install Font Awesome Vue?',
-            options: [
-                'no' => 'No',
-                'free' => 'Yes, Font Awesome Free',
-                'pro' => 'Yes, Font Awesome Pro',
-            ],
-            default: $this->optionFontAwesome
-        );
-    }
-
     protected function determineOptions(): void
     {
-        $options = [];
+        $modules = Arr::where(ClassFinder::load(
+            paths: dirname(__DIR__) . '/Modules',
+            subClassOf: ModuleInterface::class,
+            namespace: 'NormanHuth\Luraa',
+            basePath: dirname(__DIR__)
+        ), fn (ModuleInterface|string $module) => $module::autoload());
+
+        $options = Arr::mapWithKeys(
+            $modules,
+            fn (ModuleInterface|string $module) => [$module => $module::name()]
+        );
+
+        asort($options, SORT_NATURAL | SORT_FLAG_CASE);
+
+        $default = Arr::where(
+            $modules,
+            fn (ModuleInterface|string $module) => $module::default()
+        );
+
         if ($this->promptsUnsupportedEnvironment) {
-            foreach ($this->options as $key => $value) {
-                if ($this->confirm($key, $value)) {
-                    $options[] = $key;
+            foreach ($options as $key => $value) {
+                if ($this->confirm($value, in_array($key, $default))) {
+                    $this->modules[] = $key;
                 }
             }
+        } else {
+            $this->modules = multiselect(
+                label: 'Select optional features to install',
+                options: $options,
+                default: $default,
+                scroll: count($options),
+            );
+        }
 
-            $this->options = $options;
+        $this->loadModules($this->modules);
+    }
 
+    /**
+     * @param array<\NormanHuth\Luraa\Contracts\ModuleInterface|string>  $modules
+     */
+    protected function loadModules(array $modules): void
+    {
+        if (empty($modules)) {
             return;
         }
 
-        $this->options = multiselect(
-            label: 'Select optional features to install',
-            options: array_keys($this->options),
-            default: array_keys(array_filter($this->options)),
-            scroll: count($this->options),
-        );
+        $loaded = [];
+
+        foreach ($modules as $module) {
+            $loaded = array_merge($loaded, $module::load($this));
+        }
+
+        if (empty($loaded)) {
+            return;
+        }
+
+        $this->modules = array_merge($this->modules, $loaded);
+
+        /* Load nested modules */
+        $this->loadModules($loaded);
     }
 
     protected function createProject(): void
-    {
-        $this->beforeCreateProject();
-        $this->executeCreateProject();
-        $this->afterCreateProject();
-    }
-
-    protected function beforeCreateProject(): void
-    {
-        //
-    }
-
-    protected function executeCreateProject(): void
     {
         $command = [
             $this->composer,
@@ -241,215 +347,16 @@ class InstallLaravelCommand extends AbstractCommand
         ];
 
         $this->runProcess($command, $this->storage->cwdPath());
-    }
 
-    protected function afterCreateProject(): void
-    {
         $this->dependencies = new DependenciesFilesService(
             packageJsonFile: $this->storage->targetDisk->path('package.json'),
             composerJsonFile: $this->storage->targetDisk->path('composer.json')
         );
+
         $this->env = new EnvFileService($this->storage->targetDisk);
     }
 
     protected function composerInstall(): void
-    {
-        $this->beforeComposerInstall();
-        $this->executeComposerInstall();
-        $this->afterComposerInstall();
-    }
-
-    protected function beforeComposerInstall(): void
-    {
-        $this->env->setValue('APP_NAME', '"' . addslashes($this->appName) . '"');
-        $this->env->setExampleValue('APP_NAME', '"' . addslashes($this->appName) . '"');
-
-        $this->env->setValue('LOG_STACK', 'daily');
-        $this->env->setExampleValue('LOG_STACK', 'daily');
-
-        $this->env->setValue('CACHE_STORE', $this->defaultCacheStore);
-        $this->env->setExampleValue('CACHE_STORE', $this->defaultCacheStore);
-
-        $this->env->setValue('SESSION_DRIVER', $this->sessionDriver);
-        $this->env->setExampleValue('SESSION_DRIVER', $this->sessionDriver);
-
-        $this->env->setValue('QUEUE_CONNECTION', $this->defaultQueueConnection);
-        $this->env->setExampleValue('QUEUE_CONNECTION', $this->defaultQueueConnection);
-
-        if (in_array('Remove Laravel Sail', $this->options)) {
-            $this->dependencies->removeComposerDevRequirement('laravel/sail');
-        }
-
-        if (in_array('Sentry', $this->options)) {
-            $this->dependencies->addComposerRequirement('sentry/sentry-laravel', '^4.4');
-        }
-
-        if (in_array('Tailwind CSS', $this->options)) {
-            $this->dependencies->addPackageDependency('tailwindcss', '^3.4.3');
-            $this->dependencies->addPackageDependency('postcss', '^8.4.38');
-            $this->dependencies->addPackageDependency('autoprefixer', '^10.4.19');
-            $this->dependencies->addPackageDependency('@tailwindcss/forms', '^0.5.7');
-            $this->dependencies->addPackageDependency('tailwind-scrollbar', '^3.0.5');
-        }
-
-        if (in_array('barryvdh/laravel-ide-helper', $this->options)) {
-            $this->dependencies->addComposerDevRequirement('barryvdh/laravel-ide-helper', '^3.0');
-        }
-
-        if (in_array('spatie/laravel-backup', $this->options)) {
-            $this->dependencies->addComposerRequirement('spatie/laravel-backup', '^8.6');
-        }
-
-        if (in_array('Laravel Pint', $this->options)) {
-            $this->dependencies->addComposerDevRequirement('laravel/pint', '^1.15');
-            $file = 'templates/pint/' . $this->pintRules . '.json';
-            $this->storage->publish($file, 'pint.json');
-            $this->dependencies->addComposerScript('pint', './vendor/bin/pint');
-        }
-
-        if (in_array('Laravel Dusk', $this->options)) {
-            $this->dependencies->addComposerDevRequirement('laravel/dusk', '^8.1');
-        }
-
-        if (in_array('Laravel UI', $this->options)) {
-            $this->dependencies->addComposerRequirement('laravel/ui', '^4.5');
-        }
-
-        if (in_array('Inertia.js', $this->options)) {
-            $this->dependencies->addComposerRequirement('inertiajs/inertia-laravel', '^1.0');
-            $this->dependencies->addPackageDependency('@inertiajs/vue3', '^1.0.15');
-
-            $file = 'templates/vite.config.' . (int) in_array('Sentry', $this->options) . '.js';
-            $this->storage->publish($file, 'vite.config.js');
-        }
-
-        if ($this->optionFontAwesome != 'no') {
-            $this->dependencies->addPackageDependency('@fortawesome/vue-fontawesome', '^3.0.6');
-            $this->dependencies->addPackageDependency('@fortawesome/fontawesome-svg-core', '^6.5.1');
-            $this->dependencies->addPackageDependency('@fortawesome/free-brands-svg-icons', '^6.5.1');
-        }
-        if ($this->optionFontAwesome == 'pro') {
-            collect([
-                'pro-duotone-svg-icons',
-                'pro-light-svg-icons',
-                'pro-regular-svg-icons',
-                'pro-solid-svg-icons',
-            ])->each(function ($package) {
-                $this->dependencies->addPackageDependency('@fortawesome/' . $package, '^6.5.1');
-            });
-        }
-        if ($this->optionFontAwesome == 'free') {
-            collect(['free-regular-svg-icons', 'free-solid-svg-icons'])->each(function ($package) {
-                $this->dependencies->addPackageDependency('@fortawesome/' . $package, '^6.5.1');
-            });
-        }
-
-        $this->storage->publish('stubs/laravel', 'stubs');
-
-        if (in_array('spatie/laravel-medialibrary', $this->options)) {
-            $this->dependencies->addComposerRequirement('spatie/laravel-medialibrary', '^11.4');
-            $file = 'templates/media-library/config.' .
-                (int) in_array('norman-huth/php-library', $this->options) . '.stub';
-            $this->storage->publish($file, 'config/media-library.php');
-            $this->storage->publish('templates/media-library/model.stub', 'app/Models/Media.php');
-        }
-
-        if (in_array('spatie/laravel-activitylog', $this->options)) {
-            $this->dependencies->addComposerRequirement('spatie/laravel-activitylog', '^4.8');
-            $this->storage->publish('templates/activity-log/model.stub', 'app/Models/Activity.php');
-            $this->storage->publish('templates/activity-log/config.stub', 'config/activitylog.php');
-            $this->storage->publish(
-                'templates/activity-log/migration.stub',
-                'database/migrations/' . $this->getMigrationPrefixedFileName('CreateActivityLogTable')
-            );
-        }
-
-        if (in_array('spatie/laravel-permission', $this->options)) {
-            $this->dependencies->addComposerRequirement('spatie/laravel-permission', '^6.4');
-            $this->storage->publish('templates/laravel-permission/config.stub', 'config/permission.php');
-            $this->storage->publish(
-                'templates/laravel-permission/migration.stub',
-                'database/migrations/' . $this->getMigrationPrefixedFileName('CreatePermissionsTables')
-            );
-            $this->storage->publish('templates/laravel-permission/Permission.stub', 'app/Models/Permission.php');
-            $this->storage->publish('templates/laravel-permission/Role.stub', 'app/Models/Role.php');
-        }
-
-        if (in_array('norman-huth/php-library', $this->options)) {
-            $this->dependencies->addComposerRequirement('norman-huth/php-library', '^0.0.2');
-        }
-
-        if (in_array('Sentry', $this->options)) {
-            $this->env->addKeys([
-                'SENTRY_LARAVEL_DSN',
-                'SENTRY_TRACES_SAMPLE_RATE',
-                'VITE_SENTRY_DSN_PUBLIC',
-                'SENTRY_AUTH_TOKEN',
-                'VITE_SENTRY_AUTH_TOKEN',
-            ], 'APP_URL');
-            $this->env->setValue('VITE_SENTRY_DSN_PUBLIC', '"${SENTRY_LARAVEL_DSN}"');
-            $this->env->setExampleValue('VITE_SENTRY_DSN_PUBLIC', '"${SENTRY_LARAVEL_DSN}"');
-            if (in_array('Sentry', $this->options)) {
-                $this->dependencies->addPackageDependency('@sentry/vite-plugin', '^2.16.0');
-                $this->dependencies->addPackageDependency('@sentry/vue', '^7.109.0');
-            }
-
-            $this->storage->publish('templates/config/sentry.php', 'config/sentry.php');
-        }
-
-        if (in_array('Laravel Nova', $this->options)) {
-            $this->env->addKeys('NOVA_LICENSE_KEY', 'APP_URL');
-            $this->dependencies->addComposerRepository([
-                'type' => 'composer',
-                'url' => 'https://nova.laravel.com',
-            ]);
-            $this->dependencies->addComposerRequirement('laravel/nova', '^4.33');
-            $this->dependencies->addComposerRequirement('norman-huth/nova-assets-versioning', '^1.0');
-            $this->storage->publish('stubs/nova', 'stubs/nova');
-            $this->storage->publish('resources/nova/Commands', 'app/Console/Commands/Nova');
-
-            $this->determineLaravelNovaKey();
-        }
-
-        if (in_array('Laravel Sanctum', $this->options)) {
-            $this->dependencies->addComposerRequirement('laravel/sanctum', '^4.0');
-            $this->env->addKeys('SANCTUM_TOKEN_PREFIX', 'APP_URL');
-        }
-
-        if (in_array('HeadlessUI Vue', $this->options)) {
-            $this->dependencies->addPackageDependency('@headlessui/vue', '^1.7.19');
-        }
-
-        if (in_array('ESLint', $this->options)) {
-            $this->dependencies->addPackageDevDependency('@babel/plugin-syntax-dynamic-import', '^7.8.3');
-            $this->dependencies->addPackageDevDependency('@vue/eslint-config-prettier', '^9.0.0');
-            $this->dependencies->addPackageDevDependency('eslint-plugin-vue', '^9.24.0');
-            $this->dependencies->addPackageDevDependency('@rushstack/eslint-patch', '^1.10.1');
-        }
-
-        $this->env->setValue('APP_URL', 'http://localhost:8000');
-        $this->env->setExampleValue('VITE_SENTRY_DSN_PUBLIC', 'http://localhost:8000');
-
-        $this->dependencies->close();
-    }
-
-    protected function determineLaravelNovaKey(): void
-    {
-        $authJson = dirname($this->storage->packagePath(), 3) . DIRECTORY_SEPARATOR . 'auth.json';
-
-        if (!file_exists($authJson)) {
-            return;
-        }
-        $data = json_decode(file_get_contents($authJson), true);
-        foreach (data_get($data, 'http-basic', []) as $target => $basicAuth) {
-            if ($target != 'nova.laravel.com') {
-                continue;
-            }
-            $this->env->setValue('NOVA_LICENSE_KEY', data_get($basicAuth, 'password'));
-        }
-    }
-
-    protected function executeComposerInstall(): void
     {
         $command = [
             $this->composer,
@@ -459,149 +366,6 @@ class InstallLaravelCommand extends AbstractCommand
         ];
 
         $this->runProcess($command);
-    }
-
-    protected function afterComposerInstall(): void
-    {
-        $this->runProcess('php artisan lang:publish --ansi');
-        $this->runProcess('php artisan key:generate --ansi');
-
-        if (in_array('spatie/laravel-backup', $this->options)) {
-            $this->runProcess('php artisan vendor:publish --provider="Spatie\Backup\BackupServiceProvider" --ansi');
-        }
-
-        if (in_array('Laravel Sanctum', $this->options)) {
-            $this->runProcess('php artisan vendor:publish --tag=sanctum-migrations --ansi');
-            $this->runProcess('php artisan vendor:publish --tag=sanctum-config --ansi');
-        }
-
-        $this->afterComposerInstallAbstractController();
-        $this->afterComposerInstallServiceProvider();
-        $this->afterComposerInstallInertia();
-        $this->afterComposerInstallBootstrapApp();
-        $this->afterComposerInstallStylesheet();
-        $this->storage->publish('templates/.editorconfig');
-
-        if (in_array('ESLint', $this->options)) {
-            $this->storage->publish('templates/eslint');
-        }
-
-        if (in_array('Laravel Dusk', $this->options)) {
-            $this->runProcess('php artisan dusk:install --ansi');
-        }
-
-        if (in_array('Laravel Nova', $this->options)) {
-            $this->runProcess('php artisan nova:install --ansi');
-            $this->runProcess('php artisan vendor:publish --tag=nova-lang --ansi');
-            $this->storage->publish('templates/NovaServiceProvider.php', 'app/Providers/NovaServiceProvider.php');
-        }
-
-        if (in_array('Laravel Pint', $this->options)) {
-            $this->runProcess($this->composer . ' pint --ansi');
-        }
-    }
-
-    protected function afterComposerInstallAbstractController(): void
-    {
-        $file = 'app/Http/Controllers/Controller.php';
-        if (!$this->storage->targetDisk->exists($file)) {
-            return;
-        }
-        file_put_contents(
-            $this->storage->targetDisk->path('app/Http/Controllers/AbstractController.php'),
-            str_replace(
-                'abstract class Controller',
-                'abstract class AbstractController',
-                $this->storage->targetDisk->get($file)
-            )
-        );
-        $this->storage->targetDisk->delete($file);
-    }
-
-    protected function afterComposerInstallStylesheet(): void
-    {
-        $this->storage->publish('templates/fonts', 'resources/fonts');
-
-        if (in_array('Tailwind CSS', $this->options)) {
-            $this->storage->publish('templates/tailwind.config.js');
-            $this->storage->publish('templates/postcss.config.js');
-        }
-
-        if (!in_array('SCSS instead of CSS', $this->options)) {
-            $this->storage->publish('templates/css', 'resources/css');
-
-            return;
-        }
-        $this->storage->publish('templates/scss', 'resources/scss');
-        $this->storage->targetDisk->deleteDirectory('resources/css');
-    }
-
-    protected function afterComposerInstallServiceProvider(): void
-    {
-        $this->storage->publish('templates/AppServiceProvider.php', 'app/Providers/AppServiceProvider.php');
-    }
-
-    protected function afterComposerInstallBootstrapApp(): void
-    {
-        $this->storage->publish('templates/api.php', 'routes/api.php');
-
-        $file = sprintf(
-            'templates/app.%d.%d.php',
-            (int) in_array('Inertia.js', $this->options),
-            (int) in_array('Sentry', $this->options),
-        );
-        $this->storage->publish($file, 'bootstrap/app.php');
-
-        if (in_array('norman-huth/php-library', $this->options)) {
-            $contents = $this->storage->targetDisk->get('bootstrap/app.php');
-            $contents = str_replace(
-                'use Illuminate\Http\Request;',
-                'use Illuminate\Http\Request;' . "\n" . 'use NormanHuth\Library\Lib\CommandRegistry;',
-                $contents
-            );
-            $contents = str_replace(
-                '->withCommands()',
-                '->withCommands(CommandRegistry::devCommands())',
-                $contents
-            );
-
-            $this->storage->targetDisk->put('bootstrap/app.php', $contents);
-
-            if (in_array('Sentry', $this->options)) {
-                $contents = trim($this->storage->targetDisk->get('routes/api.php'));
-                $contents = str_replace(
-                    'use Illuminate\Support\Facades\Route;',
-                    'use Illuminate\Support\Facades\Route;' . "\n" .
-                        'use NormanHuth\Library\Http\Controllers\Api\SentryTunnelController;',
-                    $contents
-                );
-                $contents .= "\n";
-                $contents .= 'Route::post(\'sentry-tunnel\', SentryTunnelController::class);';
-
-                $this->storage->targetDisk->put('routes/api.php', $contents . "\n");
-            }
-        }
-
-        if (in_array('Custom Error Pages', $this->options)) {
-            $this->storage->publish('templates/error-pages');
-        }
-    }
-
-    protected function afterComposerInstallInertia(): void
-    {
-        if (!in_array('Inertia.js', $this->options)) {
-            return;
-        }
-
-        $this->runProcess('php artisan inertia:middleware --ansi');
-
-        $file = 'templates/app.' . (int) in_array('Sentry', $this->options) . '.js';
-        $this->storage->publish($file, 'resources/js/app.js');
-    }
-
-    protected function initializeInstallerResources(): void
-    {
-        $this->composer = $this->findComposer();
     }
 
     protected function moveTempContentBack(): void

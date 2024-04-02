@@ -6,6 +6,7 @@ $contents = [];
 foreach ($lines as $line) {
     if ($line != '{images}') {
         $contents[] = $line;
+
         continue;
     }
 
