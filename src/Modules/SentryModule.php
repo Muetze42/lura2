@@ -4,6 +4,7 @@ namespace NormanHuth\Luraa\Modules;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Support\Package;
 
 class SentryModule extends AbstractModule
 {
@@ -44,24 +45,26 @@ class SentryModule extends AbstractModule
     /**
      * Determine composer requirements for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function composerRequirements(InstallLaravelCommand $command): array
+    public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
-        return ['sentry/sentry-laravel' => '^4.4'];
+        return [
+            new Package('sentry/sentry-laravel', '^4.4'),
+        ];
     }
 
     /**
      * Determine Node package dependencies for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function packageDependency(InstallLaravelCommand $command): array
+    public static function addPackageDependency(InstallLaravelCommand $command): array
     {
         if (in_array(InertiaJsModule::class, $command->modules)) {
             return [
-                '@sentry/vite-plugin' => '^2.16.0',
-                '@sentry/vue' => '^7.109.0',
+                new Package('@sentry/vite-plugin', '^2.16.0'),
+                new Package('@sentry/vue', '^7.109.0'),
             ];
         }
 

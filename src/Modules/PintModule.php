@@ -5,6 +5,8 @@ namespace NormanHuth\Luraa\Modules;
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
 
+use NormanHuth\Luraa\Support\Package;
+
 use function Laravel\Prompts\select;
 
 class PintModule extends AbstractModule
@@ -30,11 +32,13 @@ class PintModule extends AbstractModule
     /**
      * Determine composer dev requirements for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function composerDevRequirements(InstallLaravelCommand $command): array
+    public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
-        return ['laravel/pint' => '^1.15'];
+        return [
+            new Package('laravel/pint', '^1.15'),
+        ];
     }
 
     /**

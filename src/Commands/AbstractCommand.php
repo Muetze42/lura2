@@ -13,6 +13,8 @@ use Laravel\Prompts\Prompt;
 use NormanHuth\Library\Lib\MacroRegistry;
 use NormanHuth\Library\Support\Macros\Str\SplitNewLinesMacro;
 use NormanHuth\Luraa\Support\Process;
+use NormanHuth\Luraa\Support\Storage;
+use ReflectionClass;
 
 abstract class AbstractCommand extends Command
 {
@@ -24,6 +26,8 @@ abstract class AbstractCommand extends Command
     protected array $validatorMessages;
 
     protected bool $promptsUnsupportedEnvironment;
+
+    public Storage $storage;
 
     /**
      * Create a new console command instance.
@@ -96,5 +100,15 @@ abstract class AbstractCommand extends Command
             ->run($command, function (string $type, string $output) {
                 $this->output->write($output);
             });
+    }
+
+    protected function initializeStorage(): void
+    {
+        $reflection = new ReflectionClass(get_called_class());
+
+        $this->storage = new Storage(
+            targetPath: rtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
+            packagePath: dirname($reflection->getFileName(), 3)
+        );
     }
 }

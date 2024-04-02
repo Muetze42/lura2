@@ -4,6 +4,7 @@ namespace NormanHuth\Luraa\Modules;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Support\Package;
 
 class ESLintModule extends AbstractModule
 {
@@ -28,13 +29,13 @@ class ESLintModule extends AbstractModule
      *
      * @return array{string: 'package' => string: 'version'}
      */
-    public static function packageDevDependency(InstallLaravelCommand $command): array
+    public static function addPackageDevDependency(InstallLaravelCommand $command): array
     {
         return [
-            '@babel/plugin-syntax-dynamic-import' => '^7.8.3',
-            '@vue/eslint-config-prettier' => '^9.0.0',
-            'eslint-plugin-vue' => '^9.24.0',
-            '@rushstack/eslint-patch' => '^1.10.1',
+            new Package('@babel/plugin-syntax-dynamic-import', '^7.8.3'),
+            new Package('@vue/eslint-config-prettier', '^9.0.0'),
+            new Package('eslint-plugin-vue', '^9.24.0'),
+            new Package('@rushstack/eslint-patch', '^1.10.1'),
         ];
     }
 

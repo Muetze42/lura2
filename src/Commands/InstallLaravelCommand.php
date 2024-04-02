@@ -10,8 +10,7 @@ use NormanHuth\Luraa\Modules\InertiaJsModule;
 use NormanHuth\Luraa\Modules\SentryModule;
 use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
-use NormanHuth\Luraa\Support\Storage;
-use ReflectionClass;
+use NormanHuth\Luraa\Support\Package;
 
 use function Laravel\Prompts\intro;
 use function Laravel\Prompts\multiselect;
@@ -34,8 +33,6 @@ class InstallLaravelCommand extends AbstractCommand
      * @var string
      */
     protected $description = 'A custom Laravel application installer';
-
-    public Storage $storage;
 
     public string $appName = '';
 
@@ -166,18 +163,12 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function afterCreateProject(): void
     {
+        $packageMethods = Package::methods();
         foreach ($this->modules as $module) {
-            foreach ($module::composerRequirements($this) as $package => $version) {
-                $this->dependencies->addComposerRequirement($package, $version);
-            }
-            foreach ($module::composerDevRequirements($this) as $package => $version) {
-                $this->dependencies->addComposerDevRequirement($package, $version);
-            }
-            foreach ($module::packageDependency($this) as $package => $version) {
-                $this->dependencies->addPackageDependency($package, $version);
-            }
-            foreach ($module::packageDevDependency($this) as $package => $version) {
-                $this->dependencies->addPackageDevDependency($package, $version);
+            foreach ($packageMethods as $method) {
+                foreach ($module::{$method}($this) as $package) {
+                    $package->{$method}($this->dependencies);
+                }
             }
             foreach ($module::composerScripts($this) as $key => $value) {
                 $this->dependencies->addComposerScript($key, $value);
@@ -429,15 +420,5 @@ class InstallLaravelCommand extends AbstractCommand
         if ($validated || empty($this->appPath)) {
             $this->determineAppData();
         }
-    }
-
-    protected function initializeStorage(): void
-    {
-        $reflection = new ReflectionClass(get_called_class());
-
-        $this->storage = new Storage(
-            targetPath: rtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
-            packagePath: dirname($reflection->getFileName(), 3)
-        );
     }
 }

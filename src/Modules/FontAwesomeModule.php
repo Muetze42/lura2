@@ -4,6 +4,7 @@ namespace NormanHuth\Luraa\Modules;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Support\Package;
 
 class FontAwesomeModule extends AbstractModule
 {
@@ -12,9 +13,9 @@ class FontAwesomeModule extends AbstractModule
     protected static function packages(array $merge): array
     {
         return array_merge([
-            '@fortawesome/vue-fontawesome' => '^3.0.6',
-            '@fortawesome/fontawesome-svg-core' => static::$version,
-            '@fortawesome/free-brands-svg-icons' => static::$version,
+            new Package('@fortawesome/vue-fontawesome', '^3.0.6'),
+            new Package('@fortawesome/fontawesome-svg-core', static::$version),
+            new Package('@fortawesome/free-brands-svg-icons', static::$version),
         ], $merge);
     }
 
@@ -37,13 +38,13 @@ class FontAwesomeModule extends AbstractModule
     /**
      * Determine Node package dependencies for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function packageDependency(InstallLaravelCommand $command): array
+    public static function addPackageDependency(InstallLaravelCommand $command): array
     {
         return static::packages([
-            'free-regular-svg-icons' => static::$version,
-            'free-solid-svg-icons' => static::$version,
+            new Package('free-regular-svg-icons', static::$version),
+            new Package('free-solid-svg-icons', static::$version),
         ]);
     }
 }

@@ -55,6 +55,8 @@ class DependenciesFilesService
             'repositories',
             $repositories
         );
+
+        $this->close();
     }
 
     public function addComposerScript(string $key, array|string $value): void
@@ -67,6 +69,8 @@ class DependenciesFilesService
             'scripts',
             $scripts
         );
+
+        $this->close();
     }
 
     public function addComposerRequirement(string $package, string $version, bool $forceVersion = false): void

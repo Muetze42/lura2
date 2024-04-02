@@ -4,6 +4,7 @@ namespace NormanHuth\Luraa\Modules;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Support\Package;
 
 class DuskModule extends AbstractModule
 {
@@ -18,10 +19,12 @@ class DuskModule extends AbstractModule
     /**
      * Determine composer dev requirements for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function composerDevRequirements(InstallLaravelCommand $command): array
+    public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
-        return ['laravel/dusk' => '^8.1'];
+        return [
+            new Package('laravel/dusk', '^8.1'),
+        ];
     }
 }

@@ -24,30 +24,58 @@ interface ModuleInterface
     /**
      * Determine composer requirements for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function composerRequirements(InstallLaravelCommand $command): array;
+    public static function addComposerRequirement(InstallLaravelCommand $command): array;
 
     /**
      * Determine composer dev requirements for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function composerDevRequirements(InstallLaravelCommand $command): array;
+    public static function addComposerDevRequirement(InstallLaravelCommand $command): array;
 
     /**
      * Determine Node package dependencies for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function packageDependency(InstallLaravelCommand $command): array;
+    public static function addPackageDependency(InstallLaravelCommand $command): array;
 
     /**
      * Determine Node package dependencies for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function packageDevDependency(InstallLaravelCommand $command): array;
+    public static function addPackageDevDependency(InstallLaravelCommand $command): array;
+
+    /**
+     * Determine composer requirements wich should be removed.
+     *
+     * @return array<\NormanHuth\Luraa\Support\Package>
+     */
+    public static function removeComposerRequirement(InstallLaravelCommand $command): array;
+
+    /**
+     * Determine composer dev requirements wich should be removed.
+     *
+     * @return array<\NormanHuth\Luraa\Support\Package>
+     */
+    public static function removeComposerDevRequirement(InstallLaravelCommand $command): array;
+
+    /**
+     * Determine Node dependency wich should be removed.
+     *
+     * @return array<\NormanHuth\Luraa\Support\Package>
+     */
+    public static function removePackageDependency(InstallLaravelCommand $command): array;
+
+    /**
+     * Determine Node dev dependency wich should be removed.
+     *
+     * @return array<\NormanHuth\Luraa\Support\Package>
+     */
+    public static function removePackageDevDependency(InstallLaravelCommand $command): array;
 
     /**
      * Perform action after create project.

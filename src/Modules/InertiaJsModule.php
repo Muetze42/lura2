@@ -5,6 +5,8 @@ namespace NormanHuth\Luraa\Modules;
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
 
+use NormanHuth\Luraa\Support\Package;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 
@@ -29,23 +31,25 @@ class InertiaJsModule extends AbstractModule
     /**
      * Determine composer requirements for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function composerRequirements(InstallLaravelCommand $command): array
+    public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            'inertiajs/inertia-laravel' => '^1.0',
+            new Package('inertiajs/inertia-laravel', '^1.0'),
         ];
     }
 
     /**
      * Determine Node package dependencies for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function packageDependency(InstallLaravelCommand $command): array
+    public static function addPackageDependency(InstallLaravelCommand $command): array
     {
-        return ['@inertiajs/vue3' => '^1.0.15'];
+        return [
+            new Package('@inertiajs/vue3', '^1.0.15'),
+        ];
     }
 
     /**
@@ -96,7 +100,7 @@ class InertiaJsModule extends AbstractModule
         }
 
         if (confirm('Install Headless UI?')) {
-            $modules[] = HeadlessUIVueModule::class;
+            $modules[] = HeadlessUIModule::class;
         }
 
         return $modules;

@@ -4,15 +4,16 @@ namespace NormanHuth\Luraa\Modules;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Support\Package;
 
-class HeadlessUIVueModule extends AbstractModule
+class HeadlessUIModule extends AbstractModule
 {
     /**
      * Determine the name of the module.
      */
     public static function name(): string
     {
-        return 'Headless UI Vue';
+        return 'Headless UI';
     }
 
     /**
@@ -26,10 +27,12 @@ class HeadlessUIVueModule extends AbstractModule
     /**
      * Determine Node package dependencies for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function packageDependency(InstallLaravelCommand $command): array
+    public static function addPackageDependency(InstallLaravelCommand $command): array
     {
-        return ['@headlessui/vue' => '^1.7.19'];
+        return [
+            new Package('@headlessui/vue', '^1.7.19'),
+        ];
     }
 }

@@ -4,6 +4,7 @@ namespace NormanHuth\Luraa\Modules;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Support\Package;
 
 class BackupModule extends AbstractModule
 {
@@ -18,11 +19,13 @@ class BackupModule extends AbstractModule
     /**
      * Determine composer requirements for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function composerRequirements(InstallLaravelCommand $command): array
+    public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
-        return ['spatie/laravel-backup' => '^8.6'];
+        return [
+            new Package('spatie/laravel-backup', '^8.6'),
+        ];
     }
 
     /**

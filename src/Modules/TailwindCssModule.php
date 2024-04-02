@@ -4,6 +4,7 @@ namespace NormanHuth\Luraa\Modules;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Support\Package;
 
 class TailwindCssModule extends AbstractModule
 {
@@ -26,16 +27,17 @@ class TailwindCssModule extends AbstractModule
     /**
      * Determine Node package dependencies for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function packageDependency(InstallLaravelCommand $command): array
+    public static function addPackageDependency(InstallLaravelCommand $command): array
     {
         return [
-            'tailwindcss' => '^3.4.3',
-            'postcss' => '^8.4.38',
-            'autoprefixer' => '^10.4.19',
-            '@tailwindcss/forms' => '^0.5.7',
-            'tailwind-scrollbar' => '^3.0.5',
+            new Package('tailwindcss', '^3.4.3'),
+            new Package('postcss', '^8.4.38'),
+            new Package('autoprefixer', '^10.4.19'),
+            new Package('autoprefixer', '^10.4.19'),
+            new Package('@tailwindcss/forms', '^0.5.7'),
+            new Package('tailwind-scrollbar', '^3.0.5'),
         ];
     }
 

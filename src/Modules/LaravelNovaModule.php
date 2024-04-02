@@ -4,6 +4,7 @@ namespace NormanHuth\Luraa\Modules;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Support\Package;
 
 class LaravelNovaModule extends AbstractModule
 {
@@ -18,13 +19,13 @@ class LaravelNovaModule extends AbstractModule
     /**
      * Determine composer requirements for this module.
      *
-     * @return array{string: 'package', string: 'version'}
+     * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function composerRequirements(InstallLaravelCommand $command): array
+    public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            'laravel/nova' => '^4.33',
-            'norman-huth/nova-assets-versioning' => '^1.0',
+            new Package('laravel/nova', '^4.33'),
+            new Package('norman-huth/nova-assets-versioning', '^1.0'),
         ];
     }
 
