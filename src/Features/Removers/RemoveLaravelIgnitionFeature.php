@@ -1,19 +1,19 @@
 <?php
 
-namespace NormanHuth\Luraa\Features;
+namespace NormanHuth\Luraa\Features\Removers;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class RemoveLaravelSailFeature extends AbstractFeature
+class RemoveLaravelIgnitionFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return 'Remove Laravel Sail';
+        return 'Remove Ignition';
     }
 
     /**
@@ -24,7 +24,7 @@ class RemoveLaravelSailFeature extends AbstractFeature
     public static function removeComposerDevRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('laravel/sail'),
+            new Package('spatie/laravel-ignition'),
         ];
     }
 }

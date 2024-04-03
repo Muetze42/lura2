@@ -6,7 +6,7 @@ use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class DuskFeature extends AbstractFeature
+class LaravelDuskFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
