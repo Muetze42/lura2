@@ -1,15 +1,15 @@
 <?php
 
-namespace NormanHuth\Luraa\Modules;
+namespace NormanHuth\Luraa\Features;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class TailwindCssModule extends AbstractModule
+class TailwindCssFeature extends AbstractFeature
 {
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string
     {
@@ -17,7 +17,7 @@ class TailwindCssModule extends AbstractModule
     }
 
     /**
-     * Determine if this module should be checked by default if autoloaded.
+     * Determine if this feature should be checked by default if autoloaded.
      */
     public static function default(): bool
     {
@@ -25,7 +25,7 @@ class TailwindCssModule extends AbstractModule
     }
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */

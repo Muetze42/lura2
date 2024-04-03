@@ -1,15 +1,15 @@
 <?php
 
-namespace NormanHuth\Luraa\Modules;
+namespace NormanHuth\Luraa\Features;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class SentryModule extends AbstractModule
+class SentryFeature extends AbstractFeature
 {
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string
     {
@@ -17,7 +17,7 @@ class SentryModule extends AbstractModule
     }
 
     /**
-     * Determine if this module should be checked by default if autoloaded.
+     * Determine if this feature should be checked by default if autoloaded.
      */
     public static function default(): bool
     {
@@ -43,7 +43,7 @@ class SentryModule extends AbstractModule
     }
 
     /**
-     * Determine composer requirements for this module.
+     * Determine composer requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -55,13 +55,13 @@ class SentryModule extends AbstractModule
     }
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
     public static function addPackageDependency(InstallLaravelCommand $command): array
     {
-        if (in_array(InertiaJsModule::class, $command->modules)) {
+        if (in_array(InertiaJsFeature::class, $command->features)) {
             return [
                 new Package('@sentry/vite-plugin', '^2.16.0'),
                 new Package('@sentry/vue', '^7.109.0'),

@@ -1,15 +1,15 @@
 <?php
 
-namespace NormanHuth\Luraa\Modules;
+namespace NormanHuth\Luraa\Features;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class ESLintModule extends AbstractModule
+class ESLintFeature extends AbstractFeature
 {
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string
     {
@@ -17,7 +17,7 @@ class ESLintModule extends AbstractModule
     }
 
     /**
-     * Determine if this module should be autoloaded.
+     * Determine if this feature should be autoloaded.
      */
     public static function autoload(): bool
     {
@@ -25,7 +25,7 @@ class ESLintModule extends AbstractModule
     }
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array{string: 'package' => string: 'version'}
      */

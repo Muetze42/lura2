@@ -4,51 +4,51 @@ namespace NormanHuth\Luraa\Contracts;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 
-interface ModuleInterface
+interface FeatureInterface
 {
     /**
-     * Determine the key of the module.
+     * Determine the key of the feature.
      */
     public static function key(): string;
 
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string;
 
     /**
-     * Determine if this module should be installed by default.
+     * Determine if this feature should be installed by default.
      */
     public static function default(): bool;
 
     /**
-     * Determine if this module should be autoloaded.
+     * Determine if this feature should be autoloaded.
      */
     public static function autoload(): bool;
 
     /**
-     * Determine composer requirements for this module.
+     * Determine composer requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
     public static function addComposerRequirement(InstallLaravelCommand $command): array;
 
     /**
-     * Determine composer dev requirements for this module.
+     * Determine composer dev requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
     public static function addComposerDevRequirement(InstallLaravelCommand $command): array;
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
     public static function addPackageDependency(InstallLaravelCommand $command): array;
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -93,7 +93,7 @@ interface ModuleInterface
     public static function afterComposerInstall(InstallLaravelCommand $command): void;
 
     /**
-     * Optional load additional modules wich not autoloaded.
+     * Optional load additional features wich not autoloaded.
      */
     public static function load(InstallLaravelCommand $command): array;
 }

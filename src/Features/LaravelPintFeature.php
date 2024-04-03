@@ -1,20 +1,20 @@
 <?php
 
-namespace NormanHuth\Luraa\Modules;
+namespace NormanHuth\Luraa\Features;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Contracts\AbstractFeature;
 
 use NormanHuth\Luraa\Support\Package;
 
 use function Laravel\Prompts\select;
 
-class LaravelPintModule extends AbstractModule
+class LaravelPintFeature extends AbstractFeature
 {
     protected static string $rules = 'psr12-custom';
 
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string
     {
@@ -22,7 +22,7 @@ class LaravelPintModule extends AbstractModule
     }
 
     /**
-     * Determine if this module should be checked by default if autoloaded.
+     * Determine if this feature should be checked by default if autoloaded.
      */
     public static function default(): bool
     {
@@ -30,7 +30,7 @@ class LaravelPintModule extends AbstractModule
     }
 
     /**
-     * Determine composer dev requirements for this module.
+     * Determine composer dev requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -42,7 +42,7 @@ class LaravelPintModule extends AbstractModule
     }
 
     /**
-     * Determine composer scripts for this module.
+     * Determine composer scripts for this feature.
      *
      * @return array{string, string|array}
      */

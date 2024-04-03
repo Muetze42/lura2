@@ -1,15 +1,15 @@
 <?php
 
-namespace NormanHuth\Luraa\Modules;
+namespace NormanHuth\Luraa\Features;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class ActivitylogModule extends AbstractModule
+class ActivitylogFeature extends AbstractFeature
 {
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string
     {
@@ -30,7 +30,7 @@ class ActivitylogModule extends AbstractModule
     }
 
     /**
-     * Determine composer requirements for this module.
+     * Determine composer requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */

@@ -1,19 +1,19 @@
 <?php
 
-namespace NormanHuth\Luraa\Modules;
+namespace NormanHuth\Luraa\Features;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Contracts\AbstractFeature;
 
 use NormanHuth\Luraa\Support\Package;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 
-class InertiaJsModule extends AbstractModule
+class InertiaJsFeature extends AbstractFeature
 {
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string
     {
@@ -21,7 +21,7 @@ class InertiaJsModule extends AbstractModule
     }
 
     /**
-     * Determine if this module should be checked by default if autoloaded.
+     * Determine if this feature should be checked by default if autoloaded.
      */
     public static function default(): bool
     {
@@ -29,7 +29,7 @@ class InertiaJsModule extends AbstractModule
     }
 
     /**
-     * Determine composer requirements for this module.
+     * Determine composer requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -41,7 +41,7 @@ class InertiaJsModule extends AbstractModule
     }
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -57,7 +57,7 @@ class InertiaJsModule extends AbstractModule
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
-        $file = 'templates/vite.config.' . (int) in_array(SentryModule::class, $command->modules) . '.js';
+        $file = 'templates/vite.config.' . (int) in_array(SentryFeature::class, $command->features) . '.js';
         $command->storage->publish($file, 'vite.config.js');
     }
 
@@ -68,16 +68,16 @@ class InertiaJsModule extends AbstractModule
     {
         $command->runProcess('php artisan inertia:middleware --ansi');
 
-        $file = 'templates/app.' . (int) in_array(SentryModule::class, $command->modules) . '.js';
+        $file = 'templates/app.' . (int) in_array(SentryFeature::class, $command->features) . '.js';
         $command->storage->publish($file, 'resources/js/app.js');
     }
 
     /**
-     * Optional load additional modules wich not autoloaded.
+     * Optional load additional features wich not autoloaded.
      */
     public static function load(InstallLaravelCommand $command): array
     {
-        $modules = [];
+        $features = [];
 
         $font = select(
             label: 'Install Font Awesome Vue?',
@@ -90,19 +90,19 @@ class InertiaJsModule extends AbstractModule
         );
 
         if ($font == 'free') {
-            $modules[] = FontAwesomeModule::class;
+            $features[] = FontAwesomeFeature::class;
         } elseif ($font == 'pro') {
-            $modules[] = FontAwesomeProModule::class;
+            $features[] = FontAwesomeProFeature::class;
         }
 
         if (confirm('Install ESLint?')) {
-            $modules[] = ESLintModule::class;
+            $features[] = ESLintFeature::class;
         }
 
         if (confirm('Install Headless UI?')) {
-            $modules[] = HeadlessUIModule::class;
+            $features[] = HeadlessUIFeature::class;
         }
 
-        return $modules;
+        return $features;
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
-namespace NormanHuth\Luraa\Modules;
+namespace NormanHuth\Luraa\Features;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Support\Package;
 
-class FontAwesomeProModule extends FontAwesomeModule
+class FontAwesomeProFeature extends FontAwesomeFeature
 {
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string
     {
@@ -16,7 +16,7 @@ class FontAwesomeProModule extends FontAwesomeModule
     }
 
     /**
-     * Determine if this module should be autoloaded.
+     * Determine if this feature should be autoloaded.
      */
     public static function autoload(): bool
     {
@@ -24,7 +24,7 @@ class FontAwesomeProModule extends FontAwesomeModule
     }
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */

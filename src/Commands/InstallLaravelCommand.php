@@ -5,9 +5,9 @@ namespace NormanHuth\Luraa\Commands;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use NormanHuth\Library\Support\ClassFinder;
-use NormanHuth\Luraa\Contracts\ModuleInterface;
-use NormanHuth\Luraa\Modules\InertiaJsModule;
-use NormanHuth\Luraa\Modules\SentryModule;
+use NormanHuth\Luraa\Contracts\FeatureInterface;
+use NormanHuth\Luraa\Features\InertiaJsFeature;
+use NormanHuth\Luraa\Features\SentryFeature;
 use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
 use NormanHuth\Luraa\Support\Package;
@@ -53,9 +53,9 @@ class InstallLaravelCommand extends AbstractCommand
     protected string $defaultQueueConnection = 'database';
 
     /**
-     * @var array<\NormanHuth\Luraa\Contracts\ModuleInterface|string>
+     * @var array<\NormanHuth\Luraa\Contracts\FeatureInterface|string>
      */
-    public array $modules = [];
+    public array $features = [];
 
     /**
      * Execute the console command.
@@ -94,8 +94,8 @@ class InstallLaravelCommand extends AbstractCommand
         $this->serviceProvider();
         $this->bootstrapAppFile();
 
-        foreach ($this->modules as $module) {
-            $module::afterComposerInstall($this);
+        foreach ($this->features as $feature) {
+            $feature::afterComposerInstall($this);
         }
         $this->storage->publish('templates/.editorconfig');
 
@@ -116,8 +116,8 @@ class InstallLaravelCommand extends AbstractCommand
 
         $file = sprintf(
             'templates/app.%d.%d.php',
-            (int) in_array(InertiaJsModule::class, $this->modules),
-            (int) in_array(SentryModule::class, $this->modules),
+            (int) in_array(InertiaJsFeature::class, $this->features),
+            (int) in_array(SentryFeature::class, $this->features),
         );
         $this->storage->publish($file, 'bootstrap/app.php');
     }
@@ -164,16 +164,16 @@ class InstallLaravelCommand extends AbstractCommand
     protected function afterCreateProject(): void
     {
         $packageMethods = Package::methods();
-        foreach ($this->modules as $module) {
+        foreach ($this->features as $feature) {
             foreach ($packageMethods as $method) {
-                foreach ($module::{$method}($this) as $package) {
+                foreach ($feature::{$method}($this) as $package) {
                     $package->{$method}($this->dependencies);
                 }
             }
-            foreach ($module::composerScripts($this) as $key => $value) {
+            foreach ($feature::composerScripts($this) as $key => $value) {
                 $this->dependencies->addComposerScript($key, $value);
             }
-            $module::afterCreateProject($this);
+            $feature::afterCreateProject($this);
         }
 
         $this->storage->publish('stubs/laravel', 'stubs');
@@ -183,8 +183,8 @@ class InstallLaravelCommand extends AbstractCommand
     {
         $this->composer = $this->findComposer();
         $this->determineOptions();
-        foreach ($this->modules as $module) {
-            $module::beforeCreateProject($this);
+        foreach ($this->features as $feature) {
+            $feature::beforeCreateProject($this);
         }
         $this->defaultCacheStore();
         $this->determineDefaultQueueConnection();
@@ -226,33 +226,33 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function determineOptions(): void
     {
-        $modules = Arr::where(ClassFinder::load(
-            paths: dirname(__DIR__) . '/Modules',
-            subClassOf: ModuleInterface::class,
+        $features = Arr::where(ClassFinder::load(
+            paths: dirname(__DIR__) . '/Features',
+            subClassOf: FeatureInterface::class,
             namespace: 'NormanHuth\Luraa',
             basePath: dirname(__DIR__)
-        ), fn (ModuleInterface|string $module) => $module::autoload());
+        ), fn (FeatureInterface|string $feature) => $feature::autoload());
 
         $options = Arr::mapWithKeys(
-            $modules,
-            fn (ModuleInterface|string $module) => [$module => $module::name()]
+            $features,
+            fn (FeatureInterface|string $feature) => [$feature => $feature::name()]
         );
 
         asort($options, SORT_NATURAL | SORT_FLAG_CASE);
 
         $default = Arr::where(
-            $modules,
-            fn (ModuleInterface|string $module) => $module::default()
+            $features,
+            fn (FeatureInterface|string $feature) => $feature::default()
         );
 
         if ($this->promptsUnsupportedEnvironment) {
             foreach ($options as $key => $value) {
                 if ($this->confirm($value, in_array($key, $default))) {
-                    $this->modules[] = $key;
+                    $this->features[] = $key;
                 }
             }
         } else {
-            $this->modules = multiselect(
+            $this->features = multiselect(
                 label: 'Select optional features',
                 options: $options,
                 default: $default,
@@ -261,32 +261,32 @@ class InstallLaravelCommand extends AbstractCommand
             );
         }
 
-        $this->loadModules($this->modules);
+        $this->loadFeatures($this->features);
     }
 
     /**
-     * @param array<\NormanHuth\Luraa\Contracts\ModuleInterface|string>  $modules
+     * @param array<\NormanHuth\Luraa\Contracts\FeatureInterface|string>  $features
      */
-    protected function loadModules(array $modules): void
+    protected function loadFeatures(array $features): void
     {
-        if (empty($modules)) {
+        if (empty($features)) {
             return;
         }
 
         $loaded = [];
 
-        foreach ($modules as $module) {
-            $loaded = array_merge($loaded, $module::load($this));
+        foreach ($features as $feature) {
+            $loaded = array_merge($loaded, $feature::load($this));
         }
 
         if (empty($loaded)) {
             return;
         }
 
-        $this->modules = array_merge($this->modules, $loaded);
+        $this->features = array_merge($this->features, $loaded);
 
-        /* Load nested modules */
-        $this->loadModules($loaded);
+        /* Load nested features */
+        $this->loadFeatures($loaded);
     }
 
     protected function createProject(): void

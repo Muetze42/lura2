@@ -5,10 +5,10 @@ namespace NormanHuth\Luraa\Contracts;
 use Illuminate\Support\Str;
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 
-abstract class AbstractModule implements ModuleInterface
+abstract class AbstractFeature implements FeatureInterface
 {
     /**
-     * Determine the key of the module.
+     * Determine the key of the feature.
      */
     public static function key(): string
     {
@@ -16,12 +16,12 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     abstract public static function name(): string;
 
     /**
-     * Determine if this module should be checked by default if autoloaded.
+     * Determine if this feature should be checked by default if autoloaded.
      */
     public static function default(): bool
     {
@@ -29,7 +29,7 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * Determine if this module should be autoloaded.
+     * Determine if this feature should be autoloaded.
      */
     public static function autoload(): bool
     {
@@ -37,7 +37,7 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * Determine composer requirements for this module.
+     * Determine composer requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -47,7 +47,7 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * Determine composer dev requirements for this module.
+     * Determine composer dev requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -57,7 +57,7 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -67,7 +67,7 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * Determine Node package dependencies for this module.
+     * Determine Node package dependencies for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
@@ -141,7 +141,7 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * Determine composer scripts for this module.
+     * Determine composer scripts for this feature.
      *
      * @return array{string, string|array}
      */
@@ -151,7 +151,7 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * Optional load additional modules wich not autoloaded.
+     * Optional load additional features wich not autoloaded.
      */
     public static function load(InstallLaravelCommand $command): array
     {

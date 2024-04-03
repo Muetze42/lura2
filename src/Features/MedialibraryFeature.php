@@ -1,15 +1,15 @@
 <?php
 
-namespace NormanHuth\Luraa\Modules;
+namespace NormanHuth\Luraa\Features;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractModule;
+use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class MedialibraryModule extends AbstractModule
+class MedialibraryFeature extends AbstractFeature
 {
     /**
-     * Determine the name of the module.
+     * Determine the name of the feature.
      */
     public static function name(): string
     {
@@ -22,13 +22,13 @@ class MedialibraryModule extends AbstractModule
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
         $file = 'templates/media-library/config.' .
-            (int) in_array(PhpLibraryModule::class, $command->modules) . '.stub';
+            (int) in_array(PhpLibraryFeature::class, $command->features) . '.stub';
         $command->storage->publish($file, 'config/media-library.php');
         $command->storage->publish('templates/media-library/model.stub', 'app/Models/Media.php');
     }
 
     /**
-     * Determine composer requirements for this module.
+     * Determine composer requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
