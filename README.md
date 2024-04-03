@@ -2,7 +2,7 @@ wip
 
 Command line interface tool for **personal** usage created with:
 
-The available "features" can be found in the directory [src/Features](/src/Features).
+The available "features" can be found in the [src/Features](/src/Features) directory.
 
 * [Illuminate Console component](https://laravel.com/docs/11.x/artisan)
 * [Laravel Prompts](https://laravel.com/docs/11.x/prompts)
