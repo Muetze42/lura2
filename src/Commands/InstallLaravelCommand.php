@@ -253,10 +253,11 @@ class InstallLaravelCommand extends AbstractCommand
             }
         } else {
             $this->modules = multiselect(
-                label: 'Select optional features to install',
+                label: 'Select optional features',
                 options: $options,
                 default: $default,
                 scroll: count($options),
+                hint: 'Selected features are applied during installation and prepared for use.'
             );
         }
 
