@@ -9,7 +9,7 @@ use NormanHuth\Luraa\Support\Package;
 
 use function Laravel\Prompts\select;
 
-class PintModule extends AbstractModule
+class LaravelPintModule extends AbstractModule
 {
     protected static string $rules = 'psr12-custom';
 
