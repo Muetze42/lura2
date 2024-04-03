@@ -17,9 +17,9 @@ class LaravelBreezeFeature extends AbstractFeature
 {
     protected static string $stack;
 
-    protected static array $features;
+    protected static array $features = [];
 
-    protected static bool $dark;
+    protected static bool $dark = false;
 
     protected static string $pest;
 
@@ -65,9 +65,9 @@ class LaravelBreezeFeature extends AbstractFeature
     }
 
     /**
-     * Perform action after create project.
+     * Perform action before create project.
      */
-    public static function afterCreateProject(InstallLaravelCommand $command): void
+    public static function beforeCreateProject(InstallLaravelCommand $command): void
     {
         static::$stack = select(
             label: 'Which Breeze stack would you like to install?',
