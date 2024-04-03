@@ -2,10 +2,19 @@
 
 namespace NormanHuth\Luraa\Contracts;
 
+use Illuminate\Support\Str;
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 
 abstract class AbstractModule implements ModuleInterface
 {
+    /**
+     * Determine the key of the module.
+     */
+    public static function key(): string
+    {
+        return Str::kebab(class_basename(get_called_class()));
+    }
+
     /**
      * Determine the name of the module.
      */

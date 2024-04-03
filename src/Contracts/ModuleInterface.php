@@ -7,6 +7,11 @@ use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 interface ModuleInterface
 {
     /**
+     * Determine the key of the module.
+     */
+    public static function key(): string;
+
+    /**
      * Determine the name of the module.
      */
     public static function name(): string;
