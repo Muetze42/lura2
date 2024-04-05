@@ -7,6 +7,8 @@ use NormanHuth\Luraa\Contracts\AbstractFeature;
 
 use NormanHuth\Luraa\Support\Package;
 
+use NormanHuth\Prompts\Prompt;
+
 use function Laravel\Prompts\select;
 
 class LaravelPintFeature extends AbstractFeature
@@ -70,7 +72,7 @@ class LaravelPintFeature extends AbstractFeature
             $command->storage->packageDisk->files('templates/pint')
         );
 
-        static::$rules = select(
+        static::$rules = Prompt::select(
             label: 'Wich rules should use for Laravel Pint in this project?',
             options: $rules,
             default: static::$rules,

@@ -6,6 +6,8 @@ use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
+use NormanHuth\Prompts\Prompt;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\select;
@@ -69,7 +71,7 @@ class LaravelBreezeFeature extends AbstractFeature
      */
     public static function beforeCreateProject(InstallLaravelCommand $command): void
     {
-        static::$stack = select(
+        static::$stack = Prompt::select(
             label: 'Which Breeze stack would you like to install?',
             options: [
                 'blade' => 'Blade with Alpine',
@@ -83,7 +85,7 @@ class LaravelBreezeFeature extends AbstractFeature
         );
 
         if (in_array(static::$stack, ['react', 'vue'])) {
-            static::$features = multiselect(
+            static::$features = Prompt::multiselect(
                 label: 'Would you like any optional features?',
                 options: [
                     'dark' => 'Dark mode',
@@ -98,7 +100,7 @@ class LaravelBreezeFeature extends AbstractFeature
             );
         }
 
-        static::$pest = select(
+        static::$pest = Prompt::select(
             label: 'Which testing framework do you prefer?',
             options: ['Pest', 'PHPUnit'],
             default: in_array(PestPluginFeature::class, $command->features) ? 'Pest' : 'PHPUnit',

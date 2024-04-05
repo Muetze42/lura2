@@ -195,7 +195,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function defaultCacheStore(): void
     {
-        $this->defaultCacheStore = select(
+        $this->defaultCacheStore = Prompt::select(
             label: 'Which cache store should be used as default?',
             options: ['database', 'file', 'redis', 'memcached', 'apc', 'array', 'dynamodb', 'octane', 'null'],
             default: $this->defaultCacheStore,
@@ -207,7 +207,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function determineDefaultQueueConnection(): void
     {
-        $this->defaultQueueConnection = select(
+        $this->defaultQueueConnection = Prompt::select(
             label: 'Which queue connection should be used as default?',
             options: ['sync', 'database', 'redis', 'beanstalkd', 'sqs', 'null'],
             default: $this->defaultQueueConnection,
@@ -217,7 +217,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function determineSessionDriver(): void
     {
-        $this->sessionDriver = select(
+        $this->sessionDriver = Prompt::select(
             label: 'Which session driver should be used?',
             options: ['file', 'database', 'redis', 'cookie', 'apc', 'memcached', 'dynamodb', 'array'],
             default: $this->sessionDriver,

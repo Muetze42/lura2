@@ -7,6 +7,8 @@ use NormanHuth\Luraa\Contracts\AbstractFeature;
 
 use NormanHuth\Luraa\Support\Package;
 
+use NormanHuth\Prompts\Prompt;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 
@@ -79,7 +81,7 @@ class InertiaJsFeature extends AbstractFeature
     {
         $features = [];
 
-        $font = select(
+        $font = Prompt::select(
             label: 'Install Font Awesome Vue?',
             options: [
                 'no' => 'No',
