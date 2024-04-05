@@ -1,4 +1,4 @@
-# Installing PHP on Windows WSL
+# Installing Prompts Requirements
 
 Tested with Ubuntu 22, WSL2 & Windows 11.
 
