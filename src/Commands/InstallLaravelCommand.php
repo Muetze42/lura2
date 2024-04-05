@@ -12,6 +12,8 @@ use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
 use NormanHuth\Luraa\Support\Package;
 
+use NormanHuth\Prompts\Prompt;
+
 use function Laravel\Prompts\intro;
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\outro;
@@ -245,21 +247,13 @@ class InstallLaravelCommand extends AbstractCommand
             fn (FeatureInterface|string $feature) => $feature::default()
         );
 
-        if ($this->promptsUnsupportedEnvironment) {
-            foreach ($options as $key => $value) {
-                if ($this->confirm($value, in_array($key, $default))) {
-                    $this->features[] = $key;
-                }
-            }
-        } else {
-            $this->features = multiselect(
-                label: 'Select optional features',
-                options: $options,
-                default: $default,
-                scroll: count($options),
-                hint: 'Selected features are applied during installation and prepared for use.'
-            );
-        }
+        $this->features = Prompt::multiselect(
+            label: 'Select optional features',
+            options: $options,
+            default: $default,
+            scroll: count($options),
+            hint: 'Selected features are applied during installation and prepared for use.'
+        );
 
         $this->loadFeatures($this->features);
     }

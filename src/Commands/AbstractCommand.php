@@ -25,8 +25,6 @@ abstract class AbstractCommand extends Command
 
     protected array $validatorMessages;
 
-    protected bool $promptsUnsupportedEnvironment;
-
     public Storage $storage;
 
     /**
@@ -36,8 +34,6 @@ abstract class AbstractCommand extends Command
     {
         parent::__construct();
         MacroRegistry::macros([SplitNewLinesMacro::class => Str::class]);
-        $this->promptsUnsupportedEnvironment = windows_os();
-        Prompt::fallbackWhen($this->promptsUnsupportedEnvironment);
     }
 
     /**
