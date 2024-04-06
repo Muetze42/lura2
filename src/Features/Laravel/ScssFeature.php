@@ -1,18 +1,18 @@
 <?php
 
-namespace NormanHuth\Luraa\Features;
+namespace NormanHuth\Luraa\Features\Laravel;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 
-class ErrorPagesFeature extends AbstractFeature
+class ScssFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return 'Custom Error Pages';
+        return 'CSS instead of CSS';
     }
 
     /**
@@ -28,6 +28,7 @@ class ErrorPagesFeature extends AbstractFeature
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
-        $command->storage->publish('templates/error-pages');
+        $command->storage->publish('templates/scss', 'resources/scss');
+        $command->storage->targetDisk->deleteDirectory('resources/css');
     }
 }

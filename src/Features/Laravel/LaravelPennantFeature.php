@@ -1,19 +1,19 @@
 <?php
 
-namespace NormanHuth\Luraa\Features;
+namespace NormanHuth\Luraa\Features\Laravel;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class BackupFeature extends AbstractFeature
+class LaravelPennantFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return 'spatie/laravel-backup';
+        return 'Laravel Pennant';
     }
 
     /**
@@ -24,7 +24,7 @@ class BackupFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('spatie/laravel-backup', '^8.6'),
+            new Package('laravel/pennant', '^1.7.0'),
         ];
     }
 
@@ -34,7 +34,7 @@ class BackupFeature extends AbstractFeature
     public static function afterComposerInstall(InstallLaravelCommand $command): void
     {
         $command->runProcess(
-            'php artisan vendor:publish --provider="Spatie\Backup\BackupServiceProvider" --ansi'
+            'php artisan vendor:publish --provider="Laravel\Pennant\PennantServiceProvider" --ansi'
         );
     }
 }

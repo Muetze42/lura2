@@ -1,19 +1,27 @@
 <?php
 
-namespace NormanHuth\Luraa\Features;
+namespace NormanHuth\Luraa\Features\Laravel;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class LaravelPennantFeature extends AbstractFeature
+class LaravelSanctumFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return 'Laravel Pennant';
+        return 'Laravel Sanctum';
+    }
+
+    /**
+     * Perform action after create project.
+     */
+    public static function afterCreateProject(InstallLaravelCommand $command): void
+    {
+        $command->env->addKeys('SANCTUM_TOKEN_PREFIX', 'APP_URL');
     }
 
     /**
@@ -24,7 +32,7 @@ class LaravelPennantFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('laravel/pennant', '^1.7.0'),
+            new Package('laravel/sanctum', '^4.0'),
         ];
     }
 
@@ -33,8 +41,7 @@ class LaravelPennantFeature extends AbstractFeature
      */
     public static function afterComposerInstall(InstallLaravelCommand $command): void
     {
-        $command->runProcess(
-            'php artisan vendor:publish --provider="Laravel\Pennant\PennantServiceProvider" --ansi'
-        );
+        $command->runProcess('php artisan vendor:publish --tag=sanctum-migrations --ansi');
+        $command->runProcess('php artisan vendor:publish --tag=sanctum-config --ansi');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Luraa\Features;
+namespace NormanHuth\Luraa\Features\Laravel;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
@@ -56,7 +56,7 @@ class LaravelNovaFeature extends AbstractFeature
 
     protected static function determineLaravelNovaKey(InstallLaravelCommand $command): void
     {
-        $authJson = dirname($command->storage->packagePath(), 3) . DIRECTORY_SEPARATOR . 'auth.json';
+        $authJson = LaravelNovaFeature . phpdirname($command->storage->packagePath(), 3) . DIRECTORY_SEPARATOR . 'auth.json';
 
         if (!file_exists($authJson)) {
             return;

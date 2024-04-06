@@ -1,30 +1,30 @@
 <?php
 
-namespace NormanHuth\Luraa\Features\Removers;
+namespace NormanHuth\Luraa\Features\Laravel;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class RemoveLaravelIgnitionFeature extends AbstractFeature
+class LaravelPassportFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return 'Remove Ignition from dev requirements';
+        return 'Laravel Passport';
     }
 
     /**
-     * Determine composer dev requirements wich should be removed.
+     * Determine composer requirements for this feature.
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function removeComposerDevRequirement(InstallLaravelCommand $command): array
+    public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('spatie/laravel-ignition'),
+            new Package('laravel/passport', 'v12.0'),
         ];
     }
 }

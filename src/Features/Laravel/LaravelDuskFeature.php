@@ -1,27 +1,19 @@
 <?php
 
-namespace NormanHuth\Luraa\Features;
+namespace NormanHuth\Luraa\Features\Laravel;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class IdeHelperFeature extends AbstractFeature
+class LaravelDuskFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return 'barryvdh/laravel-ide-helper';
-    }
-
-    /**
-     * Determine if this feature should be installed by default.
-     */
-    public static function default(): bool
-    {
-        return true;
+        return 'Laravel Dusk';
     }
 
     /**
@@ -32,7 +24,15 @@ class IdeHelperFeature extends AbstractFeature
     public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('barryvdh/laravel-ide-helper', '^3.0'),
+            new Package('laravel/dusk', '^8.1'),
         ];
+    }
+
+    /**
+     * Perform action after the composer install process.
+     */
+    public static function afterComposerInstall(InstallLaravelCommand $command): void
+    {
+        $command->runProcess('php artisan dusk:install --ansi');
     }
 }

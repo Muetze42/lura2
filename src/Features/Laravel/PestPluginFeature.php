@@ -1,19 +1,19 @@
 <?php
 
-namespace NormanHuth\Luraa\Features\Removers;
+namespace NormanHuth\Luraa\Features\Laravel;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class RemovePhpUnitFeature extends AbstractFeature
+class PestPluginFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return 'Remove PHPUnit from dev requirements';
+        return 'pestphp/pest-plugin-laravel';
     }
 
     /**
@@ -21,10 +21,10 @@ class RemovePhpUnitFeature extends AbstractFeature
      *
      * @return array<\NormanHuth\Luraa\Support\Package>
      */
-    public static function removeComposerDevRequirement(InstallLaravelCommand $command): array
+    public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('phpunit/phpunit'),
+            new Package('pestphp/pest-plugin-laravel', '^2.3'),
         ];
     }
 }

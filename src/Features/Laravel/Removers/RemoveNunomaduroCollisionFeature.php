@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Luraa\Features\Removers;
+namespace NormanHuth\Luraa\Features\Laravel\Removers;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;

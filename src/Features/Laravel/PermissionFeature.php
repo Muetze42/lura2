@@ -1,19 +1,19 @@
 <?php
 
-namespace NormanHuth\Luraa\Features;
+namespace NormanHuth\Luraa\Features\Laravel;
 
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
 
-class ActivitylogFeature extends AbstractFeature
+class PermissionFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return 'spatie/laravel-activitylog';
+        return 'spatie/laravel-permission';
     }
 
     /**
@@ -21,12 +21,13 @@ class ActivitylogFeature extends AbstractFeature
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
-        $command->storage->publish('templates/activity-log/model.stub', 'app/Models/Activity.php');
-        $command->storage->publish('templates/activity-log/config.stub', 'config/activitylog.php');
+        $command->storage->publish('templates/laravel-permission/config.stub', 'config/permission.php');
         $command->storage->publish(
-            'templates/activity-log/migration.stub',
-            'database/migrations/' . $command->getMigrationPrefixedFileName('CreateActivityLogTable')
+            'templates/laravel-permission/migration.stub',
+            'database/migrations/' . $command->getMigrationPrefixedFileName('CreatePermissionsTables')
         );
+        $command->storage->publish('templates/laravel-permission/Permission.stub', 'app/Models/Permission.php');
+        $command->storage->publish('templates/laravel-permission/Role.stub', 'app/Models/Role.php');
     }
 
     /**
@@ -37,7 +38,7 @@ class ActivitylogFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('spatie/laravel-activitylog', '^4.8'),
+            new Package('spatie/laravel-permission', '^6.4'),
         ];
     }
 }

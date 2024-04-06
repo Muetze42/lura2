@@ -6,8 +6,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use NormanHuth\Library\Support\ClassFinder;
 use NormanHuth\Luraa\Contracts\FeatureInterface;
-use NormanHuth\Luraa\Features\InertiaJsFeature;
-use NormanHuth\Luraa\Features\SentryFeature;
+use NormanHuth\Luraa\Features\Laravel\InertiaJsFeature;
+use NormanHuth\Luraa\Features\Laravel\SentryFeature;
 use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
 use NormanHuth\Luraa\Support\Package;
@@ -121,7 +121,7 @@ class InstallLaravelCommand extends AbstractCommand
     protected function determineOptions(): void
     {
         $features = Arr::where(ClassFinder::load(
-            paths: dirname(__DIR__) . '/Features',
+            paths: dirname(__DIR__) . '/Features/Laravel',
             subClassOf: FeatureInterface::class,
             namespace: 'NormanHuth\Luraa',
             basePath: dirname(__DIR__)
