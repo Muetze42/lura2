@@ -11,13 +11,10 @@ use NormanHuth\Luraa\Features\SentryFeature;
 use NormanHuth\Luraa\Services\DependenciesFilesService;
 use NormanHuth\Luraa\Services\EnvFileService;
 use NormanHuth\Luraa\Support\Package;
-
 use NormanHuth\Prompts\Prompt;
 
 use function Laravel\Prompts\intro;
-use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\outro;
-use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
 class InstallLaravelCommand extends AbstractCommand
@@ -71,12 +68,7 @@ class InstallLaravelCommand extends AbstractCommand
             return;
         }
 
-        $this->beforeCreateProject();
-        $this->createProject();
-        $this->afterCreateProject();
-        $this->composerInstall();
-        $this->afterComposerInstall();
-        $this->moveTempContentBack();
+        $this->processingActions();
 
         outro(
             sprintf(
@@ -87,135 +79,43 @@ class InstallLaravelCommand extends AbstractCommand
         );
     }
 
-    protected function afterComposerInstall(): void
+    protected function processingActions(): void
     {
-        $this->setEnvVariables();
-        $this->storage->publish('templates/css', 'resources/css');
-
-        $this->abstractController();
-        $this->serviceProvider();
-        $this->bootstrapAppFile();
-
-        foreach ($this->features as $feature) {
-            $feature::afterComposerInstall($this);
-        }
-        $this->storage->publish('templates/.editorconfig');
-
-        $this->storage->publish('templates/fonts', 'resources/fonts');
-
-        $this->runProcess('php artisan lang:publish --ansi');
-        $this->runProcess('php artisan key:generate --ansi');
-
-        // Finally
-        if ($this->storage->targetDisk->exists('pint.json')) {
-            $this->runProcess($this->composer . ' pint --ansi');
-        }
+        $this->beforeCreateProject();
+        $this->createProject();
+        $this->afterCreateProject();
+        $this->composerInstall();
+        $this->afterComposerInstall();
+        $this->moveTempContentBack();
     }
 
-    protected function bootstrapAppFile(): void
+    protected function determineAppData(): void
     {
-        $this->storage->publish('templates/api.php', 'routes/api.php');
+        $this->line('The folder name is determined in accordance with Git based on the name of the app.');
+        $this->line('If the folder already exists, it may not contain any files or folders created by Laravel.');
 
-        $file = sprintf(
-            'templates/app.%d.%d.php',
-            (int) in_array(InertiaJsFeature::class, $this->features),
-            (int) in_array(SentryFeature::class, $this->features),
+        $this->appName = text(
+            label: 'Name of the new app',
+            default: $this->appName,
+            required: true,
         );
-        $this->storage->publish($file, 'bootstrap/app.php');
-    }
 
-    protected function abstractController(): void
-    {
-        $file = 'app/Http/Controllers/Controller.php';
-        if ($this->storage->targetDisk->exists($file)) {
-            $this->storage->targetDisk->delete($file);
-        }
-        $this->storage->publish('templates/AbstractController.php', 'app/Http/Controllers/AbstractController.php');
-    }
+        $this->appPath = Str::lower(trim(trim(preg_replace(['/[^A-Za-z0-9-_.]+/', '!-+!'], '-', $this->appName), '-')));
 
-    protected function serviceProvider(): void
-    {
-        $this->storage->publish('templates/AppServiceProvider.php', 'app/Providers/AppServiceProvider.php');
-    }
-
-    protected function setEnvVariables(): void
-    {
-        $variables = [
-            'APP_NAME' => '"' . addslashes($this->appName) . '"',
-            'LOG_STACK' => 'daily',
-            'CACHE_STORE' => $this->defaultCacheStore,
-            'SESSION_DRIVER' => $this->sessionDriver,
-            'QUEUE_CONNECTION' => $this->defaultQueueConnection,
-            'APP_URL' => 'http://localhost:8000',
-        ];
-
-        foreach ($variables as $key => $value) {
-            $this->env->setValue($key, $value);
-            $this->env->setExampleValue($key, $value);
-        }
-    }
-
-    protected function afterCreateProject(): void
-    {
-        $packageMethods = Package::methods();
-        foreach ($this->features as $feature) {
-            foreach ($packageMethods as $method) {
-                foreach ($feature::{$method}($this) as $package) {
-                    $package->{$method}($this->dependencies);
-                }
-            }
-            foreach ($feature::composerScripts($this) as $key => $value) {
-                $this->dependencies->addComposerScript($key, $value);
-            }
-            $feature::afterCreateProject($this);
-        }
-
-        $this->storage->publish('stubs/laravel', 'stubs');
-    }
-
-    protected function beforeCreateProject(): void
-    {
-        $this->composer = $this->findComposer();
-        $this->determineOptions();
-        foreach ($this->features as $feature) {
-            $feature::beforeCreateProject($this);
-        }
-        $this->defaultCacheStore();
-        $this->determineDefaultQueueConnection();
-        $this->determineSessionDriver();
-    }
-
-    protected function defaultCacheStore(): void
-    {
-        $this->defaultCacheStore = Prompt::select(
-            label: 'Which cache store should be used as default?',
-            options: ['database', 'file', 'redis', 'memcached', 'apc', 'array', 'dynamodb', 'octane', 'null'],
-            default: $this->defaultCacheStore,
-            hint: 'This connection is utilized if another isn\'t explicitly ' .
-                'specified when running a cache operation inside the application.',
-            required: true
+        $validated = $this->validate(
+            data: ['name' => $this->appName],
+            rules: ['name' => 'required|string|min:1|max:50']
         );
-    }
 
-    protected function determineDefaultQueueConnection(): void
-    {
-        $this->defaultQueueConnection = Prompt::select(
-            label: 'Which queue connection should be used as default?',
-            options: ['sync', 'database', 'redis', 'beanstalkd', 'sqs', 'null'],
-            default: $this->defaultQueueConnection,
-            required: true
-        );
-    }
+        if (empty($this->appPath)) {
+            $this->error('Could not determine the app path with this name.');
+        }
 
-    protected function determineSessionDriver(): void
-    {
-        $this->sessionDriver = Prompt::select(
-            label: 'Which session driver should be used?',
-            options: ['file', 'database', 'redis', 'cookie', 'apc', 'memcached', 'dynamodb', 'array'],
-            default: $this->sessionDriver,
-            hint: 'Database storage is a great default choice.',
-            required: true
-        );
+        $this->initializeStorage();
+
+        if ($validated || empty($this->appPath)) {
+            $this->determineAppData();
+        }
     }
 
     protected function determineOptions(): void
@@ -275,6 +175,158 @@ class InstallLaravelCommand extends AbstractCommand
         $this->loadFeatures($loaded);
     }
 
+    protected function beforeCreateProject(): void
+    {
+        $this->composer = $this->findComposer();
+        $this->determineOptions();
+        foreach ($this->features as $feature) {
+            $feature::beforeCreateProject($this);
+        }
+        $this->determineDefaultCacheStore();
+        $this->determineDefaultQueueConnection();
+        $this->determineSessionDriver();
+    }
+
+    protected function afterCreateProject(): void
+    {
+        $packageMethods = Package::methods();
+        foreach ($this->features as $feature) {
+            foreach ($packageMethods as $method) {
+                foreach ($feature::{$method}($this) as $package) {
+                    $package->{$method}($this->dependencies);
+                }
+            }
+            foreach ($feature::composerScripts($this) as $key => $value) {
+                $this->dependencies->addComposerScript($key, $value);
+            }
+            $feature::afterCreateProject($this);
+        }
+
+        $this->storage->publish('stubs/laravel', 'stubs');
+    }
+
+    protected function composerInstall(): void
+    {
+        $command = [
+            $this->composer,
+            'install',
+            '--prefer-dist',
+            '--ansi',
+        ];
+
+        $this->runProcess($command);
+    }
+
+    protected function afterComposerInstall(): void
+    {
+        $this->installerAfterComposerInstall();
+
+        foreach ($this->features as $feature) {
+            $feature::afterComposerInstall($this);
+        }
+
+        $this->processesAfterComposerInstall();
+    }
+
+    protected function installerAfterComposerInstall(): void
+    {
+        $this->setEnvVariables();
+        $this->storage->publish('templates/css', 'resources/css');
+
+        $this->abstractController();
+        $this->serviceProvider();
+        $this->bootstrapAppFile();
+        $this->storage->publish('templates/.editorconfig');
+        $this->storage->publish('templates/fonts', 'resources/fonts');
+    }
+
+    protected function processesAfterComposerInstall(): void
+    {
+        $this->runProcess('php artisan lang:publish --ansi');
+        $this->runProcess('php artisan key:generate --ansi');
+
+        // Finally
+        if ($this->storage->targetDisk->exists('pint.json')) {
+            $this->runProcess($this->composer . ' pint --ansi');
+        }
+    }
+
+    protected function bootstrapAppFile(): void
+    {
+        $this->storage->publish('templates/api.php', 'routes/api.php');
+
+        $file = sprintf(
+            'templates/app.%d.%d.php',
+            (int) in_array(InertiaJsFeature::class, $this->features),
+            (int) in_array(SentryFeature::class, $this->features),
+        );
+        $this->storage->publish($file, 'bootstrap/app.php');
+    }
+
+    protected function abstractController(): void
+    {
+        $file = 'app/Http/Controllers/Controller.php';
+        if ($this->storage->targetDisk->exists($file)) {
+            $this->storage->targetDisk->delete($file);
+        }
+        $this->storage->publish('templates/AbstractController.php', 'app/Http/Controllers/AbstractController.php');
+    }
+
+    protected function serviceProvider(): void
+    {
+        $this->storage->publish('templates/AppServiceProvider.php', 'app/Providers/AppServiceProvider.php');
+    }
+
+    protected function setEnvVariables(): void
+    {
+        $variables = [
+            'APP_NAME' => '"' . addslashes($this->appName) . '"',
+            'LOG_STACK' => 'daily',
+            'CACHE_STORE' => $this->defaultCacheStore,
+            'SESSION_DRIVER' => $this->sessionDriver,
+            'QUEUE_CONNECTION' => $this->defaultQueueConnection,
+            'APP_URL' => 'http://localhost:8000',
+        ];
+
+        foreach ($variables as $key => $value) {
+            $this->env->setValue($key, $value);
+            $this->env->setExampleValue($key, $value);
+        }
+    }
+
+    protected function determineDefaultCacheStore(): void
+    {
+        $this->defaultCacheStore = Prompt::select(
+            label: 'Which cache store should be used as default?',
+            options: ['database', 'file', 'redis', 'memcached', 'apc', 'array', 'dynamodb', 'octane', 'null'],
+            default: $this->defaultCacheStore,
+            hint: 'This connection is utilized if another isn\'t explicitly ' .
+                'specified when running a cache operation inside the application.',
+            required: true
+        );
+    }
+
+    protected function determineDefaultQueueConnection(): void
+    {
+        $this->defaultQueueConnection = Prompt::select(
+            label: 'Which queue connection should be used as default?',
+            options: ['sync', 'database', 'redis', 'beanstalkd', 'sqs', 'null'],
+            default: $this->defaultQueueConnection,
+            required: true
+        );
+    }
+
+    protected function determineSessionDriver(): void
+    {
+        $this->sessionDriver = Prompt::select(
+            label: 'Which session driver should be used?',
+            options: ['file', 'database', 'redis', 'cookie', 'apc', 'memcached', 'dynamodb', 'array'],
+            default: $this->sessionDriver,
+            hint: 'Database storage is a great default choice.',
+            required: true
+        );
+    }
+
     protected function createProject(): void
     {
         $command = [
@@ -297,18 +349,6 @@ class InstallLaravelCommand extends AbstractCommand
         );
 
         $this->env = new EnvFileService($this->storage->targetDisk);
-    }
-
-    protected function composerInstall(): void
-    {
-        $command = [
-            $this->composer,
-            'install',
-            '--prefer-dist',
-            '--ansi',
-        ];
-
-        $this->runProcess($command);
     }
 
     protected function moveTempContentBack(): void
@@ -374,38 +414,5 @@ class InstallLaravelCommand extends AbstractCommand
             $this->determineTempPath();
         }
         $this->tempPath = $temp;
-    }
-
-    protected function determineAppData(): void
-    {
-        $this->line('The folder name is determined in accordance with Git based on the name of the app.');
-        $this->line('If the folder already exists, it may not contain any files or folders created by Laravel.');
-
-        $this->appName = text(
-            label: 'Name of the new app',
-            default: $this->appName,
-            required: true,
-            //hint: implode(' ', [
-            //    'The folder name is determined in accordance with Git based on the name of the app.',
-            //    'If the folder already exists, it may not contain any files or folders created by Laravel.',
-            //])
-        );
-
-        $this->appPath = Str::lower(trim(trim(preg_replace(['/[^A-Za-z0-9-_.]+/', '!-+!'], '-', $this->appName), '-')));
-
-        $validated = $this->validate(
-            data: ['name' => $this->appName],
-            rules: ['name' => 'required|string|min:1|max:50']
-        );
-
-        if (empty($this->appPath)) {
-            $this->error('Could not determine the app path with this name.');
-        }
-
-        $this->initializeStorage();
-
-        if ($validated || empty($this->appPath)) {
-            $this->determineAppData();
-        }
     }
 }

@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
-use Laravel\Prompts\Prompt;
 use NormanHuth\Library\Lib\MacroRegistry;
 use NormanHuth\Library\Support\Macros\Str\SplitNewLinesMacro;
 use NormanHuth\Luraa\Support\Process;

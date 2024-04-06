@@ -5,12 +5,9 @@ namespace NormanHuth\Luraa\Features;
 use NormanHuth\Luraa\Commands\InstallLaravelCommand;
 use NormanHuth\Luraa\Contracts\AbstractFeature;
 use NormanHuth\Luraa\Support\Package;
-
 use NormanHuth\Prompts\Prompt;
 
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\multiselect;
-use function Laravel\Prompts\select;
 
 /**
  * Todo: Testing.
