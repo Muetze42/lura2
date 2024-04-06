@@ -20,7 +20,7 @@ class LaravelPintFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return 'Laravel Pint';
+        return 'Laravel Pint Rules';
     }
 
     /**

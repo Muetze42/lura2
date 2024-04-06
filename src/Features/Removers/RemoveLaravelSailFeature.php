@@ -13,7 +13,7 @@ class RemoveLaravelSailFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return 'Remove Laravel Sail';
+        return 'Remove Laravel Sail from dev requirements';
     }
 
     /**

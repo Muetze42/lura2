@@ -13,7 +13,7 @@ class RemoveLaravelIgnitionFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return 'Remove Ignition';
+        return 'Remove Ignition from dev requirements';
     }
 
     /**
