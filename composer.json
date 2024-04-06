@@ -39,12 +39,6 @@
     "bin": [
         "bin/lura"
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Muetze42/prompts.git"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable" : true
 }
