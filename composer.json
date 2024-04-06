@@ -20,7 +20,7 @@
         "laravel/prompts": "^0.1",
         "league/flysystem": "^3.2",
         "norman-huth/php-library": "^0.0.4",
-        "norman-huth/prompts": "@dev-main"
+        "norman-huth/prompts": "dev-main"
     },
     "authors": [
         {
