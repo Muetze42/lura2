@@ -39,5 +39,6 @@
     "bin": [
         "bin/lura"
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable" : true
 }
