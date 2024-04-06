@@ -5,12 +5,15 @@ namespace NormanHuth\Luraa\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
 use NormanHuth\Library\Lib\MacroRegistry;
+use NormanHuth\Library\Support\ClassFinder;
 use NormanHuth\Library\Support\Macros\Str\SplitNewLinesMacro;
+use NormanHuth\Luraa\Contracts\FeatureInterface;
 use NormanHuth\Luraa\Support\Process;
 use NormanHuth\Luraa\Support\Storage;
 use ReflectionClass;
@@ -105,5 +108,15 @@ abstract class AbstractCommand extends Command
             targetPath: rtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
             packagePath: dirname($reflection->getFileName(), 3)
         );
+    }
+
+    protected function getFeatures(string $type = 'Laravel'): array
+    {
+        return Arr::where(ClassFinder::load(
+            paths: dirname(__DIR__) . '/Features/' . $type,
+            subClassOf: FeatureInterface::class,
+            namespace: 'NormanHuth\Luraa',
+            basePath: dirname(__DIR__)
+        ), fn (FeatureInterface|string $feature) => $feature::autoload());
     }
 }

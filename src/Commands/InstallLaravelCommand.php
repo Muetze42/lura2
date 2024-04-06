@@ -4,7 +4,6 @@ namespace NormanHuth\Luraa\Commands;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use NormanHuth\Library\Support\ClassFinder;
 use NormanHuth\Luraa\Contracts\FeatureInterface;
 use NormanHuth\Luraa\Features\Laravel\InertiaJsFeature;
 use NormanHuth\Luraa\Features\Laravel\SentryFeature;
@@ -24,14 +23,14 @@ class InstallLaravelCommand extends AbstractCommand
      *
      * @var string
      */
-    protected $signature = 'install:laravel';
+    protected $signature = 'app:install:laravel';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'A custom Laravel application installer';
+    protected $description = 'Creating a Laravel Project';
 
     public string $appName = '';
 
@@ -62,6 +61,18 @@ class InstallLaravelCommand extends AbstractCommand
     public function handle(): void
     {
         intro('Creating a Laravel Project');
+
+        $test = Prompt::multiselect2(
+            'What role should the user have?',
+            [
+                'Member' => 'lorem ipsum',
+                'Contributor' => 'lorem ipsum',
+                'Owner',
+            ],
+            default: ['Member', 'Contributor'],
+        );
+
+        var_dump($test);
 
         $this->determineAppData();
         if (!$this->isTargetPathOk()) {
@@ -120,12 +131,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function determineOptions(): void
     {
-        $features = Arr::where(ClassFinder::load(
-            paths: dirname(__DIR__) . '/Features/Laravel',
-            subClassOf: FeatureInterface::class,
-            namespace: 'NormanHuth\Luraa',
-            basePath: dirname(__DIR__)
-        ), fn (FeatureInterface|string $feature) => $feature::autoload());
+        $features = $this->getFeatures();
 
         $options = Arr::mapWithKeys(
             $features,
