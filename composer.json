@@ -22,6 +22,9 @@
         "norman-huth/php-library": "^0.0.4",
         "norman-huth/prompts": "dev-main"
     },
+    "require-dev": {
+        "laravel/pint": "^1.15"
+    },
     "authors": [
         {
             "name": "Norman Huth",
@@ -36,7 +39,5 @@
     "bin": [
         "bin/lura"
     ],
-    "require-dev": {
-        "laravel/pint": "^1.15"
-    }
+    "minimum-stability": "dev"
 }
