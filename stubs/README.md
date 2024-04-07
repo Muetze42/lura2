@@ -1,16 +1,10 @@
 wip
 
-Command line interface tool for **personal** usage created with:
+Command line interface tool for **personal** usage to create new Laravel projects.  
+There are a few ideas on how to customize this tool for yourself. But if and when I implement this depends on my time
+and desire.
 
 The available "features" can be found in the [src/Features](/src/Features) directory.
-
-* [Illuminate Console component](https://laravel.com/docs/11.x/artisan)
-* [Laravel Prompts](https://laravel.com/docs/11.x/prompts)
-* [Illuminate Processes component](https://laravel.com/docs/11.x/processes)
-* [Illuminate Validation component](https://laravel.com/docs/11.x/validation)
-* [Illuminate Http component](https://laravel.com/docs/11.x/http-client)
-* [Illuminate Filesystem component](https://laravel.com/docs/11.x/filesystem)
-* [Illuminate Support component](https://laravel.com/docs/11.x/helpers)
 
 {images}
 
@@ -33,3 +27,7 @@ Execute Lura
 ```shell
 lura
 ```
+
+## Notice
+
+Laravel is a Trademark of Laravel Holdings Inc.
