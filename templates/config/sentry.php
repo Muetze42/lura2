@@ -181,67 +181,67 @@ return [
         /* Trace queue jobs as their own transactions (this enables tracing for queue jobs) */
         'queue_job_transactions' => env(
             'SENTRY_TRACE_QUEUE_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture queue jobs as spans when executed on the sync driver */
         'queue_jobs' => env(
             'SENTRY_TRACE_QUEUE_JOBS_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture SQL queries as spans */
         'sql_queries' => env(
             'SENTRY_TRACE_SQL_QUERIES_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture SQL query bindings (parameters) in SQL query spans */
         'sql_bindings' => env(
             'SENTRY_TRACE_SQL_BINDINGS_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture where the SQL query originated from on the SQL query spans */
         'sql_origin' => env(
             'SENTRY_TRACE_SQL_ORIGIN_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture views rendered as spans */
         'views' => env(
             'SENTRY_TRACE_VIEWS_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture Livewire components as spans */
         'livewire' => env(
             'SENTRY_TRACE_LIVEWIRE_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture HTTP client requests as spans */
         'http_client_requests' => env(
             'SENTRY_TRACE_HTTP_CLIENT_REQUESTS_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture Redis operations as spans (this enables Redis events in Laravel) */
         'redis_commands' => env(
             'SENTRY_TRACE_REDIS_COMMANDS',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Capture where the Redis command originated from on the Redis command spans */
         'redis_origin' => env(
             'SENTRY_TRACE_REDIS_ORIGIN_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /* Enable tracing for requests without a matching route (404's) */
         'missing_routes' => env(
             'SENTRY_TRACE_MISSING_ROUTES_ENABLED',
-            env('SENTRY_TRACE_ENABLED', false)
+            env('SENTRY_TRACE_ENABLED', env('SENTRY_TRACING_ENABLED', false))
         ),
 
         /*
