@@ -56,7 +56,7 @@ class LaravelNovaFeature extends AbstractFeature
 
     protected static function determineLaravelNovaKey(InstallLaravelCommand $command): void
     {
-        $authJson = LaravelNovaFeature . phpdirname($command->storage->packagePath(), 3) . DIRECTORY_SEPARATOR . 'auth.json';
+        $authJson = dirname($command->storage->packagePath(), 3) . DIRECTORY_SEPARATOR . 'auth.json';
 
         if (!file_exists($authJson)) {
             return;
