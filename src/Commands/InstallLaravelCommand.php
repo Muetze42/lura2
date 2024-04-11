@@ -62,18 +62,6 @@ class InstallLaravelCommand extends AbstractCommand
     {
         intro('Creating a Laravel Project');
 
-        $test = Prompt::multiselect2(
-            'What role should the user have?',
-            [
-                'Member' => 'lorem ipsum',
-                'Contributor' => 'lorem ipsum',
-                'Owner',
-            ],
-            default: ['Member', 'Contributor'],
-        );
-
-        var_dump($test);
-
         $this->determineAppData();
         if (!$this->isTargetPathOk()) {
             return;
