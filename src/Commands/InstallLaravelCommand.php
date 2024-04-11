@@ -259,11 +259,11 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function abstractController(): void
     {
-        $file = 'app/Http/Controllers/Controller.php';
-        if ($this->storage->targetDisk->exists($file)) {
-            $this->storage->targetDisk->delete($file);
-        }
-        $this->storage->publish('templates/AbstractController.php', 'app/Http/Controllers/AbstractController.php');
+        //$file = 'app/Http/Controllers/Controller.php';
+        //if ($this->storage->targetDisk->exists($file)) {
+        //    $this->storage->targetDisk->delete($file);
+        //}
+        $this->storage->publish('templates/Controller.php', 'app/Http/Controllers/Controller.php');
     }
 
     protected function serviceProvider(): void
