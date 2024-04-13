@@ -114,9 +114,7 @@ abstract class AbstractCommand extends Command
     {
         return Arr::where(ClassFinder::load(
             paths: dirname(__DIR__) . '/Features/' . $type,
-            subClassOf: FeatureInterface::class,
-            namespace: 'NormanHuth\Lura',
-            basePath: dirname(__DIR__)
+            subClassOf: FeatureInterface::class
         ), fn (FeatureInterface|string $feature) => $feature::autoload());
     }
 }

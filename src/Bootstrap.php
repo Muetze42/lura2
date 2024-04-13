@@ -44,9 +44,7 @@ class Bootstrap
     {
         collect(ClassFinder::load(
             paths: __DIR__ . '/Commands',
-            subClassOf: Command::class,
-            namespace: 'NormanHuth\Lura\Commands',
-            basePath: __DIR__ . '/Commands'
+            subClassOf: Command::class
         ))->each(fn ($command) => $this->artisan->resolve($command));
     }
 }

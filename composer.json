@@ -19,7 +19,7 @@
         "illuminate/validation": "^11.1",
         "laravel/prompts": "^0.1",
         "league/flysystem": "^3.2",
-        "norman-huth/php-library": "^0.0.4",
+        "norman-huth/php-library": "^0.1.0",
         "norman-huth/prompts": "^0.0.3"
     },
     "require-dev": {
