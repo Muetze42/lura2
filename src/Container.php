@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Luraa;
+namespace NormanHuth\Lura;
 
 use Illuminate\Container\Container as BaseContainer;
 

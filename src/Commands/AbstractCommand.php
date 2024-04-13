@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Luraa\Commands;
+namespace NormanHuth\Lura\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
@@ -13,9 +13,9 @@ use Illuminate\Validation\Factory as Validator;
 use NormanHuth\Library\Lib\MacroRegistry;
 use NormanHuth\Library\Support\ClassFinder;
 use NormanHuth\Library\Support\Macros\Str\SplitNewLinesMacro;
-use NormanHuth\Luraa\Contracts\FeatureInterface;
-use NormanHuth\Luraa\Support\Process;
-use NormanHuth\Luraa\Support\Storage;
+use NormanHuth\Lura\Contracts\FeatureInterface;
+use NormanHuth\Lura\Support\Process;
+use NormanHuth\Lura\Support\Storage;
 use ReflectionClass;
 
 abstract class AbstractCommand extends Command
@@ -115,7 +115,7 @@ abstract class AbstractCommand extends Command
         return Arr::where(ClassFinder::load(
             paths: dirname(__DIR__) . '/Features/' . $type,
             subClassOf: FeatureInterface::class,
-            namespace: 'NormanHuth\Luraa',
+            namespace: 'NormanHuth\Lura',
             basePath: dirname(__DIR__)
         ), fn (FeatureInterface|string $feature) => $feature::autoload());
     }

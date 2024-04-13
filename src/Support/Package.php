@@ -1,9 +1,9 @@
 <?php
 
-namespace NormanHuth\Luraa\Support;
+namespace NormanHuth\Lura\Support;
 
 use Illuminate\Support\Arr;
-use NormanHuth\Luraa\Services\DependenciesFilesService;
+use NormanHuth\Lura\Services\DependenciesFilesService;
 
 class Package
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Luraa\Services;
+namespace NormanHuth\Lura\Services;
 
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemInterface;
 use Illuminate\Filesystem\FilesystemAdapter;

@@ -1,13 +1,13 @@
 <?php
 
-namespace NormanHuth\Luraa\Support;
+namespace NormanHuth\Lura\Support;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemInterface;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Filesystem\FilesystemManager;
-use NormanHuth\Luraa\Container;
+use NormanHuth\Lura\Container;
 
 class Storage
 {

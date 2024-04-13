@@ -1,10 +1,10 @@
 <?php
 
-namespace NormanHuth\Luraa\Features\Laravel;
+namespace NormanHuth\Lura\Features\Laravel;
 
-use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractFeature;
-use NormanHuth\Luraa\Support\Package;
+use NormanHuth\Lura\Commands\InstallLaravelCommand;
+use NormanHuth\Lura\Contracts\AbstractFeature;
+use NormanHuth\Lura\Support\Package;
 
 class MedialibraryFeature extends AbstractFeature
 {
@@ -30,7 +30,7 @@ class MedialibraryFeature extends AbstractFeature
     /**
      * Determine composer requirements for this feature.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {

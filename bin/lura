@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use NormanHuth\Luraa\Bootstrap;
+use NormanHuth\Lura\Bootstrap;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 
 $autoloader = file_exists(__DIR__ . '/../../../autoload.php') ?

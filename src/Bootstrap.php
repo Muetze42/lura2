@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Luraa;
+namespace NormanHuth\Lura;
 
 use Illuminate\Console\Application;
 use Illuminate\Console\Command;
@@ -34,7 +34,7 @@ class Bootstrap
         $this->artisan = new Application($this->container, $this->events, '2');
 
         $this->artisan->setDefaultCommand('app:install:laravel');
-        $this->artisan->setName('Luraa');
+        $this->artisan->setName('Lura2');
         $this->resolveCommands();
         $this->artisan->setCatchExceptions(true);
         $this->artisan->run();
@@ -45,7 +45,7 @@ class Bootstrap
         collect(ClassFinder::load(
             paths: __DIR__ . '/Commands',
             subClassOf: Command::class,
-            namespace: 'NormanHuth\Luraa\Commands',
+            namespace: 'NormanHuth\Lura\Commands',
             basePath: __DIR__ . '/Commands'
         ))->each(fn ($command) => $this->artisan->resolve($command));
     }

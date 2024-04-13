@@ -1,10 +1,10 @@
 <?php
 
-namespace NormanHuth\Luraa\Features\Laravel\Removers;
+namespace NormanHuth\Lura\Features\Laravel\Removers;
 
-use NormanHuth\Luraa\Commands\InstallLaravelCommand;
-use NormanHuth\Luraa\Contracts\AbstractFeature;
-use NormanHuth\Luraa\Support\Package;
+use NormanHuth\Lura\Commands\InstallLaravelCommand;
+use NormanHuth\Lura\Contracts\AbstractFeature;
+use NormanHuth\Lura\Support\Package;
 
 class RemoveLaravelSailFeature extends AbstractFeature
 {
@@ -19,7 +19,7 @@ class RemoveLaravelSailFeature extends AbstractFeature
     /**
      * Determine composer dev requirements wich should be removed.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function removeComposerDevRequirement(InstallLaravelCommand $command): array
     {

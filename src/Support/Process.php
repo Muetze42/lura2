@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Luraa\Support;
+namespace NormanHuth\Lura\Support;
 
 use Illuminate\Process\Factory;
 

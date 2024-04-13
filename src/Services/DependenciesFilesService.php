@@ -1,10 +1,10 @@
 <?php
 
-namespace NormanHuth\Luraa\Services;
+namespace NormanHuth\Lura\Services;
 
 use Illuminate\Support\Arr;
 use NormanHuth\Library\Support\ComposerJson;
-use NormanHuth\Luraa\Support\Http;
+use NormanHuth\Lura\Support\Http;
 
 class DependenciesFilesService
 {

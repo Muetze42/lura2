@@ -1,9 +1,9 @@
 <?php
 
-namespace NormanHuth\Luraa\Contracts;
+namespace NormanHuth\Lura\Contracts;
 
 use Illuminate\Support\Str;
-use NormanHuth\Luraa\Commands\InstallLaravelCommand;
+use NormanHuth\Lura\Commands\InstallLaravelCommand;
 
 abstract class AbstractFeature implements FeatureInterface
 {
@@ -39,7 +39,7 @@ abstract class AbstractFeature implements FeatureInterface
     /**
      * Determine composer requirements for this feature.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
@@ -49,7 +49,7 @@ abstract class AbstractFeature implements FeatureInterface
     /**
      * Determine composer dev requirements for this feature.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
@@ -59,7 +59,7 @@ abstract class AbstractFeature implements FeatureInterface
     /**
      * Determine Node package dependencies for this feature.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function addPackageDependency(InstallLaravelCommand $command): array
     {
@@ -69,7 +69,7 @@ abstract class AbstractFeature implements FeatureInterface
     /**
      * Determine Node package dependencies for this feature.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function addPackageDevDependency(InstallLaravelCommand $command): array
     {
@@ -79,7 +79,7 @@ abstract class AbstractFeature implements FeatureInterface
     /**
      * Determine composer requirements wich should be removed.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function removeComposerRequirement(InstallLaravelCommand $command): array
     {
@@ -89,7 +89,7 @@ abstract class AbstractFeature implements FeatureInterface
     /**
      * Determine composer dev requirements wich should be removed.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function removeComposerDevRequirement(InstallLaravelCommand $command): array
     {
@@ -99,7 +99,7 @@ abstract class AbstractFeature implements FeatureInterface
     /**
      * Determine Node dependency wich should be removed.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function removePackageDependency(InstallLaravelCommand $command): array
     {
@@ -109,7 +109,7 @@ abstract class AbstractFeature implements FeatureInterface
     /**
      * Determine Node dev dependency wich should be removed.
      *
-     * @return array<\NormanHuth\Luraa\Support\Package>
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
     public static function removePackageDevDependency(InstallLaravelCommand $command): array
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Luraa\Commands;
+namespace NormanHuth\Lura\Commands;
 
 class FeatureLaravelCommand extends AbstractCommand
 {

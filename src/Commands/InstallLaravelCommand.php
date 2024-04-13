@@ -1,15 +1,15 @@
 <?php
 
-namespace NormanHuth\Luraa\Commands;
+namespace NormanHuth\Lura\Commands;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use NormanHuth\Luraa\Contracts\FeatureInterface;
-use NormanHuth\Luraa\Features\Laravel\InertiaJsFeature;
-use NormanHuth\Luraa\Features\Laravel\SentryFeature;
-use NormanHuth\Luraa\Services\DependenciesFilesService;
-use NormanHuth\Luraa\Services\EnvFileService;
-use NormanHuth\Luraa\Support\Package;
+use NormanHuth\Lura\Contracts\FeatureInterface;
+use NormanHuth\Lura\Features\Laravel\InertiaJsFeature;
+use NormanHuth\Lura\Features\Laravel\SentryFeature;
+use NormanHuth\Lura\Services\DependenciesFilesService;
+use NormanHuth\Lura\Services\EnvFileService;
+use NormanHuth\Lura\Support\Package;
 use NormanHuth\Prompts\Prompt;
 
 use function Laravel\Prompts\intro;
@@ -51,7 +51,7 @@ class InstallLaravelCommand extends AbstractCommand
     protected string $defaultQueueConnection = 'database';
 
     /**
-     * @var array<\NormanHuth\Luraa\Contracts\FeatureInterface|string>
+     * @var array<\NormanHuth\Lura\Contracts\FeatureInterface|string>
      */
     public array $features = [];
 
@@ -145,7 +145,7 @@ class InstallLaravelCommand extends AbstractCommand
     }
 
     /**
-     * @param array<\NormanHuth\Luraa\Contracts\FeatureInterface|string>  $features
+     * @param array<\NormanHuth\Lura\Contracts\FeatureInterface|string>  $features
      */
     protected function loadFeatures(array $features): void
     {

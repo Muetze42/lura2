@@ -33,7 +33,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "NormanHuth\\Luraa\\": "src/"
+            "NormanHuth\\Lura\\": "src/"
         }
     },
     "bin": [
