@@ -11,7 +11,7 @@ use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
 use NormanHuth\Library\Lib\MacroRegistry;
-use NormanHuth\Library\Support\ClassFinder;
+use NormanHuth\Library\ClassFinder;
 use NormanHuth\Library\Support\Macros\Str\SplitNewLinesMacro;
 use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Support\Process;

@@ -5,7 +5,7 @@ namespace NormanHuth\Lura;
 use Illuminate\Console\Application;
 use Illuminate\Console\Command;
 use Illuminate\Events\Dispatcher;
-use NormanHuth\Library\Support\ClassFinder;
+use NormanHuth\Library\ClassFinder;
 
 class Bootstrap
 {
