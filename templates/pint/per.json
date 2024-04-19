@@ -1,6 +1,8 @@
 {
     "preset": "per",
     "notName": [
-        "_ide_help*.php"
+        "_ide_help*.php",
+        ".phpstorm.meta.php",
+        "*.blade.php"
     ]
 }

@@ -9,7 +9,7 @@ use NormanHuth\Prompts\Prompt;
 
 class LaravelPintFeature extends AbstractFeature
 {
-    protected static string $rules = 'psr12-custom';
+    protected static string $rules = 'psr12-laravel-merge';
 
     /**
      * Determine the name of the feature.
