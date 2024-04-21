@@ -24,7 +24,7 @@ class LaravelDuskFeature extends AbstractFeature
     public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('laravel/dusk', '^8.1'),
+            new Package('laravel/dusk', '^8.2'),
         ];
     }
 

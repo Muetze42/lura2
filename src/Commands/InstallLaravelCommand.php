@@ -63,7 +63,7 @@ class InstallLaravelCommand extends AbstractCommand
         intro('Creating a Laravel Project');
 
         $this->determineAppData();
-        if (!$this->isTargetPathOk()) {
+        if (! $this->isTargetPathOk()) {
             return;
         }
 
@@ -145,7 +145,7 @@ class InstallLaravelCommand extends AbstractCommand
     }
 
     /**
-     * @param array<\NormanHuth\Lura\Contracts\FeatureInterface|string>  $features
+     * @param  array<\NormanHuth\Lura\Contracts\FeatureInterface|string>  $features
      */
     protected function loadFeatures(array $features): void
     {
@@ -347,7 +347,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function moveTempContentBack(): void
     {
-        if (!$this->tempPath) {
+        if (! $this->tempPath) {
             return;
         }
 
@@ -372,7 +372,7 @@ class InstallLaravelCommand extends AbstractCommand
         $files = $this->storage->targetDisk->files();
         $directories = $this->storage->targetDisk->directories();
 
-        if (!count($directories) && !count($files)) {
+        if (! count($directories) && ! count($files)) {
             return true;
         }
 

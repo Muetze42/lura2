@@ -54,7 +54,7 @@ abstract class AbstractCommand extends Command
      */
     protected function validate(array $data, array $rules): bool
     {
-        if (!$this->validator) {
+        if (! $this->validator) {
             $this->registerValidator();
         }
 
@@ -85,9 +85,9 @@ abstract class AbstractCommand extends Command
         return date('Y_m_d_') . '000000_' . Str::snake(trim($name, '_')) . '.php';
     }
 
-    public function runProcess(string|array $command, string $path = null): void
+    public function runProcess(string|array $command, ?string $path = null): void
     {
-        if (!$path) {
+        if (! $path) {
             $path = $this->storage->targetPath();
         }
         if (is_array($command)) {

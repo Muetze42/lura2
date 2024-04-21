@@ -38,7 +38,7 @@ class PermissionFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('spatie/laravel-permission', '^6.4'),
+            new Package('spatie/laravel-permission', '^6.7'),
         ];
     }
 }

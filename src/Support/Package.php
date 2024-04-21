@@ -64,7 +64,7 @@ class Package
     {
         return Arr::map(Arr::where(
             (new \ReflectionClass(static::class))->getMethods(\ReflectionMethod::IS_PUBLIC),
-            fn (\ReflectionMethod $method) => !$method->isStatic() && $method->getName() != '__construct'
+            fn (\ReflectionMethod $method) => ! $method->isStatic() && $method->getName() != '__construct'
         ), fn (\ReflectionMethod $method) => $method->getName());
     }
 }

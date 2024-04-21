@@ -24,7 +24,7 @@ class LaravelPennantFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('laravel/pennant', '^1.7.0'),
+            new Package('laravel/pennant', '^1.7'),
         ];
     }
 

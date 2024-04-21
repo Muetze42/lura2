@@ -80,7 +80,7 @@ class Storage
             return;
         }
 
-        if (empty($to) && !is_dir($this->packageDisk->path($from))) {
+        if (empty($to) && ! is_dir($this->packageDisk->path($from))) {
             $to = basename($from);
         }
 

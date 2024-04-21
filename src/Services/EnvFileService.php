@@ -16,7 +16,7 @@ class EnvFileService
     public function __construct(FilesystemAdapter|FilesystemInterface $targetDisk)
     {
         $this->targetDisk = $targetDisk;
-        if (!$this->targetDisk->exists('.env')) {
+        if (! $this->targetDisk->exists('.env')) {
             $this->targetDisk->put(
                 '.env',
                 $this->targetDisk->get('.env.example')
@@ -24,7 +24,7 @@ class EnvFileService
         }
     }
 
-    public function addKeys(array|string $keys, string $after = null): void
+    public function addKeys(array|string $keys, ?string $after = null): void
     {
         $keys = (array) $keys;
         foreach (['.env', '.env.example'] as $file) {
@@ -45,7 +45,7 @@ class EnvFileService
                 }
             }
 
-            if (!$inserted) {
+            if (! $inserted) {
                 $contents .= "\n";
                 foreach ($keys as $key) {
                     $contents .= $key . "=\n";
@@ -73,7 +73,7 @@ class EnvFileService
         $lines = Str::splitNewLines(trim($this->targetDisk->get($file)));
         $contents = '';
         foreach ($lines as $line) {
-            if (!str_starts_with($line, $key . '=')) {
+            if (! str_starts_with($line, $key . '=')) {
                 $contents .= $line . "\n";
 
                 continue;

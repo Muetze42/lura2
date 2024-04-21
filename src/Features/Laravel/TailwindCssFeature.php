@@ -37,7 +37,7 @@ class TailwindCssFeature extends AbstractFeature
             new Package('autoprefixer', '^10.4.19'),
             new Package('autoprefixer', '^10.4.19'),
             new Package('@tailwindcss/forms', '^0.5.7'),
-            new Package('tailwind-scrollbar', '^3.0.5'),
+            new Package('tailwind-scrollbar', '^3.1.0'),
         ];
     }
 
@@ -56,7 +56,7 @@ class TailwindCssFeature extends AbstractFeature
     public static function afterComposerInstall(InstallLaravelCommand $command): void
     {
         foreach (['resources/scss/app.scss', 'resources/css/app.css'] as $file) {
-            if (!$command->storage->targetDisk->exists($file)) {
+            if (! $command->storage->targetDisk->exists($file)) {
                 continue;
             }
             $command->storage->targetDisk->put(

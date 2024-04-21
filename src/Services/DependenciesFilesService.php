@@ -21,7 +21,7 @@ class DependenciesFilesService
 
     protected string $versionsSource = 'https://raw.githubusercontent.com/Muetze42/data/main/storage/versions.json';
 
-    public function __construct(string $packageJsonFile = null, string $composerJsonFile = null)
+    public function __construct(?string $packageJsonFile = null, ?string $composerJsonFile = null)
     {
         $this->packageJsonFile = $packageJsonFile;
         $this->composerJsonFile = $composerJsonFile;
@@ -130,7 +130,7 @@ class DependenciesFilesService
         bool $forceVersion = false,
         string $key = 'composer.require'
     ): void {
-        if (!$forceVersion) {
+        if (! $forceVersion) {
             $version = $this->versions[$package] ?? $version;
         }
 

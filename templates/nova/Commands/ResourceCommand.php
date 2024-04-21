@@ -10,7 +10,7 @@ class ResourceCommand extends Command
     /**
      * Get the default namespace for the class.
      *
-     * @param string $rootNamespace
+     * @param  string  $rootNamespace
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
@@ -20,8 +20,8 @@ class ResourceCommand extends Command
     /**
      * Replace the class name for the given stub.
      *
-     * @param string $stub
-     * @param string $name
+     * @param  string  $stub
+     * @param  string  $name
      */
     protected function replaceClass($stub, $name): string
     {
