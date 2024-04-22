@@ -2,6 +2,7 @@
 
 namespace NormanHuth\Lura\Features\Laravel;
 
+use Illuminate\Support\Str;
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
 use NormanHuth\Lura\Contracts\AbstractFeature;
 use NormanHuth\Lura\Support\Package;
@@ -35,9 +36,12 @@ class SentryFeature extends AbstractFeature
             'VITE_SENTRY_DSN_PUBLIC',
             'SENTRY_AUTH_TOKEN',
             'VITE_SENTRY_AUTH_TOKEN',
+            'VITE_SENTRY_PROJECT',
         ], 'APP_URL');
         $command->env->setValue('VITE_SENTRY_DSN_PUBLIC', '"${SENTRY_LARAVEL_DSN}"');
         $command->env->setExampleValue('VITE_SENTRY_DSN_PUBLIC', '"${SENTRY_LARAVEL_DSN}"');
+        $command->env->setValue('VITE_SENTRY_PROJECT', Str::slug($command->appName));
+        $command->env->setExampleValue('VITE_SENTRY_PROJECT', Str::slug($command->appName));
 
         $command->storage->publish('templates/config/sentry.php', 'config/sentry.php');
     }

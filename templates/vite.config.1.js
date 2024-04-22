@@ -22,7 +22,7 @@ export default defineConfig({
     }),
     sentryVitePlugin({
       org: 'norman-huth',
-      project: 'quellen-tv-watch',
+      project: env.VITE_SENTRY_PROJECT,
       release: {
         name: new Date().getTime()
       },
