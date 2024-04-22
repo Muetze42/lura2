@@ -31,10 +31,10 @@ class FontAwesomeProFeature extends FontAwesomeFeature
     public static function addPackageDependency(InstallLaravelCommand $command): array
     {
         return static::packages([
-            new Package('pro-duotone-svg-icons', static::$version),
-            new Package('pro-light-svg-icons', static::$version),
-            new Package('pro-regular-svg-icons', static::$version),
-            new Package('pro-solid-svg-icons', static::$version),
+            new Package('@fortawesome/pro-duotone-svg-icons', static::$version),
+            new Package('@fortawesome/pro-light-svg-icons', static::$version),
+            new Package('@fortawesome/pro-regular-svg-icons', static::$version),
+            new Package('@fortawesome/pro-solid-svg-icons', static::$version),
         ]);
     }
 }

@@ -8,7 +8,7 @@ use NormanHuth\Lura\Support\Package;
 
 class FontAwesomeFeature extends AbstractFeature
 {
-    protected static string $version = '^6.5.1';
+    protected static string $version = '^6.5.2';
 
     protected static function packages(array $merge): array
     {
