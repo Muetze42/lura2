@@ -36,6 +36,7 @@ class ESLintFeature extends AbstractFeature
             new Package('@vue/eslint-config-prettier', '^9.0.0'),
             new Package('eslint-plugin-vue', '^9.25.0'),
             new Package('@rushstack/eslint-patch', '^1.10.1'),
+            new Package('eslint-config-next', '^14.2.2'),
         ];
     }
 
