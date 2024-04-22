@@ -4,6 +4,7 @@ namespace NormanHuth\Lura\Features\Laravel;
 
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
 use NormanHuth\Lura\Contracts\AbstractFeature;
+use NormanHuth\Lura\Support\Package;
 
 class ScssFeature extends AbstractFeature
 {
@@ -24,11 +25,42 @@ class ScssFeature extends AbstractFeature
     }
 
     /**
+     * Determine Node package dependencies for this feature.
+     *
+     * @return array<\NormanHuth\Lura\Support\Package>
+     */
+    public static function addPackageDependency(InstallLaravelCommand $command): array
+    {
+        return [
+            new Package('sass', '^1.75.0'),
+            new Package('sass-loader', '^14.2.1'),
+        ];
+    }
+
+    /**
      * Perform action after create project.
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
         $command->storage->publish('templates/scss', 'resources/scss');
+    }
+
+    /**
+     * Perform action after the composer install process.
+     */
+    public static function afterComposerInstall(InstallLaravelCommand $command): void
+    {
+        $command->storage->targetDisk->delete('resources/css/app.css');
         $command->storage->targetDisk->deleteDirectory('resources/css');
+        if ($command->storage->targetDisk->exists('resources/views/app.blade.php')) {
+            $command->storage->targetDisk->put(
+                'resources/views/app.blade.php',
+                str_replace(
+                    'resources/css/app.css',
+                    'resources/scss/app.scss',
+                    $command->storage->targetDisk->get('resources/views/app.blade.php')
+                )
+            );
+        }
     }
 }
