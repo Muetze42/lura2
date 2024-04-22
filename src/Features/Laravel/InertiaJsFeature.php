@@ -48,6 +48,8 @@ class InertiaJsFeature extends AbstractFeature
     {
         return [
             new Package('@inertiajs/vue3', '^1.0.15'),
+            new Package('@vitejs/plugin-vue', '^5.0.4'),
+            new Package('vue', '^3.4.24'),
         ];
     }
 
