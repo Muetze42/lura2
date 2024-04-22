@@ -60,6 +60,7 @@ class InertiaJsFeature extends AbstractFeature
     {
         $file = 'templates/vite.config.' . (int) in_array(SentryFeature::class, $command->features) . '.js';
         $command->storage->publish($file, 'vite.config.js');
+        $command->storage->publish('templates/app.blade.php', 'resources/views/app.blade.php');
     }
 
     /**
