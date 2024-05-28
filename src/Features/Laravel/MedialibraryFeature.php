@@ -21,8 +21,8 @@ class MedialibraryFeature extends AbstractFeature
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
-        $file = 'templates/media-library/config.' .
-            (int) in_array(PhpLibraryFeature::class, $command->features) . '.stub';
+        $file = 'templates/media-library/config.'.
+            (int) in_array(PhpLibraryFeature::class, $command->features).'.stub';
         $command->storage->publish($file, 'config/media-library.php');
         $command->storage->publish('templates/media-library/model.stub', 'app/Models/Media.php');
     }

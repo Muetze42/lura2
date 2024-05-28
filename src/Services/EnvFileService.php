@@ -34,11 +34,11 @@ class EnvFileService
             $contents = '';
 
             foreach ($lines as $line) {
-                $contents .= $line . "\n";
+                $contents .= $line."\n";
                 if ($after && explode('=', $line)[0] == $after) {
                     $contents .= "\n";
                     foreach ($keys as $key) {
-                        $contents .= $key . "=\n";
+                        $contents .= $key."=\n";
                     }
                     $contents .= "\n";
                     $inserted = true;
@@ -48,13 +48,13 @@ class EnvFileService
             if (! $inserted) {
                 $contents .= "\n";
                 foreach ($keys as $key) {
-                    $contents .= $key . "=\n";
+                    $contents .= $key."=\n";
                 }
                 $contents .= "\n";
             }
 
             $contents = preg_replace('/\n{3,}/m', "\n\n", $contents);
-            $this->targetDisk->put($file, trim($contents) . "\n");
+            $this->targetDisk->put($file, trim($contents)."\n");
         }
     }
 
@@ -73,15 +73,15 @@ class EnvFileService
         $lines = Str::splitNewLines(trim($this->targetDisk->get($file)));
         $contents = '';
         foreach ($lines as $line) {
-            if (! str_starts_with($line, $key . '=')) {
-                $contents .= $line . "\n";
+            if (! str_starts_with($line, $key.'=')) {
+                $contents .= $line."\n";
 
                 continue;
             }
-            $contents .= $key . '=' . $value . "\n";
+            $contents .= $key.'='.$value."\n";
         }
 
         $contents = preg_replace('/\n{3,}/m', "\n\n", $contents);
-        $this->targetDisk->put($file, trim($contents) . "\n");
+        $this->targetDisk->put($file, trim($contents)."\n");
     }
 }

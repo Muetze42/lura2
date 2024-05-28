@@ -13,7 +13,7 @@ class LaravelDuskFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return 'Laravel Dusk';
+        return '[Testing] Laravel Dusk';
     }
 
     /**

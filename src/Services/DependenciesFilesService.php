@@ -41,7 +41,7 @@ class DependenciesFilesService
             );
 
             $this->versions = Arr::map($this->versions, function (string $version) {
-                return str_starts_with($version, '^') ? $version : '^' . $version;
+                return str_starts_with($version, '^') ? $version : '^'.$version;
             });
         }
     }
@@ -75,21 +75,25 @@ class DependenciesFilesService
 
     public function addComposerRequirement(string $package, string $version, bool $forceVersion = false): void
     {
+        data_forget($this->dependencies, 'composer.require-dev.'.$package);
         $this->addDependency($package, $version, $forceVersion);
     }
 
     public function addComposerDevRequirement(string $package, string $version, bool $forceVersion = false): void
     {
+        data_forget($this->dependencies, 'composer.require.'.$package);
         $this->addDependency($package, $version, $forceVersion, 'composer.require-dev');
     }
 
     public function addPackageDependency(string $package, string $version, bool $forceVersion = false): void
     {
+        data_forget($this->dependencies, 'package.devDependencies.'.$package);
         $this->addDependency($package, $version, $forceVersion, 'package.dependencies');
     }
 
     public function addPackageDevDependency(string $package, string $version, bool $forceVersion = false): void
     {
+        data_forget($this->dependencies, 'package.dependencies.'.$package);
         $this->addDependency($package, $version, $forceVersion, 'package.devDependencies');
     }
 
@@ -134,8 +138,8 @@ class DependenciesFilesService
             $version = $this->versions[$package] ?? $version;
         }
 
-        $forceVersion ? data_set($this->dependencies, $key . '.' . $package, $version) :
-            data_fill($this->dependencies, $key . '.' . $package, $version);
+        $forceVersion ? data_set($this->dependencies, $key.'.'.$package, $version) :
+            data_fill($this->dependencies, $key.'.'.$package, $version);
 
         $this->close();
     }

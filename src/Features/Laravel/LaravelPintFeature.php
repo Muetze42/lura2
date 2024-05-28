@@ -54,7 +54,7 @@ class LaravelPintFeature extends AbstractFeature
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
-        $file = 'templates/pint/' . static::$rules . '.json';
+        $file = 'templates/pint/'.static::$rules.'.json';
         $command->storage->publish($file, 'pint.json');
     }
 

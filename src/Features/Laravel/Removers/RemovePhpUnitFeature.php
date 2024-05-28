@@ -13,7 +13,7 @@ class RemovePhpUnitFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return 'Remove PHPUnit from dev requirements';
+        return '[Testing] Remove PHPUnit from dev requirements';
     }
 
     /**

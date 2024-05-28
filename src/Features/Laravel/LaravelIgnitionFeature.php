@@ -6,14 +6,22 @@ use NormanHuth\Lura\Commands\InstallLaravelCommand;
 use NormanHuth\Lura\Contracts\AbstractFeature;
 use NormanHuth\Lura\Support\Package;
 
-class PestPluginFeature extends AbstractFeature
+class LaravelIgnitionFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return '[Testing] pestphp/pest-plugin-laravel';
+        return 'Ignition: a beautiful error page for Laravel apps';
+    }
+
+    /**
+     * Determine if this feature should be checked by default if autoloaded.
+     */
+    public static function default(): bool
+    {
+        return true;
     }
 
     /**
@@ -24,7 +32,7 @@ class PestPluginFeature extends AbstractFeature
     public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('pestphp/pest-plugin-laravel', '^2.3'),
+            new Package('spatie/laravel-ignition', '^2.7'),
         ];
     }
 }

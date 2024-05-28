@@ -43,7 +43,7 @@ class Bootstrap
     protected function resolveCommands(): void
     {
         collect(ClassFinder::load(
-            paths: __DIR__ . '/Commands',
+            paths: __DIR__.'/Commands',
             subClassOf: Command::class
         ))->each(fn ($command) => $this->artisan->resolve($command));
     }

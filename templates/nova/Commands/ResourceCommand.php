@@ -14,7 +14,7 @@ class ResourceCommand extends Command
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . '\Nova\Resources';
+        return $rootNamespace.'\Nova\Resources';
     }
 
     /**
@@ -25,7 +25,7 @@ class ResourceCommand extends Command
      */
     protected function replaceClass($stub, $name): string
     {
-        $class = str_replace($this->getNamespace($name) . '\\', '', $name);
+        $class = str_replace($this->getNamespace($name).'\\', '', $name);
 
         $stub = str_replace(['{{ plural }}', '{{plural}}'], Str::plural($class), $stub);
 

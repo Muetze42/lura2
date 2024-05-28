@@ -10,8 +10,8 @@ use Illuminate\Support\Str;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
-use NormanHuth\Library\Lib\MacroRegistry;
 use NormanHuth\Library\ClassFinder;
+use NormanHuth\Library\Lib\MacroRegistry;
 use NormanHuth\Library\Support\Macros\Str\SplitNewLinesMacro;
 use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Support\Process;
@@ -46,7 +46,7 @@ abstract class AbstractCommand extends Command
         $loader = new FileLoader(new Filesystem(), '');
         $translator = new Translator($loader, 'en');
         $this->validator = new Validator($translator, new Container());
-        $this->validatorMessages = include __DIR__ . '/../../lang/en/validation.php';
+        $this->validatorMessages = include __DIR__.'/../../lang/en/validation.php';
     }
 
     /**
@@ -75,14 +75,14 @@ abstract class AbstractCommand extends Command
      */
     protected function findComposer(): string
     {
-        $composerPath = getcwd() . '/composer.phar';
+        $composerPath = getcwd().'/composer.phar';
 
-        return file_exists($composerPath) ? '"' . PHP_BINARY . '" ' . $composerPath : 'composer';
+        return file_exists($composerPath) ? '"'.PHP_BINARY.'" '.$composerPath : 'composer';
     }
 
     public function getMigrationPrefixedFileName(string $name): string
     {
-        return date('Y_m_d_') . '000000_' . Str::snake(trim($name, '_')) . '.php';
+        return date('Y_m_d_').'000000_'.Str::snake(trim($name, '_')).'.php';
     }
 
     public function runProcess(string|array $command, ?string $path = null): void
@@ -105,7 +105,7 @@ abstract class AbstractCommand extends Command
         $reflection = new ReflectionClass(get_called_class());
 
         $this->storage = new Storage(
-            targetPath: rtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
+            targetPath: rtrim(getcwd(), '/\\').DIRECTORY_SEPARATOR.$this->appPath,
             packagePath: dirname($reflection->getFileName(), 3)
         );
     }
@@ -113,7 +113,7 @@ abstract class AbstractCommand extends Command
     protected function getFeatures(string $type = 'Laravel'): array
     {
         return Arr::where(ClassFinder::load(
-            paths: dirname(__DIR__) . '/Features/' . $type,
+            paths: dirname(__DIR__).'/Features/'.$type,
             subClassOf: FeatureInterface::class
         ), fn (FeatureInterface|string $feature) => $feature::autoload());
     }

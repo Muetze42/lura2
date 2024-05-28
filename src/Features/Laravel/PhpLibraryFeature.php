@@ -44,7 +44,7 @@ class PhpLibraryFeature extends AbstractFeature
         $contents = $command->storage->targetDisk->get('bootstrap/app.php');
         $contents = str_replace(
             'use Illuminate\Http\Request;',
-            'use Illuminate\Http\Request;' . "\n" . 'use NormanHuth\Library\Lib\CommandRegistry;',
+            'use Illuminate\Http\Request;'."\n".'use NormanHuth\Library\Lib\CommandRegistry;',
             $contents
         );
         $contents = str_replace(
@@ -59,14 +59,14 @@ class PhpLibraryFeature extends AbstractFeature
             $contents = trim($command->storage->targetDisk->get('routes/api.php'));
             $contents = str_replace(
                 'use Illuminate\Support\Facades\Route;',
-                'use Illuminate\Support\Facades\Route;' . "\n" .
+                'use Illuminate\Support\Facades\Route;'."\n".
                 'use NormanHuth\Library\Http\Controllers\Api\SentryTunnelController;',
                 $contents
             );
             $contents .= "\n";
             $contents .= 'Route::post(\'sentry-tunnel\', SentryTunnelController::class);';
 
-            $command->storage->targetDisk->put('routes/api.php', $contents . "\n");
+            $command->storage->targetDisk->put('routes/api.php', $contents."\n");
         }
     }
 }
