@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Features\Laravel\InertiaJsFeature;
+use NormanHuth\Lura\Features\Laravel\LaravelPintFeature;
 use NormanHuth\Lura\Features\Laravel\SentryFeature;
 use NormanHuth\Lura\Services\DependenciesFilesService;
 use NormanHuth\Lura\Services\EnvFileService;
@@ -197,7 +198,10 @@ class InstallLaravelCommand extends AbstractCommand
         }
 
         $this->storage->publish('stubs/laravel', 'stubs');
-        $this->storage->publish('templates/phpmd.xml', 'phpmd.xml.dist');
+        if (in_array(LaravelPintFeature::class, $this->features)) {
+            $this->storage->publish('templates/phpmd.xml', 'phpmd.xml.dist');
+            $this->storage->publish('templates/phpcs.xml', 'phpmd.phpcs.dist');
+        }
     }
 
     protected function composerInstall(): void
