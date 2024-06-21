@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel Rule Set">
+    <description>
+        Laravel Rule Set by Norman Huth
+    </description>
+
+    <!-- Clean Code Rules -->
+    <rule ref="rulesets/cleancode.xml">
+        <exclude name="ElseExpression"/>
+        <exclude name="IfStatementAssignment"/>
+        <exclude name="StaticAccess"/>
+    </rule>
+    <!-- Code Size Rules -->
+    <rule ref="rulesets/codesize.xml"/>
+    <!-- Controversial Rules -->
+    <rule ref="rulesets/controversial.xml"/>
+    <!-- Design Rules -->
+    <rule ref="rulesets/design.xml"/>
+    <!-- Naming Rules -->
+    <rule ref="rulesets/naming.xml">
+        <exclude name="ShortVariable"/>
+    </rule>
+    <rule ref="rulesets/naming.xml/ShortVariable"
+          since="0.2"
+          message="Avoid variables with short names like {0}. Configured minimum length is {1}."
+          class="PHPMD\Rule\Naming\ShortVariable"
+          externalInfoUrl="http://phpmd.org/rules/naming.html#shortvariable">
+        <priority>3</priority>
+        <properties>
+            <property name="minimum" description="Minimum length for a variable, property or parameter name" value="3"/>
+            <property name="exceptions" value="id,i,j,k,e,fp"/>
+        </properties>
+    </rule>
+    <!-- Unused Code Rules  -->
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedFormalParameter"/>
+    </rule>
+
+    <!-- Exclude -->
+    <exclude-pattern>*/*.blade.php</exclude-pattern>
+    <exclude-pattern>*/.idea/*</exclude-pattern>
+    <exclude-pattern>*/.phpstorm.meta.php</exclude-pattern>
+    <exclude-pattern>*/.vscode/*</exclude-pattern>
+    <exclude-pattern>*/_ide_*.php</exclude-pattern>
+</ruleset>

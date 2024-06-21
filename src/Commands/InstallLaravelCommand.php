@@ -197,6 +197,7 @@ class InstallLaravelCommand extends AbstractCommand
         }
 
         $this->storage->publish('stubs/laravel', 'stubs');
+        $this->storage->publish('templates/phpmd.xml', 'phpmd.xml.dist');
     }
 
     protected function composerInstall(): void
