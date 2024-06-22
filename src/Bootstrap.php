@@ -100,7 +100,18 @@ class Bootstrap
         echo PHP_EOL;
         echo implode(PHP_EOL, $changes) . PHP_EOL;
 
-        pause('A new version of Lura2 is available. Press ENTER to continue.');
+        $notice = 'A new version of Lura2 is available. Press ENTER to continue.';
+        if (windows_os()) {
+            echo PHP_EOL;
+            echo str_repeat('#', strlen($notice) + 4) . PHP_EOL;
+            echo '#' . str_repeat(' ', strlen($notice) + 2) . '#' . PHP_EOL;
+            echo '# ' . $notice . ' #' . PHP_EOL;
+            echo '#' . str_repeat(' ', strlen($notice) + 2) . '#' . PHP_EOL;
+            echo str_repeat('#', strlen($notice) + 4) . PHP_EOL;
+
+            return;
+        }
+        pause($notice);
     }
 
     protected function resolveCommands(): void
