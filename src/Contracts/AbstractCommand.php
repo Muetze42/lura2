@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Lura\Commands;
+namespace NormanHuth\Lura\Contracts;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
@@ -11,7 +11,6 @@ use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
 use NormanHuth\Library\ClassFinder;
-use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Support\Process;
 use NormanHuth\Lura\Support\Storage;
 use ReflectionClass;
@@ -102,7 +101,7 @@ abstract class AbstractCommand extends Command
         $reflection = new ReflectionClass(get_called_class());
 
         $this->storage = new Storage(
-            targetPath: rtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
+            targetPath: AbstractCommand . phprtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
             packagePath: dirname($reflection->getFileName(), 3)
         );
     }

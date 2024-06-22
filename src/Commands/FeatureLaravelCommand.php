@@ -2,6 +2,8 @@
 
 namespace NormanHuth\Lura\Commands;
 
+use NormanHuth\Lura\Contracts\AbstractCommand;
+
 class FeatureLaravelCommand extends AbstractCommand
 {
     /**

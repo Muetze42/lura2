@@ -4,6 +4,7 @@ namespace NormanHuth\Lura\Commands;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use NormanHuth\Lura\Contracts\AbstractCommand;
 use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Features\Laravel\InertiaJsFeature;
 use NormanHuth\Lura\Features\Laravel\LaravelPintFeature;
