@@ -60,7 +60,7 @@ class TailwindCssFeature extends AbstractFeature
             }
             $command->storage->targetDisk->put(
                 $file,
-                "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n".
+                "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n" .
                     $command->storage->targetDisk->get($file)
             );
         }

@@ -25,7 +25,7 @@ class ActivitylogFeature extends AbstractFeature
         $command->storage->publish('templates/activity-log/config.stub', 'config/activitylog.php');
         $command->storage->publish(
             'templates/activity-log/migration.stub',
-            'database/migrations/'.$command->getMigrationPrefixedFileName('CreateActivityLogTable')
+            'database/migrations/' . $command->getMigrationPrefixedFileName('CreateActivityLogTable')
         );
     }
 

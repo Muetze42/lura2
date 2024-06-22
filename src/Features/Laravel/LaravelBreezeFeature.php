@@ -47,7 +47,7 @@ class LaravelBreezeFeature extends AbstractFeature
      */
     public static function afterComposerInstall(InstallLaravelCommand $command): void
     {
-        $artisan = ['php artisan breeze:install '.static::$stack];
+        $artisan = ['php artisan breeze:install ' . static::$stack];
         if (static::$dark || in_array('dark', static::$features)) {
             $artisan[] = '--dark';
         }

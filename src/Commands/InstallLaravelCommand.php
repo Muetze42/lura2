@@ -247,7 +247,7 @@ class InstallLaravelCommand extends AbstractCommand
 
         // Finally
         if ($this->storage->targetDisk->exists('pint.json')) {
-            $this->runProcess($this->composer.' pint --ansi');
+            $this->runProcess($this->composer . ' pint --ansi');
         }
     }
 
@@ -280,7 +280,7 @@ class InstallLaravelCommand extends AbstractCommand
     protected function setEnvVariables(): void
     {
         $variables = [
-            'APP_NAME' => '"'.addslashes($this->appName).'"',
+            'APP_NAME' => '"' . addslashes($this->appName) . '"',
             'LOG_STACK' => 'daily',
             'CACHE_STORE' => $this->defaultCacheStore,
             'SESSION_DRIVER' => $this->sessionDriver,
@@ -300,7 +300,7 @@ class InstallLaravelCommand extends AbstractCommand
             label: 'Which cache store should be used as default?',
             options: ['database', 'file', 'redis', 'memcached', 'apc', 'array', 'dynamodb', 'octane', 'null'],
             default: $this->defaultCacheStore,
-            hint: 'This connection is utilized if another isn\'t explicitly '.
+            hint: 'This connection is utilized if another isn\'t explicitly ' .
                 'specified when running a cache operation inside the application.',
             required: true
         );
@@ -409,7 +409,7 @@ class InstallLaravelCommand extends AbstractCommand
 
     protected function determineTempPath(): void
     {
-        $temp = 'temp-'.Str::random();
+        $temp = 'temp-' . Str::random();
         if ($this->storage->cwdDisk->exists($temp)) {
             $this->determineTempPath();
         }

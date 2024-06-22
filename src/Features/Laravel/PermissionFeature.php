@@ -24,7 +24,7 @@ class PermissionFeature extends AbstractFeature
         $command->storage->publish('templates/laravel-permission/config.stub', 'config/permission.php');
         $command->storage->publish(
             'templates/laravel-permission/migration.stub',
-            'database/migrations/'.$command->getMigrationPrefixedFileName('CreatePermissionsTables')
+            'database/migrations/' . $command->getMigrationPrefixedFileName('CreatePermissionsTables')
         );
         $command->storage->publish('templates/laravel-permission/Permission.stub', 'app/Models/Permission.php');
         $command->storage->publish('templates/laravel-permission/Role.stub', 'app/Models/Role.php');

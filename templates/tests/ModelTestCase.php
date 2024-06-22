@@ -16,7 +16,7 @@ abstract class ModelTestCase extends TestCase
     {
         parent::setUp();
         $class = class_basename(get_called_class());
-        $this->instance = app('App\Models\\'.substr($class, 0, -4));
+        $this->instance = app('App\Models\\' . substr($class, 0, -4));
     }
 
     protected function resource(): Model|Customer

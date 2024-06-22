@@ -10,7 +10,7 @@ $versions = array_merge(
     $versions['npm']
 );
 
-$files = glob(__DIR__.'/src/Features/Laravel/*.php');
+$files = glob(__DIR__ . '/src/Features/Laravel/*.php');
 foreach ($files as $file) {
     $contents = file_get_contents($file);
     $contents = preg_replace_callback(
@@ -23,7 +23,7 @@ foreach ($files as $file) {
                 if (isset($versions[$package])) {
                     $version = $versions[$package];
                     if (! str_starts_with($version, '^')) {
-                        $version = '^'.$version;
+                        $version = '^' . $version;
                     }
 
                     return "new Package('$package', '$version')";
