@@ -63,10 +63,7 @@ class Bootstrap
     protected function checkForUpdate(): void
     {
         $response = spin(
-            fn () => Http::get(sprintf(
-                'https://api.github.com/repos/Muetze42/lura2/commits?per_page=%d',
-                $this->maxChangeLogItems
-            )),
+            fn () => Http::get('https://api.github.com/repos/Muetze42/lura2/commits?per_page=100'),
             'Checking for update...'
         );
 
@@ -81,13 +78,17 @@ class Bootstrap
 
         $changes = [];
         foreach ($commits as $commit) {
-            if ($commit['sha'] == $reference) {
+            if ($commit['sha'] == $reference || count($changes) == $this->maxChangeLogItems) {
                 break;
             }
             $message = trim(Str::splitNewLines($commit['commit']['message'])[0]);
-            if (in_array(strtolower(explode(' ', $message)[0]), ['merge', 'style'])) {
+            if (
+                in_array(strtolower(explode(' ', $message)[0]), ['merge', 'style']) ||
+                in_array($message, $changes)
+            ) {
                 continue;
             }
+
             $changes[] = '• ' . $message;
         }
 
