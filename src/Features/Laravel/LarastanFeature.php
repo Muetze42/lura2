@@ -21,7 +21,7 @@ class LarastanFeature extends AbstractFeature
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
-        $command->storage->publish('templates/phpstan.neon.dist', 'phpstan.neon.dist');
+        $command->storage->publish('templates/phpstan.neon', 'phpstan.neon');
     }
 
     /**
