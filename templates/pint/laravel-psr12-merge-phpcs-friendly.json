@@ -44,6 +44,7 @@
             ],
             "sort_algorithm": "none"
         },
+        "types_spaces": "single",
         "unary_operator_spaces": {
             "only_dec_inc": true
         }
