@@ -24,6 +24,8 @@ abstract class AbstractCommand extends Command
 
     protected array $validatorMessages;
 
+    protected string $appPath;
+
     public Storage $storage;
 
     /**
@@ -101,7 +103,7 @@ abstract class AbstractCommand extends Command
         $reflection = new ReflectionClass(get_called_class());
 
         $this->storage = new Storage(
-            targetPath: AbstractCommand . phprtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
+            targetPath: rtrim(getcwd(), '/\\') . DIRECTORY_SEPARATOR . $this->appPath,
             packagePath: dirname($reflection->getFileName(), 3)
         );
     }

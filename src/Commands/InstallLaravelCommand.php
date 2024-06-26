@@ -36,8 +36,6 @@ class InstallLaravelCommand extends AbstractCommand
 
     public string $appName = '';
 
-    protected string $appPath;
-
     protected ?string $tempPath = null;
 
     public string $composer;
