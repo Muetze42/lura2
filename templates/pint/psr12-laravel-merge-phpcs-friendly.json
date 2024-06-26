@@ -170,7 +170,7 @@
                 "arrays"
             ]
         },
-        "types_spaces": "single",
+        "types_spaces": false,
         "visibility_required": {
             "elements": [
                 "method",
