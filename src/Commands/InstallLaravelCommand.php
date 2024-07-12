@@ -199,7 +199,7 @@ class InstallLaravelCommand extends AbstractCommand
         $this->storage->publish('stubs/laravel', 'stubs');
         if (in_array(LaravelPintFeature::class, $this->features)) {
             $this->storage->publish('templates/phpmd.xml', 'phpmd.xml.dist');
-            $this->storage->publish('templates/phpcs.xml', 'phpmd.phpcs.dist');
+            $this->storage->publish('templates/phpcs.xml', 'phpcs.dist');
         }
     }
 
