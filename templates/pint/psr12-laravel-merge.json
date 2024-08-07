@@ -59,6 +59,7 @@
         "multiline_whitespace_before_semicolons": {
             "strategy": "no_multi_line"
         },
+        "new_with_parentheses": true,
         "no_extra_blank_lines": {
             "tokens": [
                 "extra",

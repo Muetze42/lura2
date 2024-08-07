@@ -20,6 +20,7 @@
             "attribute_placement": "ignore",
             "on_multiline": "ensure_fully_multiline"
         },
+        "new_with_parentheses": true,
         "single_class_element_per_statement": {
             "elements": [
                 "property"

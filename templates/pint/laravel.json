@@ -4,5 +4,8 @@
         "_ide_help*.php",
         ".phpstorm.meta.php",
         "*.blade.php"
-    ]
+    ],
+    "rules": {
+        "new_with_parentheses": true
+    }
 }
