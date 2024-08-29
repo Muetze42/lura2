@@ -151,6 +151,16 @@ abstract class AbstractFeature implements FeatureInterface
     }
 
     /**
+     * Determine package scripts for this feature.
+     *
+     * @return array{string, string|array}
+     */
+    public static function packageScripts(InstallLaravelCommand $command): array
+    {
+        return [];
+    }
+
+    /**
      * Optional load additional features wich not autoloaded.
      */
     public static function load(InstallLaravelCommand $command): array

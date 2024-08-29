@@ -73,6 +73,19 @@ class DependenciesFilesService
         $this->close();
     }
 
+    public function addPackageScript(string $key, string $value): void
+    {
+        $scripts = data_get($this->dependencies['package'], 'scripts', []);
+        $scripts[$key] = $value;
+        data_set(
+            $this->dependencies['package'],
+            'scripts',
+            $scripts
+        );
+
+        $this->close();
+    }
+
     public function addComposerRequirement(string $package, string $version, bool $forceVersion = false): void
     {
         data_forget($this->dependencies, 'composer.require-dev.' . $package);

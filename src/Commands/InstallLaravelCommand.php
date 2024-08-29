@@ -9,6 +9,7 @@ use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Features\Laravel\InertiaJsFeature;
 use NormanHuth\Lura\Features\Laravel\LaravelPintFeature;
 use NormanHuth\Lura\Features\Laravel\SentryFeature;
+use NormanHuth\Lura\Features\Laravel\TypeScriptFeature;
 use NormanHuth\Lura\Services\DependenciesFilesService;
 use NormanHuth\Lura\Services\EnvFileService;
 use NormanHuth\Lura\Support\Package;
@@ -193,6 +194,9 @@ class InstallLaravelCommand extends AbstractCommand
             foreach ($feature::composerScripts($this) as $key => $value) {
                 $this->dependencies->addComposerScript($key, $value);
             }
+            foreach ($feature::packageScripts($this) as $key => $value) {
+                $this->dependencies->addPackageScript($key, $value);
+            }
             $feature::afterCreateProject($this);
         }
 
@@ -248,6 +252,17 @@ class InstallLaravelCommand extends AbstractCommand
         // Finally
         if ($this->storage->targetDisk->exists('pint.json')) {
             $this->runProcess($this->composer . ' pint --ansi');
+        }
+
+        if (in_array(TypeScriptFeature::class, $this->features)) {
+            $this->storage->targetDisk->put(
+                'resources/views/app.blade.php',
+                str_replace(
+                    'app.js',
+                    'app.ts',
+                    $this->storage->targetDisk->get('resources/views/app.blade.php')
+                )
+            );
         }
     }
 

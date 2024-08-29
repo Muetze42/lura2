@@ -58,7 +58,8 @@ class InertiaJsFeature extends AbstractFeature
      */
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
-        $file = 'templates/vite.config.' . (int) in_array(SentryFeature::class, $command->features) . '.js';
+        $file = 'templates/vite.config.' . (int) in_array(SentryFeature::class, $command->features);
+        $file.= in_array(TypeScriptFeature::class, $command->features) ? '.ts' : '.js';
         $command->storage->publish($file, 'vite.config.js');
         $command->storage->publish('templates/app.blade.php', 'resources/views/app.blade.php');
     }
@@ -103,6 +104,10 @@ class InertiaJsFeature extends AbstractFeature
 
         if (confirm('Install Headless UI?')) {
             $features[] = HeadlessUIFeature::class;
+        }
+
+        if (confirm('Using TypeScript?')) {
+            $features[] = TypeScriptFeature::class;
         }
 
         return $features;
