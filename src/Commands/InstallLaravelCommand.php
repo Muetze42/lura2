@@ -235,6 +235,7 @@ class InstallLaravelCommand extends AbstractCommand
         $this->serviceProvider();
         $this->bootstrapAppFile();
         $this->storage->publish('templates/.editorconfig');
+        $this->storage->publish('templates/.prettierrc.json');
         $this->storage->publish('templates/tests', 'tests');
         $this->storage->publish('templates/fonts', 'resources/fonts');
     }
