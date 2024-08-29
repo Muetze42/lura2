@@ -43,8 +43,8 @@ class FontAwesomeFeature extends AbstractFeature
     public static function addPackageDependency(InstallLaravelCommand $command): array
     {
         return static::packages([
-            new Package('free-regular-svg-icons', static::$version),
-            new Package('free-solid-svg-icons', static::$version),
+            new Package('@fortawesome/free-regular-svg-icons', static::$version),
+            new Package('@fortawesome/free-solid-svg-icons', static::$version),
         ]);
     }
 }
