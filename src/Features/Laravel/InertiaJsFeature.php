@@ -59,7 +59,7 @@ class InertiaJsFeature extends AbstractFeature
     public static function afterCreateProject(InstallLaravelCommand $command): void
     {
         $file = 'templates/vite.config.' . (int) in_array(SentryFeature::class, $command->features);
-        $file.= in_array(TypeScriptFeature::class, $command->features) ? '.ts' : '.js';
+        $file .= in_array(TypeScriptFeature::class, $command->features) ? '.ts' : '.js';
         $command->storage->publish($file, 'vite.config.js');
         $command->storage->publish('templates/app.blade.php', 'resources/views/app.blade.php');
     }
@@ -71,7 +71,8 @@ class InertiaJsFeature extends AbstractFeature
     {
         $command->runProcess('php artisan inertia:middleware --ansi');
 
-        $file = 'templates/app.' . (int) in_array(SentryFeature::class, $command->features) . '.js';
+        $ext = in_array(TypeScriptFeature::class, $command->features) ? '.ts' : '.js';
+        $file = 'templates/app.' . (int) in_array(SentryFeature::class, $command->features) . $ext;
         $command->storage->publish($file, 'resources/js/app.js');
     }
 

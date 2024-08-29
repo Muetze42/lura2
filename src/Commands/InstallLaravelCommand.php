@@ -263,6 +263,14 @@ class InstallLaravelCommand extends AbstractCommand
                     $this->storage->targetDisk->get('resources/views/app.blade.php')
                 )
             );
+            $this->storage->targetDisk->move(
+                'resources/js/app.js',
+                'resources/js/app.ts'
+            );
+            $this->storage->targetDisk->move(
+                'resources/js/bootstrap.js',
+                'resources/js/bootstrap.ts'
+            );
         }
     }
 
