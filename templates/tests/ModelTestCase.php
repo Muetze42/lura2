@@ -1,5 +1,8 @@
 <?php
 
+// @formatter:off
+// phpcs:ignoreFile
+
 namespace Tests;
 
 use Illuminate\Database\Eloquent\Model;
@@ -23,10 +26,7 @@ abstract class ModelTestCase extends TestCase
         return $this->instance->factory()->create();
     }
 
-    /**
-     * @test
-     */
-    public function canCreate(): void
+    public function test_can_create(): void
     {
         $resource = $this->resource();
 
@@ -36,10 +36,7 @@ abstract class ModelTestCase extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function canDelete(): void
+    public function test_can_delete(): void
     {
         $resource = $this->resource();
         $resource->delete();
@@ -52,10 +49,7 @@ abstract class ModelTestCase extends TestCase
         $this->assertModelMissing($resource);
     }
 
-    /**
-     * @test
-     */
-    public function canRestore(): void
+    public function test_can_restore(): void
     {
         $resource = $this->resource();
         $resource->delete();

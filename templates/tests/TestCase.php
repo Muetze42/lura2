@@ -1,5 +1,8 @@
 <?php
 
+// @formatter:off
+// phpcs:ignoreFile
+
 namespace Tests;
 
 use App\Models\User;
