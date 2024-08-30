@@ -66,7 +66,7 @@ class ESLintFeature extends AbstractFeature
     {
         return [
             'lint' => 'eslint resources/js --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --ignore-pattern ziggy.* --ignore-pattern vuex.*',
-            'format' => 'prettier --write src/',
+            'format' => 'prettier --write resources/js/',
         ];
     }
 }
