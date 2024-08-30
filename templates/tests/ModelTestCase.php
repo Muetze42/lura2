@@ -2,12 +2,11 @@
 
 namespace Tests;
 
-use App\Models\Customer;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class ModelTestCase extends TestCase
 {
-    protected Model|Customer $instance;
+    protected Model $instance;
 
     /**
      * Setup the test environment.
@@ -19,7 +18,7 @@ abstract class ModelTestCase extends TestCase
         $this->instance = app('App\Models\\' . substr($class, 0, -4));
     }
 
-    protected function resource(): Model|Customer
+    protected function resource(): Model
     {
         return $this->instance->factory()->create();
     }
