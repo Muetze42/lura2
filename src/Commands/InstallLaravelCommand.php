@@ -8,6 +8,7 @@ use NormanHuth\Lura\Contracts\AbstractCommand;
 use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Features\Laravel\InertiaJsFeature;
 use NormanHuth\Lura\Features\Laravel\LaravelPintFeature;
+use NormanHuth\Lura\Features\Laravel\PhpLibraryFeature;
 use NormanHuth\Lura\Features\Laravel\SentryFeature;
 use NormanHuth\Lura\Features\Laravel\TypeScriptFeature;
 use NormanHuth\Lura\Services\DependenciesFilesService;
@@ -201,6 +202,10 @@ class InstallLaravelCommand extends AbstractCommand
         }
 
         $this->storage->publish('stubs/laravel', 'stubs');
+        if (in_array(PhpLibraryFeature::class, $this->features)) {
+            $this->storage->publish('stubs/php-library', 'stubs');
+        }
+
         if (in_array(LaravelPintFeature::class, $this->features)) {
             $this->storage->publish('templates/phpmd.xml', 'phpmd.xml.dist');
             $this->storage->publish('templates/phpcs.xml', 'phpcs.dist');
