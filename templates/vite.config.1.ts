@@ -23,6 +23,7 @@ export default defineConfig({
     sentryVitePlugin({
       org: 'norman-huth',
       project: env.VITE_SENTRY_PROJECT,
+      telemetry: false,
       release: {
         name: new Date().getTime()
       },
