@@ -4,6 +4,7 @@ namespace NormanHuth\Lura\Services;
 
 use Illuminate\Support\Arr;
 use NormanHuth\Library\Support\ComposerJson;
+use NormanHuth\Lura\Support\ComposerScript;
 use NormanHuth\Lura\Support\Http;
 
 class DependenciesFilesService
@@ -59,15 +60,37 @@ class DependenciesFilesService
         $this->close();
     }
 
-    public function addComposerScript(string $key, array|string $value): void
+    public function addComposerScript(ComposerScript $script): void
     {
-        $value = (array) $value;
         $scripts = data_get($this->dependencies['composer'], 'scripts', []);
-        $scripts[$key] = $value;
+        $scripts[$script->key] = $script->value;
         data_set(
             $this->dependencies['composer'],
             'scripts',
             $scripts
+        );
+
+        if ($description = $script->description) {
+            $descriptions = data_get($this->dependencies['composer'], 'scripts-descriptions', []);
+            $descriptions[$script->key] = $description;
+            data_set(
+                $this->dependencies['composer'],
+                'scripts-descriptions',
+                $descriptions
+            );
+        }
+
+        $this->close();
+    }
+
+    public function addScriptAlias(string $script, array|string $target): void
+    {
+        $aliases = data_get($this->dependencies['composer'], 'scripts-aliases', []);
+        $aliases[$script] = (array) $target;
+        data_set(
+            $this->dependencies['composer'],
+            'scripts-aliases',
+            $aliases
         );
 
         $this->close();

@@ -1,6 +1,6 @@
 <?php
 
-namespace NormanHuth\Lura\Contracts;
+namespace NormanHuth\Lura;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
@@ -11,6 +11,7 @@ use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory as Validator;
 use NormanHuth\Library\ClassFinder;
+use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Support\Process;
 use NormanHuth\Lura\Support\Storage;
 use ReflectionClass;
@@ -44,7 +45,7 @@ abstract class AbstractCommand extends Command
         $loader = new FileLoader(new Filesystem(), '');
         $translator = new Translator($loader, 'en');
         $this->validator = new Validator($translator, new Container());
-        $this->validatorMessages = include __DIR__ . '/../../lang/en/validation.php';
+        $this->validatorMessages = include __DIR__ . '/../lang/en/validation.php';
     }
 
     /**
@@ -111,7 +112,7 @@ abstract class AbstractCommand extends Command
     protected function getFeatures(string $type = 'Laravel'): array
     {
         return Arr::where(ClassFinder::load(
-            paths: dirname(__DIR__) . '/Features/' . $type,
+            paths: __DIR__ . '/Features/' . $type,
             subClassOf: FeatureInterface::class
         ), fn (FeatureInterface|string $feature) => $feature::autoload());
     }

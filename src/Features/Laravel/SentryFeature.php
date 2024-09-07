@@ -4,7 +4,7 @@ namespace NormanHuth\Lura\Features\Laravel;
 
 use Illuminate\Support\Str;
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
-use NormanHuth\Lura\Contracts\AbstractFeature;
+use NormanHuth\Lura\AbstractFeature;
 use NormanHuth\Lura\Support\Package;
 
 class SentryFeature extends AbstractFeature

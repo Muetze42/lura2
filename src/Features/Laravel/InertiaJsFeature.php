@@ -3,7 +3,7 @@
 namespace NormanHuth\Lura\Features\Laravel;
 
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
-use NormanHuth\Lura\Contracts\AbstractFeature;
+use NormanHuth\Lura\AbstractFeature;
 use NormanHuth\Lura\Support\Package;
 use NormanHuth\Prompts\Prompt;
 
@@ -24,7 +24,7 @@ class InertiaJsFeature extends AbstractFeature
      */
     public static function default(): bool
     {
-        return true;
+        return false;
     }
 
     /**

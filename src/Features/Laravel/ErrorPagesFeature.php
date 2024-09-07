@@ -3,7 +3,7 @@
 namespace NormanHuth\Lura\Features\Laravel;
 
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
-use NormanHuth\Lura\Contracts\AbstractFeature;
+use NormanHuth\Lura\AbstractFeature;
 
 class ErrorPagesFeature extends AbstractFeature
 {
@@ -20,7 +20,7 @@ class ErrorPagesFeature extends AbstractFeature
      */
     public static function default(): bool
     {
-        return true;
+        return false;
     }
 
     /**

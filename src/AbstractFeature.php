@@ -1,9 +1,10 @@
 <?php
 
-namespace NormanHuth\Lura\Contracts;
+namespace NormanHuth\Lura;
 
 use Illuminate\Support\Str;
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
+use NormanHuth\Lura\Contracts\FeatureInterface;
 
 abstract class AbstractFeature implements FeatureInterface
 {

@@ -3,7 +3,7 @@
 namespace NormanHuth\Lura\Features\Laravel;
 
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
-use NormanHuth\Lura\Contracts\AbstractFeature;
+use NormanHuth\Lura\AbstractFeature;
 use NormanHuth\Lura\Support\Package;
 
 class MedialibraryFeature extends AbstractFeature

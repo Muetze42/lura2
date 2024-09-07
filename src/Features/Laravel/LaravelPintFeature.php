@@ -3,7 +3,8 @@
 namespace NormanHuth\Lura\Features\Laravel;
 
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
-use NormanHuth\Lura\Contracts\AbstractFeature;
+use NormanHuth\Lura\AbstractFeature;
+use NormanHuth\Lura\Support\ComposerScript;
 use NormanHuth\Lura\Support\Package;
 use NormanHuth\Prompts\Prompt;
 
@@ -46,7 +47,13 @@ class LaravelPintFeature extends AbstractFeature
      */
     public static function composerScripts(InstallLaravelCommand $command): array
     {
-        return ['pint' => './vendor/bin/pint'];
+        return [
+            new ComposerScript(
+                'pint',
+                './vendor/bin/pint --ansi',
+                'Fix code style issues'
+            ),
+        ];
     }
 
     /**

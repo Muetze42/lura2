@@ -7,14 +7,14 @@ use NormanHuth\Lura\AbstractFeature;
 use NormanHuth\Lura\Support\ComposerScript;
 use NormanHuth\Lura\Support\Package;
 
-class LarastanFeature extends AbstractFeature
+class PhpMdFeature extends AbstractFeature
 {
     /**
      * Determine the name of the feature.
      */
     public static function name(): string
     {
-        return '[Code Quality] Larastan';
+        return '[Code Quality] PHPMD - PHP Mess Detector';
     }
 
     /**
@@ -26,11 +26,15 @@ class LarastanFeature extends AbstractFeature
     }
 
     /**
-     * Perform action after create project.
+     * Determine composer dev requirements for this feature.
+     *
+     * @return array<\NormanHuth\Lura\Support\Package>
      */
-    public static function afterCreateProject(InstallLaravelCommand $command): void
+    public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
-        $command->storage->publish('templates/phpstan.neon', 'phpstan.neon');
+        return [
+            new Package('phpmd/phpmd', '^2.15'),
+        ];
     }
 
     /**
@@ -42,22 +46,10 @@ class LarastanFeature extends AbstractFeature
     {
         return [
             new ComposerScript(
-                'stan',
-                './vendor/bin/phpstan analyse --ansi',
-                'Run static analysis to find bugs'
+                'phpmd',
+                './vendor/bin/phpmd app,bootstrap,config,database,routes ansi phpmd.xml',
+                'Look for several potential problems within the source'
             ),
-        ];
-    }
-
-    /**
-     * Determine composer requirements for this feature.
-     *
-     * @return array<\NormanHuth\Lura\Support\Package>
-     */
-    public static function addComposerDevRequirement(InstallLaravelCommand $command): array
-    {
-        return [
-            new Package('larastan/larastan', '^2.9'),
         ];
     }
 }

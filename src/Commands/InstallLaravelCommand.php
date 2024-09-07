@@ -4,15 +4,18 @@ namespace NormanHuth\Lura\Commands;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use NormanHuth\Lura\Contracts\AbstractCommand;
+use NormanHuth\Lura\AbstractCommand;
 use NormanHuth\Lura\Contracts\FeatureInterface;
 use NormanHuth\Lura\Features\Laravel\InertiaJsFeature;
+use NormanHuth\Lura\Features\Laravel\LarastanFeature;
 use NormanHuth\Lura\Features\Laravel\LaravelPintFeature;
 use NormanHuth\Lura\Features\Laravel\PhpLibraryFeature;
+use NormanHuth\Lura\Features\Laravel\PhpMdFeature;
 use NormanHuth\Lura\Features\Laravel\SentryFeature;
 use NormanHuth\Lura\Features\Laravel\TypeScriptFeature;
 use NormanHuth\Lura\Services\DependenciesFilesService;
 use NormanHuth\Lura\Services\EnvFileService;
+use NormanHuth\Lura\Support\ComposerScript;
 use NormanHuth\Lura\Support\Package;
 use NormanHuth\Prompts\Prompt;
 
@@ -192,8 +195,8 @@ class InstallLaravelCommand extends AbstractCommand
                     $package->{$method}($this->dependencies);
                 }
             }
-            foreach ($feature::composerScripts($this) as $key => $value) {
-                $this->dependencies->addComposerScript($key, $value);
+            foreach ($feature::composerScripts($this) as $item) {
+                $this->dependencies->addComposerScript($item);
             }
             foreach ($feature::packageScripts($this) as $key => $value) {
                 $this->dependencies->addPackageScript($key, $value);
@@ -206,9 +209,27 @@ class InstallLaravelCommand extends AbstractCommand
             $this->storage->publish('stubs/php-library', 'stubs');
         }
 
+        $this->storage->publish('templates/phpcs.xml', 'phpcs.xml');
+        $this->storage->publish('templates/phpmd.xml', 'phpmd.xml');
+
+        $quality = [];
         if (in_array(LaravelPintFeature::class, $this->features)) {
-            $this->storage->publish('templates/phpmd.xml', 'phpmd.xml.dist');
-            $this->storage->publish('templates/phpcs.xml', 'phpcs.dist');
+            $quality[] = "@pint";
+        }
+        if (in_array(LarastanFeature::class, $this->features)) {
+            $quality[] = "@stan";
+        }
+        if (in_array(PhpMdFeature::class, $this->features)) {
+            $quality[] = "@phpmd";
+        }
+
+        if (count($quality) > 1) {
+            $this->dependencies->addComposerScript(new ComposerScript(
+                'code-quality',
+                $quality,
+                'Running all analysis and fixer tools'
+            ));
+            $this->dependencies->addScriptAlias('code-quality', 'cq');
         }
     }
 
