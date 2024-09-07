@@ -5,12 +5,17 @@ namespace {{ namespace }};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @template TModel of \{{ namespace }}\{{ class }}
+ * @mixin \Illuminate\Database\Eloquent\Builder<TModel>
+ */
 class {{ class }} extends Model
 {
     /**
      * @use HasFactory<\Database\Factories\{{ class }}Factory>
      */
     use HasFactory;
+
     //use \Illuminate\Database\Eloquent\SoftDeletes;
 
     /**
