@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @template TModel of \{{ namespace }}\{{ class }}
- * @mixin \Illuminate\Database\Eloquent\Builder<TModel>
+ * @mixin \Illuminate\Database\Eloquent\Builder<\{{ namespace }}\{{ class }}>
  */
 class {{ class }} extends Model
 {
@@ -15,8 +14,7 @@ class {{ class }} extends Model
      * @use HasFactory<\Database\Factories\{{ class }}Factory>
      */
     use HasFactory;
-
-    //use \Illuminate\Database\Eloquent\SoftDeletes;
+    //use \Spatie\Translatable\HasTranslations;
 
     /**
      * The attributes that are mass assignable.
@@ -26,11 +24,11 @@ class {{ class }} extends Model
     protected $fillable = [];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that are translatable.
      *
      * @var array<int, string>
      */
-    protected $hidden = [];
+    public array $translatable = [];
 
     /**
      * Get the attributes that should be cast.
