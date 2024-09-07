@@ -225,11 +225,11 @@ class InstallLaravelCommand extends AbstractCommand
 
         if (count($quality) > 1) {
             $this->dependencies->addComposerScript(new ComposerScript(
-                'code-quality',
+                'checks',
                 $quality,
                 'Running all analysis and fixer tools'
             ));
-            $this->dependencies->addScriptAlias('code-quality', 'cq');
+            $this->dependencies->addScriptAlias('checks', ['c']);
         }
     }
 
