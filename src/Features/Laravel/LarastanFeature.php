@@ -13,7 +13,7 @@ class LarastanFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return '[Code Analysis] Larastan';
+        return '[Code Quality] Larastan';
     }
 
     /**

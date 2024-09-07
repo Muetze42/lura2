@@ -67,8 +67,8 @@ class SentryFeature extends AbstractFeature
     {
         if (in_array(InertiaJsFeature::class, $command->features)) {
             return [
-                new Package('@sentry/vite-plugin', '^2.16.0'),
-                new Package('@sentry/vue', '^7.109.0'),
+                new Package('@sentry/vite-plugin', '^2.22.4'),
+                new Package('@sentry/vue', '^8.28.0'),
             ];
         }
 

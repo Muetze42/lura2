@@ -32,7 +32,7 @@ class LaravelIgnitionFeature extends AbstractFeature
     public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('spatie/laravel-ignition', '^2.7'),
+            new Package('spatie/laravel-ignition', '^2.8'),
         ];
     }
 }

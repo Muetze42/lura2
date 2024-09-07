@@ -38,7 +38,7 @@ class LaravelBreezeFeature extends AbstractFeature
     public static function addComposerDevRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('laravel/breeze', '^2.0'),
+            new Package('laravel/breeze', '^2.1'),
         ];
     }
 

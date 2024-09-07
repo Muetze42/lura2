@@ -32,10 +32,10 @@ class TailwindCssFeature extends AbstractFeature
     public static function addPackageDependency(InstallLaravelCommand $command): array
     {
         return [
-            new Package('tailwindcss', '^3.4.3'),
-            new Package('postcss', '^8.4.38'),
-            new Package('autoprefixer', '^10.4.19'),
-            new Package('@tailwindcss/forms', '^0.5.7'),
+            new Package('tailwindcss', '^3.4.10'),
+            new Package('postcss', '^8.4.45'),
+            new Package('autoprefixer', '^10.4.20'),
+            new Package('@tailwindcss/forms', '^0.5.9'),
             new Package('tailwind-scrollbar', '^3.1.0'),
         ];
     }

@@ -32,8 +32,8 @@ class ScssFeature extends AbstractFeature
     public static function addPackageDependency(InstallLaravelCommand $command): array
     {
         return [
-            new Package('sass', '^1.75.0'),
-            new Package('sass-loader', '^14.2.1'),
+            new Package('sass', '^1.78.0'),
+            new Package('sass-loader', '^16.0.1'),
         ];
     }
 

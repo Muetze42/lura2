@@ -32,7 +32,7 @@ class FindCommandFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('norman-huth/find-command', '^1.0'),
+            new Package('norman-huth/find-command', '^1.1'),
         ];
     }
 }

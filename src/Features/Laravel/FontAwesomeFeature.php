@@ -8,12 +8,12 @@ use NormanHuth\Lura\Support\Package;
 
 class FontAwesomeFeature extends AbstractFeature
 {
-    protected static string $version = '^6.5.2';
+    protected static string $version = '^6.6.0';
 
     protected static function packages(array $merge): array
     {
         return array_merge([
-            new Package('@fortawesome/vue-fontawesome', '^3.0.6'),
+            new Package('@fortawesome/vue-fontawesome', '^3.0.8'),
             new Package('@fortawesome/fontawesome-svg-core', static::$version),
             new Package('@fortawesome/free-brands-svg-icons', static::$version),
         ], $merge);

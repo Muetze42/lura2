@@ -16,7 +16,7 @@ class LaravelPintFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return '[Code Linter] Laravel Pint Rules';
+        return '[Code Quality] Laravel Pint Rules';
     }
 
     /**

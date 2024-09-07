@@ -32,7 +32,7 @@ class HeadlessUIFeature extends AbstractFeature
     public static function addPackageDependency(InstallLaravelCommand $command): array
     {
         return [
-            new Package('@headlessui/vue', '^1.7.19'),
+            new Package('@headlessui/vue', '^1.7.22'),
         ];
     }
 }

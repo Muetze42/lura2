@@ -32,10 +32,10 @@ class TypeScriptFeature extends AbstractFeature
     public static function addPackageDevDependency(InstallLaravelCommand $command): array
     {
         return [
-            new Package('@typescript-eslint/eslint-plugin', '^8.3.0'),
+            new Package('@typescript-eslint/eslint-plugin', '^8.4.0'),
             new Package('@rushstack/eslint-patch', '^1.10.4'),
             new Package('typescript', '^5.5.4'),
-            new Package('vue-tsc', '^2.1.2'),
+            new Package('vue-tsc', '^2.1.6'),
         ];
     }
 

@@ -24,7 +24,7 @@ class PhpLibraryFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('norman-huth/php-library', '^2.3'),
+            new Package('norman-huth/php-library', '^2.8'),
         ];
     }
 

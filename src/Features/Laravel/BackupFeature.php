@@ -24,7 +24,7 @@ class BackupFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('spatie/laravel-backup', '^8.6'),
+            new Package('spatie/laravel-backup', '^9.0'),
         ];
     }
 
