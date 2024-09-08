@@ -298,6 +298,8 @@ class InstallLaravelCommand extends AbstractCommand
                 'resources/js/bootstrap.ts'
             );
         }
+
+        $this->dependencies->simplifyComposerScripts();
     }
 
     protected function bootstrapAppFile(): void

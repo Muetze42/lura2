@@ -83,6 +83,24 @@ class DependenciesFilesService
         $this->close();
     }
 
+    public function simplifyComposerScripts(): void
+    {
+        $scripts = data_get($this->dependencies['composer'], 'scripts', []);
+
+        foreach ($scripts as $key => $value) {
+            if (is_array($value) && count($value) == 1) {
+                $scripts[$key] = $value[0];
+            }
+        }
+
+        data_set(
+            $this->dependencies['composer'],
+            'scripts',
+            $scripts
+        );
+        $this->close();
+    }
+
     public function addScriptAlias(string $script, array|string $target): void
     {
         $aliases = data_get($this->dependencies['composer'], 'scripts-aliases', []);
