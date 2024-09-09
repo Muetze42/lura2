@@ -14,7 +14,6 @@ class {{ class }} extends Model
      * @use HasFactory<\Database\Factories\{{ class }}Factory>
      */
     use HasFactory;
-    //use \Spatie\Translatable\HasTranslations;
 
     /**
      * The attributes that are mass assignable.
