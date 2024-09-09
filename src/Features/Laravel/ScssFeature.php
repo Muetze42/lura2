@@ -13,7 +13,7 @@ class ScssFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return 'CSS instead of CSS';
+        return 'SCSS instead of CSS';
     }
 
     /**
