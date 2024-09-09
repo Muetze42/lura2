@@ -43,7 +43,7 @@ class LarastanFeature extends AbstractFeature
         return [
             new ComposerScript(
                 'stan',
-                './vendor/bin/phpstan analyse --ansi',
+                './vendor/bin/phpstan analyse -v --ansi',
                 'Run static analysis to find bugs'
             ),
         ];
