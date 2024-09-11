@@ -29,9 +29,7 @@ class {{ class }} extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'token',
-    ];
+    protected $hidden = [];
 
     /**
      * Get the attributes that should be cast.
