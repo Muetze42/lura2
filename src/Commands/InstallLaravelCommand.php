@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use NormanHuth\Lura\AbstractCommand;
 use NormanHuth\Lura\Contracts\FeatureInterface;
+use NormanHuth\Lura\Features\Laravel\EloquentTranslatableFeature;
 use NormanHuth\Lura\Features\Laravel\InertiaJsFeature;
 use NormanHuth\Lura\Features\Laravel\LarastanFeature;
 use NormanHuth\Lura\Features\Laravel\LaravelPintFeature;
@@ -66,12 +67,6 @@ class InstallLaravelCommand extends AbstractCommand
     public function handle(): void
     {
         intro('Creating a Laravel Project');
-
-        $array = [
-            '@vendor/package' => '^1.0.0',
-            'foo' => '^3.0.0',
-            'bar' => '^5.0.0',
-        ];
 
         $this->determineAppData();
         if (! $this->isTargetPathOk()) {
@@ -211,6 +206,10 @@ class InstallLaravelCommand extends AbstractCommand
         }
 
         $this->storage->publish('stubs/laravel', 'stubs');
+        if (in_array(EloquentTranslatableFeature::class, $this->features)) {
+            $this->storage->publish('templates/model.translatable.stub', 'stubs/model.stub');
+        }
+
         if (in_array(PhpLibraryFeature::class, $this->features)) {
             $this->storage->publish('stubs/php-library', 'stubs');
         }
@@ -280,6 +279,20 @@ class InstallLaravelCommand extends AbstractCommand
     {
         $this->runProcess('php artisan lang:publish --ansi');
         $this->runProcess('php artisan key:generate --ansi');
+
+        $this->storage->targetDisk->put(
+            'app\Models\User.php',
+            str_replace(
+                'use HasFactory, Notifiable;',
+                '/**
+     * @use HasFactory<\Database\Factories\UserFactory>
+     */
+    use HasFactory;
+
+    use Notifiable;',
+                $this->storage->targetDisk->get('app\Models\User.php')
+            )
+        );
 
         // Finally
         if ($this->storage->targetDisk->exists('pint.json')) {
