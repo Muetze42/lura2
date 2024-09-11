@@ -2,12 +2,17 @@
 
 namespace NormanHuth\Lura\Features\Laravel;
 
+use Illuminate\Support\Carbon;
 use NormanHuth\Lura\Commands\InstallLaravelCommand;
 use NormanHuth\Lura\AbstractFeature;
 use NormanHuth\Lura\Support\Package;
 
+use function Laravel\Prompts\confirm;
+
 class PhpLibraryFeature extends AbstractFeature
 {
+    protected static bool $updateProvider;
+
     /**
      * Determine the name of the feature.
      */
@@ -24,7 +29,7 @@ class PhpLibraryFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('norman-huth/php-library', '^2.8'),
+            new Package('norman-huth/php-library', '^2.9'),
         ];
     }
 
@@ -68,5 +73,27 @@ class PhpLibraryFeature extends AbstractFeature
 
             $command->storage->targetDisk->put('routes/api.php', $contents . "\n");
         }
+    }
+
+    /**
+     * Perform action before create project.
+     */
+    public static function beforeCreateProject(InstallLaravelCommand $command): void
+    {
+        $prefix = Carbon::now()->format('Y_m_d_0000');
+
+        static::$updateProvider = confirm(
+            label: 'Should the migrations have sequential numbers?',
+            default: false,
+            hint: $prefix . '10_create_foo_table, ' . $prefix . '20_create_bar_table etc'
+        );
+    }
+
+    /**
+     * Perform action after create project.
+     */
+    public static function afterCreateProject(InstallLaravelCommand $command): void
+    {
+        $command->storage->publish('templates/providers.php', 'bootstrap/providers.php');
     }
 }
