@@ -25,6 +25,15 @@ class {{ class }} extends Model
     protected $fillable = [];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'token',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
