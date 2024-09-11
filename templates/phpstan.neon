@@ -4,33 +4,20 @@ includes:
 parameters:
   paths:
     - app/
+    - bootstrap/
 #  reportUnmatchedIgnoredErrors: false
 
-# 0 is the loosest and 9 is the strictest
+#  treatPhpDocTypesAsCertain: false
+#
+#  universalObjectCratesClasses:
+#    - Illuminate\Database\Eloquent\Relations\Pivot
+#    - Illuminate\Http\Resources\Json\JsonResource
+
   level: 9
 
   ignoreErrors:
 #    -
 #      message: "#Unsafe usage of new static#"
 #      paths:
-#        - app/Contracts
-#        - app/Support
-# Laravel Framework Rules https://github.com/laravel/framework/blob/11.x/phpstan.src.neon.dist
-#    - "#\\(void\\) is used#"
-#    - "#Access to an undefined property#"
-#    - "#Call to an undefined method#"
-#    - "#but return statement is missing.#"
-#    - "#Caught class [a-zA-Z0-9\\\\_]+ not found.#"
-#    - "#Class [a-zA-Z0-9\\\\_]+ not found.#"
-#    - "#has invalid type#"
-#    - "#should always throw an exception or terminate script execution#"
-#    - "#Instantiated class [a-zA-Z0-9\\\\_]+ not found.#"
-#    - "#Unsafe usage of new static#"
-#
-#    ignoreErrors:
-#        - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
-#
-#    checkMissingIterableValueType: false
+#        - app/Traits/*
+#        - app/*/Concerns/*
