@@ -67,6 +67,12 @@ class InstallLaravelCommand extends AbstractCommand
     {
         intro('Creating a Laravel Project');
 
+        $array = [
+            '@vendor/package' => '^1.0.0',
+            'foo' => '^3.0.0',
+            'bar' => '^5.0.0',
+        ];
+
         $this->determineAppData();
         if (! $this->isTargetPathOk()) {
             return;

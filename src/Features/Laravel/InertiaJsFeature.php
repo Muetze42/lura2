@@ -83,29 +83,45 @@ class InertiaJsFeature extends AbstractFeature
     {
         $features = [];
 
-        if (confirm('Install ESLint?')) {
+        $packages = Prompt::multiselect(
+            label: 'Select additional dependencies:',
+            options: [
+                'eslint' => 'ESLint',
+                'headless' => 'Headless UI',
+                'typescript' => 'TypeScript',
+                'primevue' => 'PrimeVue',
+            ],
+            default: ['eslint', 'typescript']
+        );
+
+        if (in_array('eslint', $packages)) {
             $features[] = ESLintFeature::class;
         }
 
-        if (confirm('Install Headless UI?')) {
+        if (in_array('headless', $packages)) {
             $features[] = HeadlessUIFeature::class;
         }
 
-        if (confirm('Using TypeScript?')) {
+        if (in_array('typescript', $packages)) {
             $features[] = TypeScriptFeature::class;
         }
 
+        if (in_array('primevue', $packages)) {
+            $features[] = PrimeVueFeature::class;
+        }
+
         $font = Prompt::select(
-            label: 'Install Vue Icon Font?',
+            label: 'Install Vue Icons?',
             options: [
                 'no' => 'No',
                 'fa-free' => 'Font Awesome Free',
-                'fa-pro' => ' Font Awesome Pro',
-                'heroicons' => ' Heroicons',
-                'primeicons' => ' PrimeIcons',
-                'vue-material-design-icons' => ' Vue Material Design Icons',
+                'fa-pro' => 'Font Awesome Pro',
+                'heroicons' => 'Heroicons',
+                'primeicons' => 'PrimeIcons',
+                'vue-material-design-icons' => 'Vue Material Design Icons',
             ],
-            default: 'no'
+            default: 'no',
+            scroll: 10
         );
 
         if ($font == 'fa-free') {
