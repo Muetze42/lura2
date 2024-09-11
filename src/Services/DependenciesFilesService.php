@@ -130,11 +130,13 @@ class DependenciesFilesService
     public function addComposerRequirement(string $package, string $version, bool $forceVersion = false): void
     {
         data_forget($this->dependencies, 'composer.require-dev.' . $package);
+        data_forget($this->dependencies, 'composer.require.' . $package);
         $this->addDependency($package, $version, $forceVersion);
     }
 
     public function addComposerDevRequirement(string $package, string $version, bool $forceVersion = false): void
     {
+        data_forget($this->dependencies, 'composer.require-dev.' . $package);
         data_forget($this->dependencies, 'composer.require.' . $package);
         $this->addDependency($package, $version, $forceVersion, 'composer.require-dev');
     }
@@ -142,11 +144,13 @@ class DependenciesFilesService
     public function addPackageDependency(string $package, string $version, bool $forceVersion = false): void
     {
         data_forget($this->dependencies, 'package.devDependencies.' . $package);
+        data_forget($this->dependencies, 'package.dependencies.' . $package);
         $this->addDependency($package, $version, $forceVersion, 'package.dependencies');
     }
 
     public function addPackageDevDependency(string $package, string $version, bool $forceVersion = false): void
     {
+        data_forget($this->dependencies, 'package.devDependencies.' . $package);
         data_forget($this->dependencies, 'package.dependencies.' . $package);
         $this->addDependency($package, $version, $forceVersion, 'package.devDependencies');
     }
@@ -200,6 +204,15 @@ class DependenciesFilesService
 
     protected function close(): void
     {
+        ksort($this->dependencies['composer']['require']);
+        ksort($this->dependencies['composer']['require-dev']);
+        if (!empty($this->dependencies['package']['dependencies'])) {
+            ksort($this->dependencies['package']['dependencies']);
+        }
+        if (!empty($this->dependencies['package']['devDependencies'])) {
+            ksort($this->dependencies['package']['devDependencies']);
+        }
+
         if ($this->dependencies['package']) {
             file_put_contents(
                 $this->packageJsonFile,
