@@ -32,6 +32,7 @@ class ESLintFeature extends AbstractFeature
     public static function addPackageDevDependency(InstallLaravelCommand $command): array
     {
         $packages = [
+            new Package('eslint', '^8.57.0', true),
             new Package('@babel/plugin-syntax-dynamic-import', '^7.8.3'),
             new Package('@vue/eslint-config-prettier', '^9.0.0'),
             new Package('eslint-plugin-vue', '^9.25.0'),
