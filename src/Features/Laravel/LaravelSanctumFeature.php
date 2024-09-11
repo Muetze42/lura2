@@ -41,7 +41,12 @@ class LaravelSanctumFeature extends AbstractFeature
      */
     public static function afterComposerInstall(InstallLaravelCommand $command): void
     {
-        $command->runProcess('php artisan vendor:publish --tag=sanctum-migrations --ansi');
+        //$command->runProcess('php artisan vendor:publish --tag=sanctum-migrations --ansi');
+        $command->storage->publish(
+            'templates/sanctum/migration.stub',
+            'database/migrations/' . $command->getMigrationPrefixedFileName('create_personal_access_tokens_table')
+        );
+        $command->line('Publishing [sanctum-migrations] assets.', 'info');
         $command->runProcess('php artisan vendor:publish --tag=sanctum-config --ansi');
     }
 }
