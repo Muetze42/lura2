@@ -83,22 +83,6 @@ class InertiaJsFeature extends AbstractFeature
     {
         $features = [];
 
-        $font = Prompt::select(
-            label: 'Install Font Awesome Vue?',
-            options: [
-                'no' => 'No',
-                'free' => 'Yes, Font Awesome Free',
-                'pro' => 'Yes, Font Awesome Pro',
-            ],
-            default: 'no'
-        );
-
-        if ($font == 'free') {
-            $features[] = FontAwesomeFeature::class;
-        } elseif ($font == 'pro') {
-            $features[] = FontAwesomeProFeature::class;
-        }
-
         if (confirm('Install ESLint?')) {
             $features[] = ESLintFeature::class;
         }
@@ -109,6 +93,49 @@ class InertiaJsFeature extends AbstractFeature
 
         if (confirm('Using TypeScript?')) {
             $features[] = TypeScriptFeature::class;
+        }
+
+        $font = Prompt::select(
+            label: 'Install Vue Icon Font?',
+            options: [
+                'no' => 'No',
+                'fa-free' => 'Font Awesome Free',
+                'fa-pro' => ' Font Awesome Pro',
+                'heroicons' => ' Heroicons',
+                'primeicons' => ' PrimeIcons',
+                'vue-material-design-icons' => ' Vue Material Design Icons',
+            ],
+            default: 'no'
+        );
+
+        if ($font == 'fa-free') {
+            $features[] = FontAwesomeFeature::class;
+
+            return $features;
+        }
+
+        if ($font == 'fa-pro') {
+            $features[] = FontAwesomeProFeature::class;
+
+            return $features;
+        }
+
+        if ($font == 'heroicons') {
+            $features[] = HeroiconsFeature::class;
+
+            return $features;
+        }
+
+        if ($font == 'primeicons') {
+            $features[] = PrimeIconsFeature::class;
+
+            return $features;
+        }
+
+        if ($font == 'vue-material-design-icons') {
+            $features[] = VueMaterialDesignIconsFeature::class;
+
+            return $features;
         }
 
         return $features;

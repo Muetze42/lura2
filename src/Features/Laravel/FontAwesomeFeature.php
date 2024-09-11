@@ -24,7 +24,7 @@ class FontAwesomeFeature extends AbstractFeature
      */
     public static function name(): string
     {
-        return 'FontAwesome';
+        return 'Font Awesome';
     }
 
     /**
