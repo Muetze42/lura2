@@ -236,6 +236,15 @@ class InstallLaravelCommand extends AbstractCommand
             ));
             $this->dependencies->addScriptAlias('checks', ['c']);
         }
+
+        $this->storage->targetDisk->put(
+            'config/database.php',
+            str_replace(
+                'env(\'DB_DATABASE\', database_path(\'database.sqlite\'))',
+                'database_path(env(\'DB_DATABASE\', \'database.sqlite\'))',
+                $this->storage->targetDisk->get('config/database.php')
+            )
+        );
     }
 
     protected function composerInstall(): void
