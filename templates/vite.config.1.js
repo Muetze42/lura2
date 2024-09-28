@@ -24,7 +24,7 @@ export default defineConfig({
       org: 'norman-huth',
       project: env.VITE_SENTRY_PROJECT,
       release: {
-        name: new Date().getTime()
+        name: new Date().toISOString()
       },
       authToken: env.VITE_SENTRY_AUTH_TOKEN.trim()
     })

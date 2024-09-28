@@ -25,7 +25,7 @@ export default defineConfig({
       project: env.VITE_SENTRY_PROJECT,
       telemetry: false,
       release: {
-        name: new Date().getTime()
+        name: new Date().toISOString()
       },
       authToken: env.VITE_SENTRY_AUTH_TOKEN.trim()
     })
