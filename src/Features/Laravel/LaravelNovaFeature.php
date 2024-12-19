@@ -24,8 +24,8 @@ class LaravelNovaFeature extends AbstractFeature
     public static function addComposerRequirement(InstallLaravelCommand $command): array
     {
         return [
-            new Package('laravel/nova', '^4.35.1'),
-            new Package('norman-huth/nova-assets-versioning', '^1.0'),
+            new Package('laravel/nova', '^5.0.3'),
+            new Package('norman-huth/nova-assets-versioning', '^1.1'),
         ];
     }
 
