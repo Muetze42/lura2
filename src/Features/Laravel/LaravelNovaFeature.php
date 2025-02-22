@@ -39,8 +39,8 @@ class LaravelNovaFeature extends AbstractFeature
             'type' => 'composer',
             'url' => 'https://nova.laravel.com',
         ]);
-        $command->storage->publish('stubs/nova', 'stubs/nova');
-        $command->storage->publish('templates/nova/Commands', 'app/Console/Commands/Nova');
+        //$command->storage->publish('stubs/nova', 'stubs/nova');
+        //$command->storage->publish('templates/nova/Commands', 'app/Console/Commands/Nova');
         static::determineLaravelNovaKey($command);
     }
 
@@ -51,7 +51,7 @@ class LaravelNovaFeature extends AbstractFeature
     {
         $command->runProcess('php artisan nova:install --ansi');
         $command->runProcess('php artisan vendor:publish --tag=nova-lang --ansi');
-        $command->storage->publish('templates/NovaServiceProvider.php', 'app/Providers/NovaServiceProvider.php');
+        //$command->storage->publish('templates/NovaServiceProvider.php', 'app/Providers/NovaServiceProvider.php');
     }
 
     protected static function determineLaravelNovaKey(InstallLaravelCommand $command): void
